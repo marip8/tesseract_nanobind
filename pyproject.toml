@@ -48,6 +48,14 @@ classifiers = [
 ]
 dynamic = ["version"]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0",
+    "pytest-xdist",
+    "pytest-benchmark",
+    "scipy>=1.7.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/tesseract-robotics/tesseract_nanobind"
 Repository = "https://github.com/tesseract-robotics/tesseract_nanobind"
