@@ -1,0 +1,236 @@
+name: Build & Test (macOS)
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'      # e.g. 0.6.1
+      - '[0-9]+.[0-9]+.[0-9]+.[0-9]+'  # e.g. 0.34.1.0
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.9', '3.10', '3.11', '3.12']
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: ws/src/tesseract_nanobind
+    - name: brew
+      run: |
+        brew install automake autoconf libtool
+        # Note: libomp comes from pixi (llvm-openmp) to avoid duplicate library crashes
+    - name: setup pixi
+      uses: prefix-dev/setup-pixi@v0.8.0
+      env:
+        PIXI_ENV: py${{ matrix.python == '3.9' && '39' || matrix.python == '3.10' && '310' || matrix.python == '3.11' && '311' || '312' }}
+      with:
+        manifest-path: ws/src/tesseract_nanobind/pyproject.toml
+        cache: true
+        environments: ${{ env.PIXI_ENV }}
+        activate-environment: ${{ env.PIXI_ENV }}
+    - name: typecheck
+      working-directory: ws/src/tesseract_nanobind
+      run: pixi run typecheck
+    - name: cache vcs repos
+      uses: actions/cache@v4
+      with:
+        path: |
+          ws/src/tesseract
+          ws/src/tesseract_planning
+          ws/src/trajopt
+          ws/src/descartes_light
+          ws/src/opw_kinematics
+          ws/src/ruckig
+        key: vcs-${{ hashFiles('ws/src/tesseract_nanobind/dependencies.rosinstall') }}
+    - name: vcs import
+      working-directory: ws/src
+      run: vcs import --input tesseract_nanobind/dependencies.rosinstall --skip-existing
+    - name: cache colcon build
+      uses: actions/cache@v4
+      id: colcon-cache
+      with:
+        path: ws/install
+        key: colcon-v11-py${{ matrix.python }}-macos-arm64-${{ hashFiles('ws/src/tesseract_nanobind/dependencies.rosinstall', 'ws/src/tesseract_nanobind/pyproject.toml') }}
+    - name: colcon build C++ deps
+      if: steps.colcon-cache.outputs.cache-hit != 'true'
+      working-directory: ws
+      run: |
+        export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib:$GITHUB_WORKSPACE/ws/install/lib
+        export CMAKE_PREFIX_PATH=$CONDA_PREFIX:$GITHUB_WORKSPACE/ws/install
+        export LIBRARY_PATH=$CONDA_PREFIX/lib:$LIBRARY_PATH
+        export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
+        colcon build --merge-install \
+            --packages-ignore tesseract_python tesseract_examples vhacd qpoases tesseract_nanobind tesseract_viewer_python twc_application twc_motion_planning twc_msgs twc_support \
+            --event-handlers console_cohesion+ \
+            --cmake-force-configure \
+            --cmake-args -GNinja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_VISIBILITY_PRESET=default -DCMAKE_VISIBILITY_INLINES_HIDDEN=OFF \
+            -DINSTALL_OMPL=OFF -DINSTALL_OMPL_TAG=master -DBUILD_CLOUD_CLIENT=OFF -DBUILD_IPOPT=OFF -DBUILD_SNOPT=OFF \
+            -DBUILD_SHARED_LIBS=ON -DTESSERACT_ENABLE_EXAMPLES=OFF -DTESSERACT_BUILD_TRAJOPT_IFOPT=ON \
+            -DTESSERACT_ENABLE_TESTING=OFF \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
+            -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DCMAKE_INSTALL_RPATH=@loader_path \
+            -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
+            -DQT_HOST_PATH=$CONDA_PREFIX \
+            -DOpenMP_CXX_INCLUDE_DIR=$CONDA_PREFIX/include \
+            -DOpenMP_C_INCLUDE_DIR=$CONDA_PREFIX/include \
+            -DOpenMP_CXX_LIB_NAMES=libomp -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp" \
+            -DOpenMP_C_LIB_NAMES=libomp -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp" \
+            -DOpenMP_libomp_LIBRARY=$CONDA_PREFIX/lib/libomp.dylib
+    - name: build nanobind wheel
+      working-directory: ws/src/tesseract_nanobind
+      run: |
+        export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib:$GITHUB_WORKSPACE/ws/install/lib
+        export CMAKE_PREFIX_PATH=$CONDA_PREFIX:$GITHUB_WORKSPACE/ws/install
+        pip install delocate setuptools-scm
+        CMAKE_ARGS="-DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0" \
+          pip wheel . -w dist/ --no-build-isolation
+    - name: delocate
+      working-directory: ws/src/tesseract_nanobind
+      run: |
+        export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib:$GITHUB_WORKSPACE/ws/install/lib
+        mkdir -p wheelhouse
+        delocate-wheel -w wheelhouse -v dist/*.whl
+    - name: bundle plugins
+      working-directory: ws/src/tesseract_nanobind
+      run: |
+        # Plugin factories are runtime-loaded (dlopen), not caught by delocate
+        WHEEL_FILE=$(ls wheelhouse/tesseract*.whl)
+        WHEEL_DIR=$(mktemp -d)
+        unzip -q "$WHEEL_FILE" -d "$WHEEL_DIR"
+
+        PLUGINS=(
+          libtesseract_collision_bullet_factories.dylib
+          libtesseract_collision_fcl_factories.dylib
+          libtesseract_kinematics_core_factories.dylib
+          libtesseract_kinematics_kdl_factories.dylib
+          libtesseract_kinematics_opw_factory.dylib
+          libtesseract_kinematics_ur_factory.dylib
+          libtesseract_task_composer_factories.dylib
+          libtesseract_task_composer_planning_factories.dylib
+          libtesseract_task_composer_taskflow_factories.dylib
+        )
+
+        for plugin in "${PLUGINS[@]}"; do
+          if [[ -f "$GITHUB_WORKSPACE/ws/install/lib/$plugin" ]]; then
+            cp "$GITHUB_WORKSPACE/ws/install/lib/$plugin" "$WHEEL_DIR/tesseract_robotics/.dylibs/"
+            echo "  Added: $plugin"
+          fi
+        done
+
+        # Fix rpaths in newly added plugins
+        export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib:$GITHUB_WORKSPACE/ws/install/lib
+        delocate-path "$WHEEL_DIR/tesseract_robotics/.dylibs" -L "$GITHUB_WORKSPACE/ws/install/lib:$CONDA_PREFIX/lib"
+
+        # Patch task_composer_config YAMLs only (resolved at runtime by __init__.py)
+        # Robot YAMLs (tesseract_support) are NOT patched - they use env var plugin paths
+        echo "Patching task composer configs..."
+        for yaml_file in "$WHEEL_DIR/tesseract_robotics/data/task_composer_config"/*.yaml; do
+          if [[ -f "$yaml_file" ]] && grep -q '/usr/local/lib' "$yaml_file"; then
+            sed -i '' 's|/usr/local/lib|"@PLUGIN_PATH@"|g' "$yaml_file"
+            echo "  Patched: $(basename $yaml_file)"
+          fi
+        done
+
+        # Repack wheel
+        rm "$WHEEL_FILE"
+        cd "$WHEEL_DIR"
+        zip -rq "$GITHUB_WORKSPACE/ws/src/tesseract_nanobind/wheelhouse/$(basename $WHEEL_FILE)" .
+        rm -rf "$WHEEL_DIR"
+    - name: archive wheels
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-${{ matrix.python }}-macos-arm64
+        path: ws/src/tesseract_nanobind/wheelhouse/tesseract*.whl
+    - name: archive logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs-macos-arm64
+        path: "**/*.log"
+        retention-days: 2
+
+  test-wheel:
+    needs: build
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.9', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tesseract_nanobind
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-${{ matrix.python }}-macos-arm64
+          path: wheelhouse/
+      - name: install wheel in virgin env
+        run: |
+          python -m venv test_env
+          source test_env/bin/activate
+          pip install wheelhouse/tesseract*.whl
+      - name: debug libs
+        run: |
+          source test_env/bin/activate
+          PKG_DIR=$(python -c "import tesseract_robotics; from pathlib import Path; print(Path(tesseract_robotics.__file__).parent)")
+          echo "Package dir: $PKG_DIR"
+          echo "--- .dylib files in package (count) ---"
+          ls "$PKG_DIR"/.dylibs/*.dylib 2>/dev/null | wc -l
+          echo "--- Plugin factories ---"
+          ls -la "$PKG_DIR"/.dylibs/lib*_factories.dylib 2>/dev/null | head -5 || echo "No plugin factories"
+          echo "--- Kinematics KDL factory deps ---"
+          otool -L "$PKG_DIR/.dylibs/libtesseract_kinematics_kdl_factories.dylib" 2>&1 | head -15
+          echo "--- Kinematics OPW factory deps ---"
+          otool -L "$PKG_DIR/.dylibs/libtesseract_kinematics_opw_factory.dylib" 2>&1
+          echo "--- Missing deps check ---"
+          for lib in "$PKG_DIR"/.dylibs/*.dylib; do
+            missing=$(otool -L "$lib" 2>&1 | grep "not found" || true)
+            if [[ -n "$missing" ]]; then
+              echo "$(basename $lib): $missing"
+            fi
+          done
+          echo "--- End missing deps check ---"
+          echo "--- TESSERACT env vars ---"
+          python -c "import os; import tesseract_robotics; print('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES:', os.environ.get('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES', 'NOT SET')); print('TESSERACT_SUPPORT_DIR:', os.environ.get('TESSERACT_SUPPORT_DIR', 'NOT SET'))"
+      - name: smoke test
+        run: |
+          source test_env/bin/activate
+          python -c "import tesseract_robotics; print('Version:', tesseract_robotics.__version__)"
+          python -c "from tesseract_robotics import tesseract_common, tesseract_geometry, tesseract_scene_graph"
+      - name: run full tests
+        run: |
+          source test_env/bin/activate
+          pip install pytest pytest-xdist scipy
+          cd tesseract_nanobind
+          # Skip time_parameterization (requires boost), examples (viewer needs Qt/VTK, kinematics needs plugins), benchmarks (needs pytest-benchmark)
+          pytest tests -n auto \
+            --ignore=tests/tesseract_time_parameterization \
+            --ignore=tests/examples \
+            --ignore=tests/tesseract_kinematics \
+            --ignore=tests/benchmarks \
+            -v --tb=short
