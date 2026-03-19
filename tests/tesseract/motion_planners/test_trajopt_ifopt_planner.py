@@ -13,7 +13,6 @@ from tesseract.command_language import (
     ProfileDictionary,
 )
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
     ManipulatorInfo,
 )
@@ -37,16 +36,12 @@ TRAJOPT_IFOPT_NAMESPACE = "TrajOptIfoptMotionPlannerTask"
 def kuka_iiwa_environment():
     """Load KUKA IIWA robot environment for testing."""
     locator = GeneralResourceLocator()
-    urdf_path = FilesystemPath(
-        locator.locateResource(
+    urdf_path = locator.locateResource(
             "package://tesseract_support/urdf/lbr_iiwa_14_r820.urdf"
         ).getFilePath()
-    )
-    srdf_path = FilesystemPath(
-        locator.locateResource(
+    srdf_path = locator.locateResource(
             "package://tesseract_support/urdf/lbr_iiwa_14_r820.srdf"
         ).getFilePath()
-    )
 
     t_env = Environment()
     assert t_env.init(urdf_path, srdf_path, locator), "Failed to initialize KUKA IIWA"

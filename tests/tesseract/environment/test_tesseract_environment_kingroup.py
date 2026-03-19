@@ -2,22 +2,22 @@ import os
 
 import numpy as np
 
-from tesseract.common import FilesystemPath, ManipulatorInfo
+from tesseract.common import ManipulatorInfo
 from tesseract.environment import Environment
 from tesseract.kinematics import (
     KinGroupIKInput,
     KinGroupIKInputs,
 )
 
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 
 def get_environment():
     env = Environment()
     locator = TesseractSupportResourceLocator()
     tesseract_support = os.environ["TESSERACT_SUPPORT_DIR"]
-    urdf_path = FilesystemPath(os.path.join(tesseract_support, "urdf/abb_irb2400.urdf"))
-    srdf_path = FilesystemPath(os.path.join(tesseract_support, "urdf/abb_irb2400.srdf"))
+    urdf_path = os.path.join(tesseract_support, "urdf/abb_irb2400.urdf")
+    srdf_path = os.path.join(tesseract_support, "urdf/abb_irb2400.srdf")
     assert env.init(urdf_path, srdf_path, locator)
     manip_info = ManipulatorInfo()
     manip_info.manipulator = "manipulator"

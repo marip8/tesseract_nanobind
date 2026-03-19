@@ -4,7 +4,7 @@ import gc
 import os
 
 import tesseract
-from tesseract.common import FilesystemPath, GeneralResourceLocator
+from tesseract.common import GeneralResourceLocator
 from tesseract.task_composer import TaskComposerPluginFactory
 
 
@@ -44,9 +44,8 @@ class TestTaskComposerPluginFactory:
         assert config_file and Path(config_file).is_file(), (
             "No task composer config found. Tried env var, package config, and workspace"
         )
-        config_path = FilesystemPath(config_file)
         locator = GeneralResourceLocator()
-        factory = TaskComposerPluginFactory(config_path, locator)
+        factory = TaskComposerPluginFactory(config_file, locator)
         assert factory is not None
 
         # Test pipeline node creation - keep references to avoid GC issues
@@ -136,7 +135,7 @@ class TestTaskComposerPluginFactory:
         assert config_file and Path(config_file).is_file(), "No task composer config found"
 
         locator = GeneralResourceLocator()
-        factory = TaskComposerPluginFactory(FilesystemPath(config_file), locator)
+        factory = TaskComposerPluginFactory(config_file, locator)
 
         # Try to load each pipeline
         loaded = []

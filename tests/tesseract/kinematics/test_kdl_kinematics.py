@@ -3,31 +3,27 @@ import os
 import numpy as np
 import numpy.testing as nptest
 
-from tesseract import (
-    tesseract_common,
-    tesseract_kinematics,
-    tesseract_state_solver,
-    tesseract_urdf,
-)
+import tesseract.common
+import tesseract.kinematics
+import tesseract.state_solver
+import tesseract.urdf
 
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
+
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 
 def get_scene_graph():
     tesseract_support = os.environ["TESSERACT_SUPPORT_DIR"]
     path = os.path.join(tesseract_support, "urdf/lbr_iiwa_14_r820.urdf")
     locator = TesseractSupportResourceLocator()
-    return tesseract_urdf.parseURDFFile(path, locator)
+    return tesseract.urdf.parseURDFFile(path, locator)
 
 
 def get_plugin_factory():
-    # Use _FilesystemPath (C++ binding) for KinematicsPluginFactory which needs fs::path
-    from tesseract.common import _FilesystemPath
-
     support_dir = os.environ["TESSERACT_SUPPORT_DIR"]
-    kin_config = _FilesystemPath(support_dir + "/urdf/" + "lbr_iiwa_14_r820_plugins.yaml")
+    kin_config = support_dir + "/urdf/" + "lbr_iiwa_14_r820_plugins.yaml"
     locator = TesseractSupportResourceLocator()
-    return tesseract_kinematics.KinematicsPluginFactory(kin_config, locator), locator
+    return tesseract.kinematics.KinematicsPluginFactory(kin_config, locator), locator
 
 
 def run_inv_kin_test(inv_kin, fwd_kin):
@@ -35,8 +31,8 @@ def run_inv_kin_test(inv_kin, fwd_kin):
     pose[2, 3] = 1.306
 
     seed = np.array([-0.785398, 0.785398, -0.785398, 0.785398, -0.785398, 0.785398, -0.785398])
-    tip_pose = tesseract_common.TransformMap()
-    tip_pose["tool0"] = tesseract_common.Isometry3d(pose)
+    tip_pose = tesseract.common.TransformMap()
+    tip_pose["tool0"] = tesseract.common.Isometry3d(pose)
     solutions = inv_kin.calcInvKin(tip_pose, seed)
     assert len(solutions) > 0
 
@@ -48,7 +44,7 @@ def run_inv_kin_test(inv_kin, fwd_kin):
 def test_kdl_kin_chain_lma_inverse_kinematic():
     plugin_factory, p_locator = get_plugin_factory()
     scene_graph = get_scene_graph()
-    solver = tesseract_state_solver.KDLStateSolver(scene_graph)
+    solver = tesseract.state_solver.KDLStateSolver(scene_graph)
     scene_state1 = solver.getState(np.zeros((7,)))
     scene_state2 = solver.getState(np.zeros((7,)))
     inv_kin = plugin_factory.createInvKin(
@@ -70,7 +66,7 @@ def test_kdl_kin_chain_lma_inverse_kinematic():
 def test_jacobian():
     plugin_factory, p_locator = get_plugin_factory()
     scene_graph = get_scene_graph()
-    solver = tesseract_state_solver.KDLStateSolver(scene_graph)
+    solver = tesseract.state_solver.KDLStateSolver(scene_graph)
     scene_state = solver.getState(np.zeros((7,)))
     fwd_kin = plugin_factory.createFwdKin("manipulator", "KDLFwdKinChain", scene_graph, scene_state)
     scene_graph = get_scene_graph()

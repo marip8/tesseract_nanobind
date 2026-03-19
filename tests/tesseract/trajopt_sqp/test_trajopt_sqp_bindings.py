@@ -17,7 +17,6 @@ import pytest
 from tesseract import trajopt_ifopt as ti
 from tesseract import trajopt_sqp as tsqp
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
 )
@@ -54,16 +53,12 @@ def _make_problem(nodes_variables, vars_list, joint_names, constraints=None, cos
 def kuka_setup():
     """Load KUKA IIWA robot environment."""
     locator = GeneralResourceLocator()
-    urdf_path = FilesystemPath(
-        locator.locateResource(
+    urdf_path = locator.locateResource(
             "package://tesseract_support/urdf/lbr_iiwa_14_r820.urdf"
         ).getFilePath()
-    )
-    srdf_path = FilesystemPath(
-        locator.locateResource(
+    srdf_path = locator.locateResource(
             "package://tesseract_support/urdf/lbr_iiwa_14_r820.srdf"
         ).getFilePath()
-    )
 
     env = Environment()
     assert env.init(urdf_path, srdf_path, locator)

@@ -1,8 +1,7 @@
 import numpy.testing as nptest
+import tesseract.urdf
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
-from tesseract import tesseract_urdf
-
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 mesh_urdf = """
 <robot name="mesh_viewer" xmlns:tesseract="http://ros.org/wiki/tesseract" tesseract:make_convex="true">
@@ -31,7 +30,7 @@ mesh_urdf = """
 def get_scene_graph():
     locator = TesseractSupportResourceLocator()
     # nanobind automatically extracts from unique_ptr, no .release() needed
-    return tesseract_urdf.parseURDFString(mesh_urdf, locator)
+    return tesseract.urdf.parseURDFString(mesh_urdf, locator)
 
 
 def test_mesh_material_loading():

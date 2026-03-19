@@ -3,9 +3,11 @@ import traceback
 
 import numpy as np
 
-from tesseract import tesseract_environment, tesseract_srdf, tesseract_urdf
+import tesseract.environment
+import tesseract.urdf
+import tesseract.srdf
 
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 
 def get_scene_graph():
@@ -13,13 +15,13 @@ def get_scene_graph():
     path = os.path.join(tesseract_support, "urdf/lbr_iiwa_14_r820.urdf")
     locator = TesseractSupportResourceLocator()
     # nanobind automatically extracts from unique_ptr, no .release() needed
-    return tesseract_urdf.parseURDFFile(path, locator)
+    return tesseract.urdf.parseURDFFile(path, locator)
 
 
 def get_srdf_model(scene_graph):
     tesseract_support = os.environ["TESSERACT_SUPPORT_DIR"]
     path = os.path.join(tesseract_support, "urdf/lbr_iiwa_14_r820.srdf")
-    srdf = tesseract_srdf.SRDFModel()
+    srdf = tesseract.srdf.SRDFModel()
     locator = TesseractSupportResourceLocator()
     srdf.initFile(scene_graph, path, locator)
     return srdf
@@ -32,7 +34,7 @@ def get_environment():
     srdf = get_srdf_model(scene_graph)
     assert srdf is not None
 
-    env = tesseract_environment.Environment()
+    env = tesseract.environment.Environment()
     assert env is not None
 
     assert env.getRevision() == 0
@@ -49,8 +51,8 @@ def get_environment():
 
     def event_cb_py(evt):
         try:
-            if evt.type == tesseract_environment.Events_SCENE_STATE_CHANGED:
-                evt2 = tesseract_environment.cast_SceneStateChangedEvent(evt)
+            if evt.type == tesseract.environment.Events_SCENE_STATE_CHANGED:
+                evt2 = tesseract.environment.cast_SceneStateChangedEvent(evt)
                 if len(evt2.state.joints) != 7:
                     print("joint state length error")
                     return
@@ -59,22 +61,22 @@ def get_environment():
                         print("joint value mismatch")
                         return
                 scene_state_changed[0] = True
-            if evt.type == tesseract_environment.Events_COMMAND_APPLIED:
-                evt2 = tesseract_environment.cast_CommandAppliedEvent(evt)
+            if evt.type == tesseract.environment.Events_COMMAND_APPLIED:
+                evt2 = tesseract.environment.cast_CommandAppliedEvent(evt)
                 print(evt2.revision)
                 if evt2.revision == 4:
                     command_applied[0] = True
         except Exception:
             traceback.print_exc()
 
-    event_cb = tesseract_environment.EventCallbackFn(event_cb_py)
+    event_cb = tesseract.environment.EventCallbackFn(event_cb_py)
 
     env.addEventCallback(12345, event_cb)
 
     env.setState(joint_names, joint_values)
     assert scene_state_changed[0]
 
-    cmd = tesseract_environment.RemoveJointCommand("joint_a7-tool0")
+    cmd = tesseract.environment.RemoveJointCommand("joint_a7-tool0")
     assert env.applyCommand(cmd)
     assert command_applied[0]
 

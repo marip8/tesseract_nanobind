@@ -1,20 +1,18 @@
 """Tests for OMPL base state space bindings (SE2, Reeds-Shepp, Dubins)."""
 
 import math
+from ompl.base import RealVectorBounds, SE2StateSpace, DubinsStateSpace, DubinsPathSegmentType, ReedsSheppStateSpace, ReedsSheppPathSegmentType
 
 
 class TestRealVectorBounds:
     """Tests for RealVectorBounds."""
 
     def test_constructor(self):
-        from ompl_base import RealVectorBounds
-
         bounds = RealVectorBounds(2)
         assert len(bounds.low) == 2
         assert len(bounds.high) == 2
 
     def test_setLow_setHigh_all(self):
-        from ompl_base import RealVectorBounds
 
         bounds = RealVectorBounds(3)
         bounds.setLow(-5.0)
@@ -24,8 +22,6 @@ class TestRealVectorBounds:
         assert all(v == 10.0 for v in bounds.high)
 
     def test_setLow_setHigh_indexed(self):
-        from ompl_base import RealVectorBounds
-
         bounds = RealVectorBounds(2)
         bounds.setLow(0, -1.0)
         bounds.setLow(1, -2.0)
@@ -38,8 +34,6 @@ class TestRealVectorBounds:
         assert bounds.high[1] == 4.0
 
     def test_getVolume(self):
-        from ompl_base import RealVectorBounds
-
         bounds = RealVectorBounds(2)
         bounds.setLow(-1.0)
         bounds.setHigh(1.0)
@@ -47,8 +41,6 @@ class TestRealVectorBounds:
         assert abs(bounds.getVolume() - 4.0) < 1e-9
 
     def test_getDifference(self):
-        from ompl_base import RealVectorBounds
-
         bounds = RealVectorBounds(2)
         bounds.setLow(0, 0.0)
         bounds.setHigh(0, 5.0)
@@ -64,8 +56,6 @@ class TestSE2StateSpace:
     """Tests for SE2StateSpace."""
 
     def test_alloc_free_state(self):
-        from ompl_base import RealVectorBounds, SE2StateSpace
-
         ss = SE2StateSpace()
         bounds = RealVectorBounds(2)
         bounds.setLow(-10.0)
@@ -77,8 +67,6 @@ class TestSE2StateSpace:
         ss.freeState(state)
 
     def test_state_getters_setters(self):
-        from ompl_base import RealVectorBounds, SE2StateSpace
-
         ss = SE2StateSpace()
         bounds = RealVectorBounds(2)
         bounds.setLow(-10.0)
@@ -99,8 +87,6 @@ class TestSE2StateSpace:
         ss.freeState(state)
 
     def test_setXY(self):
-        from ompl_base import RealVectorBounds, SE2StateSpace
-
         ss = SE2StateSpace()
         bounds = RealVectorBounds(2)
         bounds.setLow(-10.0)
@@ -117,8 +103,6 @@ class TestSE2StateSpace:
         ss.freeState(state)
 
     def test_distance(self):
-        from ompl_base import RealVectorBounds, SE2StateSpace
-
         ss = SE2StateSpace()
         bounds = RealVectorBounds(2)
         bounds.setLow(-10.0)
@@ -142,8 +126,6 @@ class TestSE2StateSpace:
         ss.freeState(s2)
 
     def test_interpolate(self):
-        from ompl_base import RealVectorBounds, SE2StateSpace
-
         ss = SE2StateSpace()
         bounds = RealVectorBounds(2)
         bounds.setLow(-10.0)
@@ -174,20 +156,14 @@ class TestReedsSheppStateSpace:
     """Tests for ReedsSheppStateSpace."""
 
     def test_constructor_default(self):
-        from ompl_base import ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace()  # default turningRadius=1.0
         assert rs is not None
 
     def test_constructor_custom_radius(self):
-        from ompl_base import ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace(turningRadius=2.5)
         assert rs is not None
 
     def test_reedsShepp_path(self):
-        from ompl_base import RealVectorBounds, ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace(turningRadius=1.0)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -214,8 +190,6 @@ class TestReedsSheppStateSpace:
         rs.freeState(s2)
 
     def test_reedsShepp_turn(self):
-        from ompl_base import RealVectorBounds, ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace(turningRadius=1.0)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -243,8 +217,6 @@ class TestReedsSheppStateSpace:
         rs.freeState(s2)
 
     def test_distance_equals_path_length(self):
-        from ompl_base import RealVectorBounds, ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace(turningRadius=1.5)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -272,8 +244,6 @@ class TestReedsSheppStateSpace:
         rs.freeState(s2)
 
     def test_interpolate(self):
-        from ompl_base import RealVectorBounds, ReedsSheppStateSpace
-
         rs = ReedsSheppStateSpace(turningRadius=1.0)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -306,8 +276,6 @@ class TestReedsSheppStateSpace:
         rs.freeState(interp)
 
     def test_path_segment_types(self):
-        from ompl_base import ReedsSheppPathSegmentType
-
         # Verify enum values exist and are distinct
         types = [
             ReedsSheppPathSegmentType.RS_NOP,
@@ -323,27 +291,19 @@ class TestDubinsStateSpace:
     """Tests for DubinsStateSpace."""
 
     def test_constructor_default(self):
-        from ompl_base import DubinsStateSpace
-
         dubins = DubinsStateSpace()
         assert dubins is not None
 
     def test_constructor_custom(self):
-        from ompl_base import DubinsStateSpace
-
         dubins = DubinsStateSpace(turningRadius=2.0, isSymmetric=True)
         assert dubins is not None
 
     def test_isMetricSpace(self):
-        from ompl_base import DubinsStateSpace
-
         dubins = DubinsStateSpace()
         # Dubins distance is NOT a proper metric
         assert dubins.isMetricSpace() is False
 
     def test_dubins_path(self):
-        from ompl_base import DubinsStateSpace, RealVectorBounds
-
         dubins = DubinsStateSpace(turningRadius=1.0)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -368,8 +328,6 @@ class TestDubinsStateSpace:
         dubins.freeState(s2)
 
     def test_dubins_turn(self):
-        from ompl_base import DubinsStateSpace, RealVectorBounds
-
         dubins = DubinsStateSpace(turningRadius=1.0)
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
@@ -395,8 +353,6 @@ class TestDubinsStateSpace:
         dubins.freeState(s2)
 
     def test_path_segment_types(self):
-        from ompl_base import DubinsPathSegmentType
-
         # Verify enum values exist and are distinct
         types = [
             DubinsPathSegmentType.DUBINS_LEFT,
@@ -411,12 +367,6 @@ class TestReedsSheppVsDubins:
     """Compare Reeds-Shepp and Dubins for the same problem."""
 
     def test_reeds_shepp_shorter_when_reverse_helps(self):
-        from ompl_base import (
-            DubinsStateSpace,
-            RealVectorBounds,
-            ReedsSheppStateSpace,
-        )
-
         bounds = RealVectorBounds(2)
         bounds.setLow(-100.0)
         bounds.setHigh(100.0)

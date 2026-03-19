@@ -13,7 +13,7 @@ environment and kinematic group.
 
 import gc
 
-from tesseract.common import FilesystemPath, GeneralResourceLocator
+from tesseract.common import GeneralResourceLocator
 from tesseract.environment import Environment
 
 
@@ -27,7 +27,7 @@ def test_kdl_kinematics_plugin_loads():
     srdf = locator.locateResource(
         "package://tesseract_support/urdf/lbr_iiwa_14_r820.srdf"
     ).getFilePath()
-    assert env.init(FilesystemPath(urdf), FilesystemPath(srdf), locator)
+    assert env.init(urdf, srdf, locator)
 
     # This should not raise RuntimeError if plugins load correctly
     kin_group = env.getKinematicGroup("manipulator")
@@ -44,7 +44,7 @@ def test_opw_kinematics_plugin_loads():
     env = Environment()
     urdf = locator.locateResource("package://tesseract_support/urdf/abb_irb2400.urdf").getFilePath()
     srdf = locator.locateResource("package://tesseract_support/urdf/abb_irb2400.srdf").getFilePath()
-    assert env.init(FilesystemPath(urdf), FilesystemPath(srdf), locator)
+    assert env.init(urdf, srdf, locator)
 
     # This should not raise RuntimeError if plugins load correctly
     kin_group = env.getKinematicGroup("manipulator")

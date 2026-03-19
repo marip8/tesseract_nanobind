@@ -13,7 +13,6 @@ from tesseract.command_language import (
     ProfileDictionary,
 )
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     ManipulatorInfo,
@@ -38,12 +37,8 @@ OMPL_DEFAULT_NAMESPACE = "OMPLMotionPlannerTask"
 def abb_irb2400_environment():
     """Load ABB IRB2400 robot environment for testing."""
     locator = GeneralResourceLocator()
-    urdf_path = FilesystemPath(
-        locator.locateResource("package://tesseract_support/urdf/abb_irb2400.urdf").getFilePath()
-    )
-    srdf_path = FilesystemPath(
-        locator.locateResource("package://tesseract_support/urdf/abb_irb2400.srdf").getFilePath()
-    )
+    urdf_path = locator.locateResource("package://tesseract_support/urdf/abb_irb2400.urdf").getFilePath()
+    srdf_path = locator.locateResource("package://tesseract_support/urdf/abb_irb2400.srdf").getFilePath()
     t_env = Environment()
     assert t_env.init(urdf_path, srdf_path, locator), "Failed to initialize ABB IRB2400"
     return t_env

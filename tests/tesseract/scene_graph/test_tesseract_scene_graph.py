@@ -3,15 +3,16 @@ import os
 import numpy as np
 
 import tesseract.scene_graph as sg
-from tesseract import tesseract_common, tesseract_srdf
+import tesseract.common
+import tesseract.srdf
 
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 
 def _translation(p):
     H = np.eye(4)
     H[0:3, 3] = p
-    return tesseract_common.Isometry3d(H)
+    return tesseract.common.Isometry3d(H)
 
 
 def test_tesseract_scene_graph():
@@ -217,10 +218,10 @@ def test_load_srdf_unit():
     joint_tool0.type = sg.JointType_FIXED
     assert g.addJoint(joint_tool0)
 
-    srdf = tesseract_srdf.SRDFModel()
+    srdf = tesseract.srdf.SRDFModel()
     srdf.initFile(g, srdf_file, locator)
 
-    tesseract_srdf.processSRDFAllowedCollisions(g, srdf)
+    tesseract.srdf.processSRDFAllowedCollisions(g, srdf)
 
     acm = g.getAllowedCollisionMatrix()
 

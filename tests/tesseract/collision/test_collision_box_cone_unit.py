@@ -4,54 +4,56 @@ import os
 import numpy as np
 import numpy.testing as nptest
 
-from tesseract import tesseract_collision, tesseract_common, tesseract_geometry
+from tesseract.common import CollisionMarginData, VectorIsometry3d, Isometry3d, FilesystemPath
+from tesseract.geometry import Box, Cone, GeometriesConst
+from tesseract.collision import ContactManagersPluginFactory, ContactRequest, ContactTestType, ContactResultMap, ContactResultVector
 
-from ..tesseract_support_resource_locator import TesseractSupportResourceLocator
+from ...tesseract_support_resource_locator import TesseractSupportResourceLocator
 
 
 def addCollisionObjects(checker):
     # Add static box to checker
-    box = tesseract_geometry.Box(1, 1, 1)
+    box = Box(1, 1, 1)
     box_pose = np.eye(4)
-    obj1_shapes = tesseract_geometry.GeometriesConst()
+    obj1_shapes = GeometriesConst()
     obj1_shapes.append(box)
-    obj1_poses = tesseract_common.VectorIsometry3d()
-    obj1_poses.append(tesseract_common.Isometry3d(box_pose))
+    obj1_poses = VectorIsometry3d()
+    obj1_poses.append(Isometry3d(box_pose))
 
     checker.addCollisionObject("box_link", 0, obj1_shapes, obj1_poses, False)
     checker.enableCollisionObject("box_link")
 
     # Add thin box to checker which is disabled
-    thin_box = tesseract_geometry.Box(0.1, 1, 1)
+    thin_box = Box(0.1, 1, 1)
     thin_box_pose = np.eye(4)
 
-    obj2_shapes = tesseract_geometry.GeometriesConst()
+    obj2_shapes = GeometriesConst()
     obj2_shapes.append(thin_box)
-    obj2_poses = tesseract_common.VectorIsometry3d()
-    obj2_poses.append(tesseract_common.Isometry3d(thin_box_pose))
+    obj2_poses = VectorIsometry3d()
+    obj2_poses.append(Isometry3d(thin_box_pose))
 
     checker.addCollisionObject("thin_box_link", 0, obj2_shapes, obj2_poses)
     checker.disableCollisionObject("thin_box_link")
 
     # Add cone to checker
-    cone = tesseract_geometry.Cone(0.25, 0.25)
+    cone = Cone(0.25, 0.25)
     cone_pose = np.eye(4)
 
-    obj3_shapes = tesseract_geometry.GeometriesConst()
+    obj3_shapes = GeometriesConst()
     obj3_shapes.append(cone)
-    obj3_poses = tesseract_common.VectorIsometry3d()
-    obj3_poses.append(tesseract_common.Isometry3d(cone_pose))
+    obj3_poses = VectorIsometry3d()
+    obj3_poses.append(Isometry3d(cone_pose))
 
     checker.addCollisionObject("cone_link", 0, obj3_shapes, obj3_poses)
 
     # Add box and remove
-    remove_box = tesseract_geometry.Box(0.1, 1, 1)
+    remove_box = Box(0.1, 1, 1)
     remove_box_pose = np.eye(4)
 
-    obj4_shapes = tesseract_geometry.GeometriesConst()
+    obj4_shapes = GeometriesConst()
     obj4_shapes.append(remove_box)
-    obj4_poses = tesseract_common.VectorIsometry3d()
-    obj4_poses.append(tesseract_common.Isometry3d(remove_box_pose))
+    obj4_poses = VectorIsometry3d()
+    obj4_poses.append(Isometry3d(remove_box_pose))
 
     checker.addCollisionObject("remove_box_link", 0, obj4_shapes, obj4_poses)
     assert len(checker.getCollisionObjects()) == 4
@@ -66,7 +68,7 @@ def addCollisionObjects(checker):
 
     # Try to add empty Collision Object
     assert not checker.addCollisionObject(
-        "empty_link", 0, tesseract_geometry.GeometriesConst(), tesseract_common.VectorIsometry3d()
+        "empty_link", 0, GeometriesConst(), VectorIsometry3d()
     )
 
     # Check sizes
@@ -87,23 +89,23 @@ def run_test(checker):
 
     # Test when object is in collision
     checker.setActiveCollisionObjects(["box_link", "cone_link"])
-    checker.setCollisionMarginData(tesseract_common.CollisionMarginData(0.1))
+    checker.setCollisionMarginData(CollisionMarginData(0.1))
     nptest.assert_almost_equal(checker.getCollisionMarginData().getMaxCollisionMargin(), 0.1)
 
     # Set the collision object transforms
-    location = tesseract_common.TransformMap()
-    location["box_link"] = tesseract_common.Isometry3d(np.eye(4))
+    location = dict()
+    location["box_link"] = Isometry3d(np.eye(4))
     cone_link_transform = np.eye(4)
     cone_link_transform[0][3] = 0.2
-    location["cone_link"] = tesseract_common.Isometry3d(cone_link_transform)
+    location["cone_link"] = Isometry3d(cone_link_transform)
     checker.setCollisionObjectsTransform(location)
 
     # Perform collision check
-    result = tesseract_collision.ContactResultMap()
+    result = ContactResultMap()
     checker.contactTest(
-        result, tesseract_collision.ContactRequest(tesseract_collision.ContactTestType_CLOSEST)
+        result, ContactRequest(ContactTestType.CLOSEST)
     )
-    result_vector = tesseract_collision.ContactResultVector()
+    result_vector = ContactResultVector()
     result.flattenMoveResults(result_vector)
 
     assert len(result_vector) > 0
@@ -129,13 +131,10 @@ def run_test(checker):
 
 
 def get_plugin_factory():
-    # Use _FilesystemPath (C++ binding) for ContactManagersPluginFactory which needs fs::path
-    from tesseract.common import _FilesystemPath
-
     support_dir = os.environ["TESSERACT_SUPPORT_DIR"]
-    collision_config = _FilesystemPath(support_dir + "/urdf/" + "contact_manager_plugins.yaml")
+    collision_config = FilesystemPath(support_dir + "/urdf/" + "contact_manager_plugins.yaml")
     locator = TesseractSupportResourceLocator()
-    return tesseract_collision.ContactManagersPluginFactory(collision_config, locator), locator
+    return ContactManagersPluginFactory(collision_config, locator), locator
 
 
 def test_bullet_discrete_simple():
