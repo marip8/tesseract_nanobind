@@ -85,9 +85,10 @@ from tesseract.collision import CollisionEvaluatorType
 from tesseract.command_language import ProfileDictionary
 from tesseract.motion_planners_trajopt import (
     ProfileDictionary_addTrajOptCompositeProfile,
-    TrajOptCollisionConfig,
     TrajOptDefaultCompositeProfile,
 )
+from tesseract.trajopt_ifopt import TrajOptCollisionConfig
+
 
 TRAJOPT_NS = "TrajOptMotionPlannerTask"
 

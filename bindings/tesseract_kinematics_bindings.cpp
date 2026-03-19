@@ -36,7 +36,7 @@ namespace tsg = tesseract_scene_graph;
 // Make KinGroupIKInputs opaque so we can bind it as a class
 NB_MAKE_OPAQUE(tk::KinGroupIKInputs)
 
-NB_MODULE(_tesseract_kinematics, m) {
+NB_MODULE(kinematics, m) {
     m.doc() = "tesseract_kinematics Python bindings";
 
     // ========== URParameters ==========

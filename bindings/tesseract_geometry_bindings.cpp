@@ -33,7 +33,7 @@ namespace tc = tesseract_common;
 // Disable type caster for this specific vector type so we can bind it as a class
 NB_MAKE_OPAQUE(std::vector<std::shared_ptr<const tg::Geometry>>);
 
-NB_MODULE(_tesseract_geometry, m) {
+NB_MODULE(geometry, m) {
     m.doc() = "tesseract_geometry Python bindings";
 
     // GeometryType enum

@@ -41,7 +41,7 @@ public:
     }
 };
 
-NB_MODULE(_tesseract_common, m) {
+NB_MODULE(common, m) {
     m.doc() = "tesseract_common Python bindings (nanobind)";
 
     // ========== Eigen Type Aliases ==========

@@ -41,7 +41,6 @@ from tesseract.command_language import (
     WaypointPoly_as_StateWaypointPoly,
 )
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
 )
 from tesseract.motion_planners import assignCurrentStateAsSeed
@@ -313,7 +312,7 @@ class TaskComposer:
             )
 
         factory = TaskComposerPluginFactory(
-            FilesystemPath(str(config_path)),
+            str(config_path),
             locator,
         )
 

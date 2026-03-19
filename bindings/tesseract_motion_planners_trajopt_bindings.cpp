@@ -41,17 +41,17 @@ namespace tp = tesseract_planning;
 namespace tc = tesseract_common;
 namespace tj = trajopt_common;
 
-NB_MODULE(_tesseract_motion_planners_trajopt, m) {
+NB_MODULE(motion_planners_trajopt, m) {
     m.doc() = "tesseract_motion_planners_trajopt Python bindings";
 
     // Import Profile type from tesseract_command_language for cross-module inheritance
-    auto cl_module = nb::module_::import_("tesseract.command_language._tesseract_command_language");
+    auto cl_module = nb::module_::import_("tesseract.command_language");
 
     // Import tesseract_collision for CollisionEvaluatorType (moved there in 0.33)
-    nb::module_::import_("tesseract.collision._tesseract_collision");
+    nb::module_::import_("tesseract.collision");
 
     // Import MotionPlanner base type for clone() return type
-    nb::module_::import_("tesseract.motion_planners._tesseract_motion_planners");
+    nb::module_::import_("tesseract.motion_planners");
 
     // Note: CollisionEvaluatorType is in tesseract_collision module - import from there
 
@@ -75,7 +75,7 @@ NB_MODULE(_tesseract_motion_planners_trajopt, m) {
 
     // ========== TrajOptCollisionConfig ==========
     // Import from trajopt_ifopt to avoid duplicate registration
-    nb::module_::import_("tesseract.trajopt_ifopt._trajopt_ifopt");
+    nb::module_::import_("tesseract.trajopt_ifopt");
 
     // ========== TrajOptMoveProfile (base, was TrajOptPlanProfile) ==========
     nb::class_<tp::TrajOptMoveProfile, tc::Profile>(m, "TrajOptMoveProfile")

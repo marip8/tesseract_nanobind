@@ -21,11 +21,11 @@
 namespace tp = tesseract_planning;
 namespace te = tesseract_environment;
 
-NB_MODULE(_tesseract_motion_planners_simple, m) {
+NB_MODULE(motion_planners_simple, m) {
     m.doc() = "tesseract_motion_planners_simple Python bindings";
 
     // Import MotionPlanner base type for clone() return type
-    nb::module_::import_("tesseract.motion_planners._tesseract_motion_planners");
+    nb::module_::import_("tesseract.motion_planners");
 
     // ========== SimpleMotionPlanner ==========
     // Note: Not binding inheritance from MotionPlanner to avoid cross-module issues

@@ -34,7 +34,7 @@
 namespace tp = tesseract_planning;
 namespace tc = tesseract_common;
 
-NB_MODULE(_tesseract_command_language, m) {
+NB_MODULE(command_language, m) {
     m.doc() = "tesseract_command_language Python bindings";
 
     // ========== JointWaypoint ==========

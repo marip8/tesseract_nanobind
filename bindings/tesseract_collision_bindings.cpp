@@ -34,7 +34,7 @@ namespace tg = tesseract_geometry;
 // Disable type caster for ContactResultVector so we can bind it as a class
 NB_MAKE_OPAQUE(tc::ContactResultVector);
 
-NB_MODULE(_tesseract_collision, m) {
+NB_MODULE(collision, m) {
     m.doc() = "tesseract_collision Python bindings";
 
     // ========== Enums ==========

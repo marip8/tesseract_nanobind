@@ -19,7 +19,6 @@ from tesseract.command_language import (
     ProfileDictionary,
 )
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     ManipulatorInfo,
@@ -72,12 +71,8 @@ def main():
     locator = GeneralResourceLocator()
     abb_irb2400_urdf_package_url = "package://tesseract_support/urdf/abb_irb2400.urdf"
     abb_irb2400_srdf_package_url = "package://tesseract_support/urdf/abb_irb2400.srdf"
-    abb_irb2400_urdf_fname = FilesystemPath(
-        locator.locateResource(abb_irb2400_urdf_package_url).getFilePath()
-    )
-    abb_irb2400_srdf_fname = FilesystemPath(
-        locator.locateResource(abb_irb2400_srdf_package_url).getFilePath()
-    )
+    abb_irb2400_urdf_fname = locator.locateResource(abb_irb2400_urdf_package_url).getFilePath()
+    abb_irb2400_srdf_fname = locator.locateResource(abb_irb2400_srdf_package_url).getFilePath()
 
     t_env = Environment()
     assert t_env.init(abb_irb2400_urdf_fname, abb_irb2400_srdf_fname, locator)

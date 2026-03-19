@@ -11,7 +11,7 @@
 
 namespace tu = tesseract_urdf;
 
-NB_MODULE(_tesseract_urdf, m) {
+NB_MODULE(urdf, m) {
     m.doc() = "tesseract_urdf Python bindings";
 
     // parseURDFString - returns unique_ptr, nanobind handles conversion

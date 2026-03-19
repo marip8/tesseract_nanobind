@@ -16,7 +16,7 @@
 
 namespace ts = tesseract_srdf;
 
-NB_MODULE(_tesseract_srdf, m) {
+NB_MODULE(srdf, m) {
     m.doc() = "tesseract_srdf Python bindings";
 
     // KinematicsInformation

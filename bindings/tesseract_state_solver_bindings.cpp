@@ -25,7 +25,7 @@
 namespace tsg = tesseract_scene_graph;
 namespace tc = tesseract_common;
 
-NB_MODULE(_tesseract_state_solver, m) {
+NB_MODULE(state_solver, m) {
     m.doc() = "tesseract_state_solver Python bindings";
 
     // ========== SceneState ==========

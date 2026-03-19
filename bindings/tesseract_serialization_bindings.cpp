@@ -23,7 +23,7 @@ using namespace tesseract_planning;
 using namespace tesseract_environment;
 using namespace tesseract_scene_graph;
 
-NB_MODULE(_tesseract_serialization, m)
+NB_MODULE(serialization, m)
 {
     m.doc() = "Tesseract serialization bindings (XML/binary via Cereal)";
 

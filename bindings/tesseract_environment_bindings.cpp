@@ -69,9 +69,14 @@ struct PyEventCallbackFn {
     }
 };
 
-NB_MODULE(_tesseract_environment, m) {
-    // Import collision module for DiscreteContactManager/ContinuousContactManager types
-    nb::module_::import_("tesseract.collision._tesseract_collision");
+NB_MODULE(environment, m) {
+    // Import dependent modules for type compatibility
+    nb::module_::import_("tesseract.common");
+    nb::module_::import_("tesseract.kinematics");
+    nb::module_::import_("tesseract.scene_graph");
+    nb::module_::import_("tesseract.srdf");
+    nb::module_::import_("tesseract.collision");
+    
     m.doc() = "tesseract_environment Python bindings";
 
     // ========== Events enum ==========

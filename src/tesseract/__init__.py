@@ -193,3 +193,5 @@ def get_tesseract_support_path() -> Path:
 def get_task_composer_config_path() -> Path:
     """Get path to bundled task composer config file."""
     return Path(__file__).parent / "data" / "task_composer_config" / "task_composer_plugins.yaml"
+
+ensure_configured()

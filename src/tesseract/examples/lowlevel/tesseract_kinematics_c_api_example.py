@@ -105,7 +105,6 @@ Related Examples
 import numpy as np
 
 from tesseract.common import (
-    FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     Quaterniond,
@@ -155,12 +154,8 @@ def main():
         "package://tesseract_support/urdf/abb_irb2400.srdf"
     ).getFilePath()
 
-    # FilesystemPath wraps std::filesystem::path for cross-platform compatibility
-    urdf_path = FilesystemPath(urdf_path_str)
-    srdf_path = FilesystemPath(srdf_path_str)
-
     # init() parses URDF/SRDF and loads configured kinematic plugins
-    assert env.init(urdf_path, srdf_path, locator)
+    assert env.init(urdf_path_str, srdf_path_str, locator)
 
     # ABB IRB2400 joint naming convention: joint_1 through joint_6
     _robot_joint_names = [f"joint_{i + 1}" for i in range(6)]  # noqa: F841

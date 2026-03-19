@@ -79,11 +79,11 @@ public:
     }
 };
 
-NB_MODULE(_trajopt_ifopt, m) {
+NB_MODULE(trajopt_ifopt, m) {
     m.doc() = "trajopt_ifopt Python bindings - variables, constraints, and costs for IFOPT-based trajectory optimization";
 
     // Import tesseract_collision for CollisionCheckConfig type
-    nb::module_::import_("tesseract.collision._tesseract_collision");
+    nb::module_::import_("tesseract.collision");
 
     // ========== BoundsType enum ==========
     nb::enum_<ti::BoundsType>(m, "BoundsType")

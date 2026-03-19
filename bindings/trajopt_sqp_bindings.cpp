@@ -38,11 +38,11 @@ public:
     }
 };
 
-NB_MODULE(_trajopt_sqp, m) {
+NB_MODULE(trajopt_sqp, m) {
     m.doc() = "trajopt_sqp Python bindings - SQP solver for trajectory optimization";
 
     // Import trajopt_ifopt module for cross-module type resolution
-    nb::module_::import_("tesseract.trajopt_ifopt._trajopt_ifopt");
+    nb::module_::import_("tesseract.trajopt_ifopt");
 
     // ========== Enums ==========
 

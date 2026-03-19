@@ -22,7 +22,7 @@ namespace tp = tesseract_planning;
 namespace te = tesseract_environment;
 namespace tc = tesseract_common;
 
-NB_MODULE(_tesseract_motion_planners, m) {
+NB_MODULE(motion_planners, m) {
     m.doc() = "tesseract_motion_planners Python bindings";
 
     // ========== PlannerRequest ==========

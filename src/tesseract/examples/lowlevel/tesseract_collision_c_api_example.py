@@ -98,7 +98,6 @@ from tesseract.collision import (
 )
 from tesseract.common import (
     CollisionMarginData,
-    FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     Translation3d,
@@ -152,13 +151,9 @@ def main():
         "package://tesseract_support/urdf/abb_irb2400.srdf"
     ).getFilePath()
 
-    # FilesystemPath wraps std::filesystem::path for cross-platform compatibility
-    urdf_path = FilesystemPath(urdf_path_str)
-    srdf_path = FilesystemPath(srdf_path_str)
-
     # init() parses URDF/SRDF and loads configured plugins (collision, kinematics)
     # Returns False if parsing fails - always check return value
-    assert env.init(urdf_path, srdf_path, locator)
+    assert env.init(urdf_path_str, srdf_path_str, locator)
 
     # ABB IRB2400 is a 6-axis industrial robot with joints named joint_1..joint_6
     robot_joint_names = [f"joint_{i + 1}" for i in range(6)]

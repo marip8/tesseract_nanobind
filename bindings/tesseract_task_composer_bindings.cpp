@@ -39,11 +39,11 @@ namespace tp = tesseract_planning;
 namespace te = tesseract_environment;
 namespace tc = tesseract_common;
 
-NB_MODULE(_tesseract_task_composer, m) {
+NB_MODULE(task_composer, m) {
     m.doc() = "tesseract_task_composer Python bindings";
 
     // Import tesseract_common module to ensure type hierarchy is available
-    nb::module_::import_("tesseract.common._tesseract_common");
+    nb::module_::import_("tesseract.common");
 
     // ========== TaskComposerKeys ==========
     nb::class_<tp::TaskComposerKeys>(m, "TaskComposerKeys")
@@ -201,7 +201,7 @@ NB_MODULE(_tesseract_task_composer, m) {
     nb::class_<tp::TaskComposerPluginFactory>(m, "TaskComposerPluginFactory")
         .def("__init__", [](tp::TaskComposerPluginFactory* self, const std::string& config_str, nb::handle locator_handle) {
             std::filesystem::path config(config_str);
-            auto common_module = nb::module_::import_("tesseract.common._tesseract_common");
+            auto common_module = nb::module_::import_("tesseract.common");
             auto grl_type = common_module.attr("GeneralResourceLocator");
             if (!nb::isinstance(locator_handle, grl_type)) {
                 throw nb::type_error("locator must be a GeneralResourceLocator");
@@ -230,7 +230,7 @@ NB_MODULE(_tesseract_task_composer, m) {
         std::filesystem::path config(config_str);
 
         // Get the GeneralResourceLocator type from the tesseract_common module
-        auto common_module = nb::module_::import_("tesseract.common._tesseract_common");
+        auto common_module = nb::module_::import_("tesseract.common");
         auto grl_type = common_module.attr("GeneralResourceLocator");
 
         // Check if locator is a GeneralResourceLocator

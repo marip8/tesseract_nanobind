@@ -63,10 +63,10 @@ from tesseract.common import Isometry3d  # noqa: E402
 from tesseract.motion_planners_trajopt import (  # noqa: E402
     ProfileDictionary_addTrajOptCompositeProfile,  # Register composite profile
     ProfileDictionary_addTrajOptPlanProfile,  # Register plan profile
-    TrajOptCollisionConfig,  # Collision checking config (0.33 API)
     TrajOptDefaultCompositeProfile,  # Trajectory-wide settings (collision)
     TrajOptDefaultPlanProfile,  # Per-waypoint settings (constraint/cost)
 )
+from tesseract.trajopt_ifopt import TrajOptCollisionConfig  # noqa: E402
 
 # Low-level scene graph for link manipulation
 from tesseract.scene_graph import Joint, JointType  # noqa: E402

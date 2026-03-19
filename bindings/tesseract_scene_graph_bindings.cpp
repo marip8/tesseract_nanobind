@@ -20,7 +20,7 @@
 namespace tsg = tesseract_scene_graph;
 namespace tg = tesseract_geometry;
 
-NB_MODULE(_tesseract_scene_graph, m) {
+NB_MODULE(scene_graph, m) {
     m.doc() = "tesseract_scene_graph Python bindings";
 
     // ==================== Joint-related classes ====================
