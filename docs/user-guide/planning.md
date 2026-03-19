@@ -1,6 +1,6 @@
 # Motion Planning
 
-tesseract_robotics provides multiple motion planners for different use cases.
+tesseract provides multiple motion planners for different use cases.
 
 ## Planner Comparison
 
@@ -17,7 +17,7 @@ tesseract_robotics provides multiple motion planners for different use cases.
 === "OMPL (Freespace)"
 
     ```python
-    from tesseract_robotics.planning import Robot, Planner
+    from tesseract.planning import Robot, Planner
     import numpy as np
 
     robot = Robot.from_tesseract_support("abb_irb2400")
@@ -36,7 +36,7 @@ tesseract_robotics provides multiple motion planners for different use cases.
 === "TrajOpt (Cartesian)"
 
     ```python
-    from tesseract_robotics.tesseract_common import Isometry3d
+    from tesseract.tesseract_common import Isometry3d
 
     target_pose = Isometry3d.Identity()
     target_pose.translate([0.8, 0.2, 0.5])
@@ -77,7 +77,7 @@ graph LR
 ### OMPL Profiles
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLDefaultPlanProfile
 )
 
@@ -114,11 +114,11 @@ graph TD
 ### TrajOpt Costs and Constraints
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_trajopt import (
+from tesseract.tesseract_motion_planners_trajopt import (
     TrajOptDefaultPlanProfile,
     TrajOptDefaultCompositeProfile,
 )
-from tesseract_robotics.tesseract_collision import CollisionEvaluatorType
+from tesseract.tesseract_collision import CollisionEvaluatorType
 
 # Plan profile (per-waypoint settings)
 plan_profile = TrajOptDefaultPlanProfile()
@@ -138,8 +138,8 @@ composite_profile.smooth_accelerations = True
 ### Collision Configuration (0.33 API)
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_trajopt import TrajOptCollisionConfig
-from tesseract_robotics.tesseract_collision import CollisionEvaluatorType
+from tesseract.tesseract_motion_planners_trajopt import TrajOptCollisionConfig
+from tesseract.tesseract_collision import CollisionEvaluatorType
 
 # TrajOptCollisionConfig constructor: (margin, coeff) or default
 collision_config = TrajOptCollisionConfig(0.025, 20.0)  # margin=2.5cm, coeff=20
@@ -176,10 +176,10 @@ TrajOpt distinguishes between **costs** (soft constraints) and **constraints** (
 ### Example: Collision as Cost vs Constraint
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_trajopt import (
+from tesseract.tesseract_motion_planners_trajopt import (
     TrajOptDefaultCompositeProfile,
 )
-from tesseract_robotics.tesseract_collision import CollisionEvaluatorType
+from tesseract.tesseract_collision import CollisionEvaluatorType
 
 profile = TrajOptDefaultCompositeProfile()
 
@@ -208,7 +208,7 @@ profile.collision_constraint_config.collision_check_config.type = CollisionEvalu
 ### Example: Cartesian Pose as Cost vs Constraint
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_trajopt import TrajOptDefaultPlanProfile
+from tesseract.tesseract_motion_planners_trajopt import TrajOptDefaultPlanProfile
 
 plan_profile = TrajOptDefaultPlanProfile()
 
@@ -268,7 +268,7 @@ Best for:
 - Machining toolpaths
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_descartes import (
+from tesseract.tesseract_motion_planners_descartes import (
     DescartesDefaultPlanProfile
 )
 
@@ -283,7 +283,7 @@ profile.num_threads = 4  # Parallel IK solving
 Any collision-free path between configurations:
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     MoveInstruction, MoveInstructionType
 )
 
@@ -318,7 +318,7 @@ move = MoveInstruction(waypoint, MoveInstructionType.CIRCULAR, "DEFAULT")
 Complex motions are defined as programs:
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CompositeInstruction, MoveInstruction,
     StateWaypointPoly, CartesianWaypointPoly
 )

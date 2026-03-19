@@ -7,7 +7,7 @@ Motion planning examples from simple freespace to complex industrial tasks.
 Basic OMPL planning between joint configurations:
 
 ```python title="freespace_ompl_example.py"
-from tesseract_robotics.planning import Robot, Planner
+from tesseract.planning import Robot, Planner
 import numpy as np
 
 # Load robot
@@ -35,8 +35,8 @@ else:
 Cartesian straight-line motion with TrajOpt:
 
 ```python title="basic_cartesian_example.py"
-from tesseract_robotics.planning import Robot, Planner
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.planning import Robot, Planner
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -76,8 +76,8 @@ if trajectory:
 Keep end-effector orientation constrained (e.g., carrying a glass of water):
 
 ```python title="glass_upright_example.py"
-from tesseract_robotics.planning import Robot, Composer
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.planning import Robot, Composer
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -121,11 +121,11 @@ if result.success:
 Complete pick and place workflow with object attachment:
 
 ```python title="pick_and_place_example.py"
-from tesseract_robotics.planning import Robot, Composer
-from tesseract_robotics.tesseract_geometry import Box
-from tesseract_robotics.tesseract_scene_graph import Link, Joint, JointType, Visual, Collision
-from tesseract_robotics.tesseract_environment import AddLinkCommand, RemoveLinkCommand
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.planning import Robot, Composer
+from tesseract.tesseract_geometry import Box
+from tesseract.tesseract_scene_graph import Link, Joint, JointType, Visual, Collision
+from tesseract.tesseract_environment import AddLinkCommand, RemoveLinkCommand
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -207,8 +207,8 @@ if pick_result.success:
 Industrial raster pattern for welding/painting:
 
 ```python title="raster_example.py"
-from tesseract_robotics.planning import Robot, Composer
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.planning import Robot, Composer
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -263,7 +263,7 @@ if result.success:
 Use OMPL for exploration, TrajOpt for smoothing:
 
 ```python title="freespace_hybrid_example.py"
-from tesseract_robotics.planning import Robot, Planner
+from tesseract.planning import Robot, Planner
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -305,7 +305,7 @@ if ompl_trajectory:
 Complex sequence using full Task Composer pipeline:
 
 ```python title="car_seat_example.py"
-from tesseract_robotics.planning import Robot, Composer
+from tesseract.planning import Robot, Composer
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -341,7 +341,7 @@ if result.success:
 All examples can be visualized:
 
 ```python
-from tesseract_robotics.viewer import TesseractViewer
+from tesseract.viewer import TesseractViewer
 
 viewer = TesseractViewer()
 viewer.update_environment(robot.env, [0, 0, 0])

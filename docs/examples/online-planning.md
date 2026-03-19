@@ -37,14 +37,14 @@ Real-time replanning at 73 Hz with discrete collision:
 ```python title="online_planning_sqp_example.py"
 import numpy as np
 import time
-from tesseract_robotics.planning import Robot
-from tesseract_robotics.ifopt import Bounds
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.planning import Robot
+from tesseract.ifopt import Bounds
+from tesseract.trajopt_ifopt import (
     JointPosition, CartPosConstraint, CartPosInfo, CartPosInfoType,
     TrajOptCollisionConfig, CollisionCache, SingleTimestepCollisionEvaluator,
     DiscreteCollisionConstraint, interpolate
 )
-from tesseract_robotics.trajopt_sqp import (
+from tesseract.trajopt_sqp import (
     TrustRegionSQPSolver, OSQPEigenSolver, IfoptQPProblem, SQPStatus
 )
 
@@ -274,7 +274,7 @@ for i in range(n_steps):
 For higher precision (5-10 Hz):
 
 ```python
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.trajopt_ifopt import (
     LVSDiscreteCollisionEvaluator, ContinuousCollisionConstraint
 )
 
@@ -300,7 +300,7 @@ for i in range(n_steps - 1):
 Animate trajectory in viewer:
 
 ```python
-from tesseract_robotics.viewer import TesseractViewer
+from tesseract.viewer import TesseractViewer
 
 viewer = TesseractViewer()
 viewer.update_environment(robot.env, [0, 0, 0])
@@ -323,7 +323,7 @@ viewer.start_serve_background()
 For slower updates (1-5 Hz), use Task Composer:
 
 ```python title="online_planning_example.py"
-from tesseract_robotics.planning import Robot, Composer
+from tesseract.planning import Robot, Composer
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")

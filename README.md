@@ -31,7 +31,7 @@ pip install tesseract-robotics-nanobind
 ## Quick Start
 
 ```python
-from tesseract_robotics.planning import (
+from tesseract.planning import (
     Robot, MotionProgram, JointTarget, CartesianTarget,
     Pose, box, create_obstacle, TaskComposer,
 )
@@ -66,8 +66,8 @@ if result.successful:
 For direct C++ API access:
 
 ```python
-from tesseract_robotics.tesseract_environment import Environment
-from tesseract_robotics.tesseract_common import GeneralResourceLocator
+from tesseract.tesseract_environment import Environment
+from tesseract.tesseract_common import GeneralResourceLocator
 
 env = Environment()
 locator = GeneralResourceLocator()
@@ -148,7 +148,7 @@ This runs ruff + auto-staging on commit, and pyright + pytest on push (configure
 ```
 ├── pyproject.toml            # package config + pixi workspace
 ├── CMakeLists.txt            # nanobind build
-├── src/tesseract_robotics/   # Python package + C++ extension modules
+├── src/tesseract/   # Python package + C++ extension modules
 ├── tests/                    # pytest suite
 ├── examples/                 # usage examples
 ├── ws/                       # C++ workspace (colcon src/ + install/)

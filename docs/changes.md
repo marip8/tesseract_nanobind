@@ -14,16 +14,16 @@
 
 ### `ifopt` module removed
 
-The standalone `tesseract_robotics.ifopt` module no longer exists. All types moved into `tesseract_robotics.trajopt_ifopt`.
+The standalone `tesseract.ifopt` module no longer exists. All types moved into `tesseract.trajopt_ifopt`.
 
 ```python
 # 0.33
-from tesseract_robotics import ifopt
+from tesseract import ifopt
 bounds = ifopt.Bounds(-1.0, 1.0)
 problem = ifopt.Problem()
 
 # 0.34
-from tesseract_robotics import trajopt_ifopt as ti
+from tesseract import trajopt_ifopt as ti
 bounds = ti.Bounds(-1.0, 1.0)
 # Problem is now IfoptProblem (see below)
 ```
@@ -40,7 +40,7 @@ Use the `createNodesVariables` factory to build the full hierarchy in one call:
 
 ```python
 # 0.33
-from tesseract_robotics import ifopt
+from tesseract import ifopt
 vars_list = []
 for i, state in enumerate(initial_states):
     var = ti.JointPosition(state, joint_names, f"Joint_{i}")
@@ -194,7 +194,7 @@ solver.stepSQPSolver()
 
 ## Migration Checklist
 
-- [ ] Replace `from tesseract_robotics import ifopt` → `from tesseract_robotics import trajopt_ifopt`
+- [ ] Replace `from tesseract import ifopt` → `from tesseract import trajopt_ifopt`
 - [ ] Replace `JointPosition` with `createNodesVariables` factory + `Var` refs
 - [ ] Replace `IfoptQPProblem()` → `IfoptProblem(nodes_variables)` + `IfoptQPProblem(nlp)`
 - [ ] Replace `CartPosInfo` struct with direct `CartPosConstraint` parameters

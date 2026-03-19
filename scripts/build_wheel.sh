@@ -86,17 +86,17 @@ PLUGINS=(
 
 for plugin in "${PLUGINS[@]}"; do
     if [[ -f "$PROJECT_ROOT/ws/install/lib/$plugin" ]]; then
-        cp "$PROJECT_ROOT/ws/install/lib/$plugin" "$WHEEL_DIR/tesseract_robotics/.dylibs/"
+        cp "$PROJECT_ROOT/ws/install/lib/$plugin" "$WHEEL_DIR/tesseract/.dylibs/"
         echo "  Added: $plugin"
     fi
 done
 
 echo "Fixing plugin rpaths..."
-delocate-path "$WHEEL_DIR/tesseract_robotics/.dylibs" -L "$PROJECT_ROOT/ws/install/lib:$CONDA_PREFIX/lib"
+delocate-path "$WHEEL_DIR/tesseract/.dylibs" -L "$PROJECT_ROOT/ws/install/lib:$CONDA_PREFIX/lib"
 
 # Patch task_composer_config YAMLs (resolved at runtime by __init__.py)
 echo "Patching task composer configs..."
-for yaml_file in "$WHEEL_DIR/tesseract_robotics/data/task_composer_config"/*.yaml; do
+for yaml_file in "$WHEEL_DIR/tesseract/data/task_composer_config"/*.yaml; do
     if [[ -f "$yaml_file" ]] && grep -q '/usr/local/lib' "$yaml_file"; then
         sed -i '' 's|/usr/local/lib|"@PLUGIN_PATH@"|g' "$yaml_file"
         echo "  Patched: $(basename $yaml_file)"
@@ -105,7 +105,7 @@ done
 
 # Remove search_paths from robot YAMLs (forces use of env vars set by __init__.py)
 echo "Removing hardcoded search_paths from robot YAMLs..."
-find "$WHEEL_DIR/tesseract_robotics/data/tesseract_support" -name "*.yaml" -type f | while read yaml_file; do
+find "$WHEEL_DIR/tesseract/data/tesseract_support" -name "*.yaml" -type f | while read yaml_file; do
     if grep -q 'search_paths:' "$yaml_file"; then
         # Remove search_paths: line and following lines with - /path
         sed -i '' '/search_paths:/d; /^[[:space:]]*- \/.*$/d' "$yaml_file"

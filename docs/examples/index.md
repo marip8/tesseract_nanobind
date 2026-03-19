@@ -1,6 +1,6 @@
 # Examples
 
-Learn tesseract_robotics through working examples.
+Learn tesseract through working examples.
 
 ## Example Categories
 
@@ -89,11 +89,11 @@ python examples/freespace_ompl_example.py
 Most examples require:
 
 ```python
-# tesseract_robotics installed
-import tesseract_robotics
+# tesseract installed
+import tesseract
 
 # For visualization
-from tesseract_robotics.viewer import TesseractViewer
+from tesseract.viewer import TesseractViewer
 ```
 
 Install the viewer:
@@ -107,7 +107,7 @@ pip install tesseract-robotics-nanobind
 Most examples include visualization:
 
 ```python
-from tesseract_robotics.viewer import TesseractViewer
+from tesseract.viewer import TesseractViewer
 
 viewer = TesseractViewer()
 viewer.update_environment(robot.env, [0, 0, 0])

@@ -37,22 +37,22 @@ Three modules provide the SQP functionality:
 
 | Module | Purpose |
 |--------|---------|
-| `tesseract_robotics.ifopt` | Base optimization classes (Bounds, VariableSet, ConstraintSet) |
-| `tesseract_robotics.trajopt_ifopt` | Robotics-specific constraints (collision, Cartesian, joint limits) |
-| `tesseract_robotics.trajopt_sqp` | SQP solver (TrustRegionSQPSolver, OSQPEigenSolver) |
+| `tesseract.ifopt` | Base optimization classes (Bounds, VariableSet, ConstraintSet) |
+| `tesseract.trajopt_ifopt` | Robotics-specific constraints (collision, Cartesian, joint limits) |
+| `tesseract.trajopt_sqp` | SQP solver (TrustRegionSQPSolver, OSQPEigenSolver) |
 
 ## Basic Example
 
 ```python
 import numpy as np
-from tesseract_robotics.planning import Robot
-from tesseract_robotics.ifopt import Bounds
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.planning import Robot
+from tesseract.ifopt import Bounds
+from tesseract.trajopt_ifopt import (
     JointPosition, CartPosConstraint, CartPosInfo, CartPosInfoType,
     TrajOptCollisionConfig, CollisionCache, SingleTimestepCollisionEvaluator,
     DiscreteCollisionConstraint
 )
-from tesseract_robotics.trajopt_sqp import (
+from tesseract.trajopt_sqp import (
     TrustRegionSQPSolver, OSQPEigenSolver, IfoptQPProblem,
     SQPParameters, CostPenaltyType
 )
@@ -117,8 +117,8 @@ trajectory = np.array([var.GetValues() for var in variables])
 Represents joint values at a single timestep:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import JointPosition
-from tesseract_robotics.ifopt import Bounds
+from tesseract.trajopt_ifopt import JointPosition
+from tesseract.ifopt import Bounds
 
 # Create variable
 var = JointPosition(
@@ -141,7 +141,7 @@ var.SetVariables(new_values)
 Define variable limits:
 
 ```python
-from tesseract_robotics.ifopt import Bounds
+from tesseract.ifopt import Bounds
 
 # Position bound
 pos_bound = Bounds(-3.14, 3.14)
@@ -160,7 +160,7 @@ negative = Bounds.BoundSmallerZero()  # (-inf, 0)
 Constrain end-effector pose:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.trajopt_ifopt import (
     CartPosConstraint, CartPosInfo, CartPosInfoType
 )
 
@@ -189,7 +189,7 @@ CartPosInfoType options:
 Limit joint positions:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import JointPosConstraint
+from tesseract.trajopt_ifopt import JointPosConstraint
 
 constraint = JointPosConstraint(
     joint_var,
@@ -204,7 +204,7 @@ constraint = JointPosConstraint(
 Limit joint velocities between timesteps:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import JointVelConstraint
+from tesseract.trajopt_ifopt import JointVelConstraint
 
 constraint = JointVelConstraint(
     var_prev, var_next,  # Adjacent timesteps
@@ -218,7 +218,7 @@ constraint = JointVelConstraint(
 Limit joint accelerations:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import JointAccelConstraint
+from tesseract.trajopt_ifopt import JointAccelConstraint
 
 constraint = JointAccelConstraint(
     var_prev, var_curr, var_next,  # Three consecutive timesteps
@@ -232,7 +232,7 @@ constraint = JointAccelConstraint(
 Avoid collisions at a single timestep:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.trajopt_ifopt import (
     TrajOptCollisionConfig, CollisionCache,
     SingleTimestepCollisionEvaluator, DiscreteCollisionConstraint
 )
@@ -260,7 +260,7 @@ qp_problem.addConstraintSet(collision_constraint)
 Avoid collisions between consecutive timesteps:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import (
+from tesseract.trajopt_ifopt import (
     LVSDiscreteCollisionEvaluator, ContinuousCollisionConstraint
 )
 
@@ -285,7 +285,7 @@ constraint = ContinuousCollisionConstraint(
 ### SQPParameters
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPParameters, CostPenaltyType
+from tesseract.trajopt_sqp import SQPParameters, CostPenaltyType
 
 params = SQPParameters()
 
@@ -377,7 +377,7 @@ def plan_step(current_joints, target_pose, obstacle_pose):
 ### SQPStatus
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPStatus
+from tesseract.trajopt_sqp import SQPStatus
 
 status = solver.solve(qp_problem)
 
@@ -404,7 +404,7 @@ print(f"Best variables: {results.best_var_vals}")
 Monitor optimization progress:
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPCallback
+from tesseract.trajopt_sqp import SQPCallback
 
 class MyCallback(SQPCallback):
     def __call__(self, iteration, cost, constraint_violation):
@@ -419,8 +419,8 @@ solver.registerCallback(MyCallback())
 Add velocity smoothing as a cost:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import JointVelConstraint
-from tesseract_robotics.ifopt import Bounds
+from tesseract.trajopt_ifopt import JointVelConstraint
+from tesseract.ifopt import Bounds
 
 # Create "constraint" with slack (acts as cost)
 for i in range(n_steps - 1):

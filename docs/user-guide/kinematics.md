@@ -1,6 +1,6 @@
 # Kinematics
 
-tesseract_robotics provides forward and inverse kinematics through kinematic groups defined in the SRDF.
+tesseract provides forward and inverse kinematics through kinematic groups defined in the SRDF.
 
 ## Kinematic Groups
 
@@ -16,7 +16,7 @@ A kinematic group defines a chain of joints for FK/IK calculations:
 ### Getting a Kinematic Group
 
 ```python
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 
 robot = Robot.from_tesseract_support("abb_irb2400")
 manip = robot.env.getKinematicGroup("manipulator")
@@ -60,7 +60,7 @@ Compute end-effector pose from joint values:
 ### Transform Operations
 
 ```python
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 # Create identity transform
@@ -196,7 +196,7 @@ def is_near_singularity(jacobian, threshold=0.01):
 Define tool center point (TCP) offsets:
 
 ```python
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_common import Isometry3d
 
 # Tool offset (e.g., gripper extends 15cm from flange)
 tool_offset = Isometry3d.Identity()

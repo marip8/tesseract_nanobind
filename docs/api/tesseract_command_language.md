@@ -1,4 +1,4 @@
-# tesseract_robotics.tesseract_command_language
+# tesseract.tesseract_command_language
 
 Motion program instructions and waypoints.
 
@@ -22,7 +22,7 @@ CompositeInstruction (program)
 Joint-space target (specific joint values).
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     StateWaypoint, StateWaypointPoly, StateWaypointPoly_wrap_StateWaypoint
 )
 import numpy as np
@@ -46,10 +46,10 @@ print(f"Position: {wp.getPosition()}")
 Cartesian-space target (pose).
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CartesianWaypoint, CartesianWaypointPoly, CartesianWaypointPoly_wrap_CartesianWaypoint
 )
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_common import Isometry3d
 
 # Create target pose
 pose = Isometry3d.Identity()
@@ -71,7 +71,7 @@ wp_poly = CartesianWaypointPoly_wrap_CartesianWaypoint(wp)
 Named joint positions (subset of joints).
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     JointWaypoint, JointWaypointPoly, JointWaypointPoly_wrap_JointWaypoint
 )
 
@@ -89,7 +89,7 @@ wp_poly = JointWaypointPoly_wrap_JointWaypoint(wp)
 Single motion command.
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     MoveInstruction, MoveInstructionPoly, MoveInstructionPoly_wrap_MoveInstruction,
     MoveInstructionType
 )
@@ -122,7 +122,7 @@ waypoint = instr.getWaypoint()
 Container for multiple instructions.
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CompositeInstruction, CompositeInstructionOrder
 )
 
@@ -130,7 +130,7 @@ from tesseract_robotics.tesseract_command_language import (
 program = CompositeInstruction("DEFAULT")
 
 # Set manipulator info
-from tesseract_robotics.tesseract_common import ManipulatorInfo
+from tesseract.tesseract_common import ManipulatorInfo
 manip_info = ManipulatorInfo()
 manip_info.manipulator = "manipulator"
 manip_info.tcp_frame = "tool0"
@@ -161,14 +161,14 @@ for i in range(len(program)):
 Container for planner profiles.
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     ProfileDictionary, ProfileDictionary_addProfile
 )
 
 profiles = ProfileDictionary()
 
 # Add profiles (type-specific functions)
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     ProfileDictionary_addOMPLProfile
 )
 ProfileDictionary_addOMPLProfile(profiles, "DEFAULT", ompl_profile)
@@ -212,13 +212,13 @@ AnyPoly_as_CompositeInstruction(any_poly)
 ## Complete Example
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     StateWaypoint, StateWaypointPoly_wrap_StateWaypoint,
     CartesianWaypoint, CartesianWaypointPoly_wrap_CartesianWaypoint,
     MoveInstruction, MoveInstructionType,
     CompositeInstruction,
 )
-from tesseract_robotics.tesseract_common import ManipulatorInfo, Isometry3d
+from tesseract.tesseract_common import ManipulatorInfo, Isometry3d
 import numpy as np
 
 # Setup
@@ -256,7 +256,7 @@ program.appendMoveInstruction(goal_instr)
 
 ## Auto-generated API Reference
 
-::: tesseract_robotics.tesseract_command_language._tesseract_command_language
+::: tesseract.tesseract_command_language._tesseract_command_language
     options:
       show_root_heading: false
       show_source: false

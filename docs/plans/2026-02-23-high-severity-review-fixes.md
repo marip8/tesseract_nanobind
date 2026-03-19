@@ -54,7 +54,7 @@ Combines OMPL profiles + TrajOptIfopt profiles (same pattern as `create_freespac
 
 `_resolve_config_paths()` writes to `Path(__file__).parent / ".cache"` inside the installed package. Fails on read-only installs.
 
-**Fix:** Write to `tempfile.gettempdir() / "tesseract_robotics"` instead. Same hash-based naming for invalidation.
+**Fix:** Write to `tempfile.gettempdir() / "tesseract"` instead. Same hash-based naming for invalidation.
 
 **Files:** `__init__.py`
 
@@ -65,7 +65,7 @@ cache_dir = Path(__file__).parent / ".cache"
 
 ### After
 ```python
-cache_dir = Path(tempfile.gettempdir()) / "tesseract_robotics"
+cache_dir = Path(tempfile.gettempdir()) / "tesseract"
 ```
 
 ## H4: Fix broken error diagnostics

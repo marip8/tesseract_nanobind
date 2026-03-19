@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CartesianWaypoint,
     CartesianWaypointPoly_wrap_CartesianWaypoint,
     CompositeInstruction,
@@ -16,7 +16,7 @@ from tesseract_robotics.tesseract_command_language import (
     ProfileDictionary,
     WaypointPoly_as_StateWaypointPoly,
 )
-from tesseract_robotics.tesseract_common import (
+from tesseract.tesseract_common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
@@ -24,14 +24,14 @@ from tesseract_robotics.tesseract_common import (
     Quaterniond,
     Translation3d,
 )
-from tesseract_robotics.tesseract_environment import Environment
-from tesseract_robotics.tesseract_motion_planners import PlannerRequest
-from tesseract_robotics.tesseract_motion_planners_simple import generateInterpolatedProgram
+from tesseract.tesseract_environment import Environment
+from tesseract.tesseract_motion_planners import PlannerRequest
+from tesseract.tesseract_motion_planners_simple import generateInterpolatedProgram
 
 # TrajOpt imports - skip tests if not available
 try:
-    from tesseract_robotics.tesseract_collision import CollisionEvaluatorType
-    from tesseract_robotics.tesseract_motion_planners_trajopt import (
+    from tesseract.tesseract_collision import CollisionEvaluatorType
+    from tesseract.tesseract_motion_planners_trajopt import (
         ProfileDictionary_addTrajOptCompositeProfile,
         ProfileDictionary_addTrajOptPlanProfile,
         TrajOptCollisionConfig,

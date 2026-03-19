@@ -1,10 +1,10 @@
-# tesseract_robotics
+# tesseract
 
 Python bindings for the Tesseract Motion Planning Framework.
 
 ## Overview
 
-**tesseract_robotics** provides Python bindings for [Tesseract](https://github.com/tesseract-robotics/tesseract), an industrial-grade motion planning framework. It enables:
+**tesseract** provides Python bindings for [Tesseract](https://github.com/tesseract-robotics/tesseract), an industrial-grade motion planning framework. It enables:
 
 - **Robot modeling** from URDF/SRDF files
 - **Collision detection** using FCL and Bullet
@@ -50,7 +50,7 @@ graph TB
 ## Quick Example
 
 ```python
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 import numpy as np
 
 # Load robot from URDF

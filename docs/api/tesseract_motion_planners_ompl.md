@@ -1,4 +1,4 @@
-# tesseract_robotics.tesseract_motion_planners_ompl
+# tesseract.tesseract_motion_planners_ompl
 
 OMPL (Open Motion Planning Library) planner bindings.
 
@@ -8,7 +8,7 @@ OMPL provides sampling-based planners for complex environments where
 optimization-based planners may get stuck in local minima.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLMotionPlanner,
     OMPLPlanProfile, OMPLRealVectorPlanProfile,
     RRTConnectConfigurator, RRTstarConfigurator, SBLConfigurator,
@@ -21,8 +21,8 @@ from tesseract_robotics.tesseract_motion_planners_ompl import (
 The OMPL motion planner.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import OMPLMotionPlanner
-from tesseract_robotics.tesseract_motion_planners import PlannerRequest
+from tesseract.tesseract_motion_planners_ompl import OMPLMotionPlanner
+from tesseract.tesseract_motion_planners import PlannerRequest
 
 planner = OMPLMotionPlanner()
 
@@ -41,7 +41,7 @@ response = planner.solve(request)
 Configure OMPL planning behavior.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import OMPLRealVectorPlanProfile
+from tesseract.tesseract_motion_planners_ompl import OMPLRealVectorPlanProfile
 
 profile = OMPLRealVectorPlanProfile()
 
@@ -72,7 +72,7 @@ profile.planners = [RRTConnectConfigurator()]
 Rapidly-exploring Random Tree Connect - fast, bidirectional.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import RRTConnectConfigurator
+from tesseract.tesseract_motion_planners_ompl import RRTConnectConfigurator
 
 config = RRTConnectConfigurator()
 config.range = 0.0  # 0 = auto
@@ -85,7 +85,7 @@ profile.planners = [config]
 RRT* - asymptotically optimal.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import RRTstarConfigurator
+from tesseract.tesseract_motion_planners_ompl import RRTstarConfigurator
 
 config = RRTstarConfigurator()
 config.range = 0.0
@@ -99,7 +99,7 @@ profile.planners = [config]
 Single-query Bidirectional Lazy PRM.
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import SBLConfigurator
+from tesseract.tesseract_motion_planners_ompl import SBLConfigurator
 
 config = SBLConfigurator()
 config.range = 0.0
@@ -126,8 +126,8 @@ Available OMPL planners:
 ## Adding Profiles
 
 ```python
-from tesseract_robotics.tesseract_command_language import ProfileDictionary
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_command_language import ProfileDictionary
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLRealVectorPlanProfile, ProfileDictionary_addOMPLProfile,
     RRTConnectConfigurator
 )
@@ -148,12 +148,12 @@ request.profiles = profiles
 ## Complete Example
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLMotionPlanner, OMPLRealVectorPlanProfile,
     RRTConnectConfigurator, ProfileDictionary_addOMPLProfile
 )
-from tesseract_robotics.tesseract_motion_planners import PlannerRequest
-from tesseract_robotics.tesseract_command_language import ProfileDictionary
+from tesseract.tesseract_motion_planners import PlannerRequest
+from tesseract.tesseract_command_language import ProfileDictionary
 
 # Configure OMPL profile
 profile = OMPLRealVectorPlanProfile()
@@ -191,7 +191,7 @@ else:
 
 ## Auto-generated API Reference
 
-::: tesseract_robotics.tesseract_motion_planners_ompl._tesseract_motion_planners_ompl
+::: tesseract.tesseract_motion_planners_ompl._tesseract_motion_planners_ompl
     options:
       show_root_heading: false
       show_source: false

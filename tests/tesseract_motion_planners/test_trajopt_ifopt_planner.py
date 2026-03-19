@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CompositeInstruction,
     JointWaypoint,
     JointWaypointPoly_wrap_JointWaypoint,
@@ -12,15 +12,15 @@ from tesseract_robotics.tesseract_command_language import (
     MoveInstructionType_FREESPACE,
     ProfileDictionary,
 )
-from tesseract_robotics.tesseract_common import (
+from tesseract.tesseract_common import (
     FilesystemPath,
     GeneralResourceLocator,
     ManipulatorInfo,
 )
-from tesseract_robotics.tesseract_environment import Environment
-from tesseract_robotics.tesseract_motion_planners import PlannerRequest
-from tesseract_robotics.tesseract_motion_planners_simple import generateInterpolatedProgram
-from tesseract_robotics.tesseract_motion_planners_trajopt_ifopt import (
+from tesseract.tesseract_environment import Environment
+from tesseract.tesseract_motion_planners import PlannerRequest
+from tesseract.tesseract_motion_planners_simple import generateInterpolatedProgram
+from tesseract.tesseract_motion_planners_trajopt_ifopt import (
     ProfileDictionary_addTrajOptIfoptCompositeProfile,
     ProfileDictionary_addTrajOptIfoptPlanProfile,
     ProfileDictionary_addTrajOptIfoptSolverProfile,

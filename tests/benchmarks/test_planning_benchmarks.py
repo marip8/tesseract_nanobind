@@ -12,7 +12,7 @@ import pytest
 # Skip if benchmark not installed
 pytest.importorskip("pytest_benchmark")
 
-from tesseract_robotics.examples import (
+from tesseract.examples import (
     freespace_ompl_example,
     pick_and_place_example,
     glass_upright_example,

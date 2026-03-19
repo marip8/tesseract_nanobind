@@ -22,7 +22,7 @@ graph TD
 === "High-Level API"
 
     ```python
-    from tesseract_robotics.planning import Robot, Composer
+    from tesseract.planning import Robot, Composer
     import numpy as np
 
     robot = Robot.from_tesseract_support("abb_irb2400")
@@ -49,7 +49,7 @@ graph TD
 === "Low-Level API"
 
     ```python
-    from tesseract_robotics.tesseract_task_composer import (
+    from tesseract.tesseract_task_composer import (
         TaskComposerPluginFactory,
         TaskComposerDataStorage,
         TaskComposerContext,
@@ -103,7 +103,7 @@ DescartesTask → TrajOptTask → TimeParam → ContactCheck
 ```
 
 ```python
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_common import Isometry3d
 
 target_pose = Isometry3d.Identity()
 target_pose.translate([0.8, 0.2, 0.5])
@@ -147,10 +147,10 @@ composer.add_raster(
 Profiles configure each task's behavior:
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLDefaultPlanProfile
 )
-from tesseract_robotics.tesseract_motion_planners_trajopt import (
+from tesseract.tesseract_motion_planners_trajopt import (
     TrajOptDefaultPlanProfile,
     TrajOptDefaultCompositeProfile
 )
@@ -245,7 +245,7 @@ task_composer_plugins:
 Complete pick-and-place with Task Composer:
 
 ```python
-from tesseract_robotics.planning import Robot, Composer
+from tesseract.planning import Robot, Composer
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -274,7 +274,7 @@ result = composer.plan()
 
 if result.success:
     # Visualize
-    from tesseract_robotics.viewer import TesseractViewer
+    from tesseract.viewer import TesseractViewer
     viewer = TesseractViewer()
     viewer.update_environment(robot.env, [0, 0, 0])
     viewer.update_trajectory(result.raw_results)
@@ -295,7 +295,7 @@ if result.success:
 **Use `warmup()` for interactive applications:**
 
 ```python
-from tesseract_robotics.planning import TaskComposer
+from tesseract.planning import TaskComposer
 
 # Option 1: Explicit warmup (recommended for timing visibility)
 composer = TaskComposer.from_config()

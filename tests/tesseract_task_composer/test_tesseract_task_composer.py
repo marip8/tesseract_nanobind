@@ -3,9 +3,9 @@
 import gc
 import os
 
-import tesseract_robotics
-from tesseract_robotics.tesseract_common import FilesystemPath, GeneralResourceLocator
-from tesseract_robotics.tesseract_task_composer import TaskComposerPluginFactory
+import tesseract
+from tesseract.tesseract_common import FilesystemPath, GeneralResourceLocator
+from tesseract.tesseract_task_composer import TaskComposerPluginFactory
 
 
 class TestTaskComposerPluginFactory:
@@ -25,7 +25,7 @@ class TestTaskComposerPluginFactory:
 
         # 2. Try package bundled config (installed wheels)
         if not config_file:
-            pkg_config = tesseract_robotics.get_task_composer_config_path()
+            pkg_config = tesseract.get_task_composer_config_path()
             if pkg_config.is_file():
                 config_file = str(pkg_config)
 
@@ -119,7 +119,7 @@ class TestTaskComposerPluginFactory:
         # Get config file (same fallback logic as test_create_factory_and_nodes)
         config_file = os.environ.get("TESSERACT_TASK_COMPOSER_CONFIG_FILE")
         if not config_file or not Path(config_file).is_file():
-            pkg_config = tesseract_robotics.get_task_composer_config_path()
+            pkg_config = tesseract.get_task_composer_config_path()
             if pkg_config.is_file():
                 config_file = str(pkg_config)
 

@@ -16,7 +16,7 @@ pixi task list
 | `build-cpp` | C++ only | Fetches sources via vcstool, builds 28 packages with colcon |
 | `install` | Install bindings | Editable pip install (depends on `build-cpp`) |
 | `test` | Run tests | pytest with xdist parallel (depends on `install`) |
-| `typecheck` | Type check | pyright on `src/tesseract_robotics/` |
+| `typecheck` | Type check | pyright on `src/tesseract/` |
 | `lint` | Lint | ruff check |
 | `fmt` | Format | ruff format |
 | `docs` | Live docs | mkdocs serve with auto-reload |
@@ -42,7 +42,7 @@ pixi run python examples/freespace_ompl_example.py
 
 # Interactive shell (all env vars set)
 pixi shell
-python -c "from tesseract_robotics.planning import Robot; print('ok')"
+python -c "from tesseract.planning import Robot; print('ok')"
 ```
 
 ### Rebuild After C++ Changes
@@ -151,7 +151,7 @@ graph TD
     end
 
     subgraph "Python API"
-        I[tesseract_robotics.planning]
+        I[tesseract.planning]
         J[Robot, Planner, Composer]
     end
 
@@ -175,7 +175,7 @@ tesseract_nanobind/
 ├── CMakeLists.txt             # nanobind module build
 ├── dependencies.rosinstall    # C++ source versions (vcstool)
 ├── src/
-│   ├── tesseract_robotics/    # Python package
+│   ├── tesseract/    # Python package
 │   │   ├── planning/          # High-level API (pure Python)
 │   │   ├── viewer/            # 3D visualization
 │   │   ├── trajopt_ifopt/     # Low-level optimization
@@ -203,7 +203,7 @@ nanobind maintains separate type registries per module. When a function returns 
 ```cpp
 NB_MODULE(_my_module, m) {
     // Import module that defines the type BEFORE using it
-    nb::module_::import_("tesseract_robotics.tesseract_collision._tesseract_collision");
+    nb::module_::import_("tesseract.tesseract_collision._tesseract_collision");
 
     // Now can return DiscreteContactManager from functions
     .def("getContactManager", [...] { return self.getDiscreteContactManager(); })
@@ -246,7 +246,7 @@ After modifying C++ bindings, regenerate `.pyi` stubs:
 bash scripts/generate_stubs.sh
 ```
 
-This introspects all 20 nanobind modules and writes stubs to `src/tesseract_robotics/<module>/`. Stubs are committed to the repo for IDE support and type checking.
+This introspects all 20 nanobind modules and writes stubs to `src/tesseract/<module>/`. Stubs are committed to the repo for IDE support and type checking.
 
 ---
 

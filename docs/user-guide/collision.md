@@ -1,13 +1,13 @@
 # Collision Detection
 
-tesseract_robotics provides discrete and continuous collision checking using FCL and Bullet backends.
+tesseract provides discrete and continuous collision checking using FCL and Bullet backends.
 
 ## Quick Collision Check
 
 === "High-Level API"
 
     ```python
-    from tesseract_robotics.planning import Robot
+    from tesseract.planning import Robot
     import numpy as np
 
     robot = Robot.from_tesseract_support("abb_irb2400")
@@ -60,7 +60,7 @@ graph LR
 ## Discrete Collision Checking
 
 ```python
-from tesseract_robotics.tesseract_collision import (
+from tesseract.tesseract_collision import (
     DiscreteContactManager,
     ContactRequest,
     ContactTestType
@@ -93,7 +93,7 @@ for key, results in contacts.items():
 Check for collisions along a motion segment:
 
 ```python
-from tesseract_robotics.tesseract_collision import ContinuousContactManager
+from tesseract.tesseract_collision import ContinuousContactManager
 
 # Get continuous manager
 manager = env.getContinuousContactManager()
@@ -128,8 +128,8 @@ graph LR
 Used in TrajOpt for efficient continuous collision approximation:
 
 ```python
-from tesseract_robotics.trajopt_ifopt import TrajOptCollisionConfig
-from tesseract_robotics.tesseract_collision import CollisionEvaluatorType
+from tesseract.trajopt_ifopt import TrajOptCollisionConfig
+from tesseract.tesseract_collision import CollisionEvaluatorType
 
 # 0.33 API: TrajOptCollisionConfig(margin, coeff) constructor
 config = TrajOptCollisionConfig(0.025, 20.0)  # 2.5cm margin, coeff=20
@@ -143,7 +143,7 @@ config.collision_check_config.longest_valid_segment_length = 0.05  # 5cm interpo
 Contact margins define the safety buffer around objects:
 
 ```python
-from tesseract_robotics.tesseract_collision import ContactMarginData
+from tesseract.tesseract_collision import ContactMarginData
 
 margin_data = ContactMarginData()
 
@@ -221,7 +221,7 @@ manager.setIsContactAllowedFn(acm.isCollisionAllowed)
 Planners automatically use collision checking:
 
 ```python
-from tesseract_robotics.planning import Planner
+from tesseract.planning import Planner
 
 planner = Planner(robot)
 
@@ -251,7 +251,7 @@ trajectory = planner.plan(
     For complex meshes, use convex decomposition for better performance:
 
     ```python
-    from tesseract_robotics.tesseract_geometry import ConvexMesh
+    from tesseract.tesseract_geometry import ConvexMesh
 
     convex = ConvexMesh.fromMesh(mesh, convex_hull=True)
     ```

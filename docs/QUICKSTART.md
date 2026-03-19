@@ -11,8 +11,8 @@ pip install tesseract-robotics-nanobind
 ## Verify Installation
 
 ```python
-import tesseract_robotics
-from tesseract_robotics.tesseract_environment import Environment
+import tesseract
+from tesseract.tesseract_environment import Environment
 
 env = Environment()
 print("Success!")
@@ -21,7 +21,7 @@ print("Success!")
 ## Example
 
 ```python
-from tesseract_robotics.planning import (
+from tesseract.planning import (
     Robot, MotionProgram, JointTarget, CartesianTarget,
     Pose, box, create_obstacle, TaskComposer,
 )

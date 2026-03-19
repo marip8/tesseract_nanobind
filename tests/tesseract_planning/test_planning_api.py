@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from tesseract_robotics.planning import (
+from tesseract.planning import (
     CartesianTarget,
     JointTarget,
     MotionProgram,
@@ -103,7 +103,7 @@ class TestPose:
 
     def test_rotation_from_quaternion(self):
         """Test rotation_from_quaternion factory function."""
-        from tesseract_robotics.planning import rotation_from_quaternion
+        from tesseract.planning import rotation_from_quaternion
 
         # 90 degree rotation around Z axis
         t = rotation_from_quaternion(0, 0, 0.707, 0.707)
@@ -115,7 +115,7 @@ class TestPose:
 
     def test_rotation_from_axis_angle(self):
         """Test rotation_from_axis_angle factory function."""
-        from tesseract_robotics.planning import rotation_from_axis_angle
+        from tesseract.planning import rotation_from_axis_angle
 
         # 90 degree rotation around Z axis
         t = rotation_from_axis_angle([0, 0, 1], np.pi / 2)
@@ -484,14 +484,14 @@ class TestGeometry:
         assert c is not None
 
     def test_cone(self):
-        from tesseract_robotics.planning.geometry import cone
+        from tesseract.planning.geometry import cone
 
         c = cone(0.5, 1.0)
         assert c is not None
 
     def test_create_link_with_geometry(self):
         """Test create_link_with_geometry helper."""
-        from tesseract_robotics.planning.geometry import create_link_with_geometry
+        from tesseract.planning.geometry import create_link_with_geometry
 
         link = create_link_with_geometry(
             name="test_link",
@@ -507,7 +507,7 @@ class TestGeometry:
 
     def test_mesh_from_file(self):
         """Test mesh_from_file loads STL mesh."""
-        from tesseract_robotics.planning.geometry import mesh_from_file
+        from tesseract.planning.geometry import mesh_from_file
 
         # Use mesh from tesseract_support package
         mesh = mesh_from_file(
@@ -517,7 +517,7 @@ class TestGeometry:
 
     def test_convex_mesh_from_file(self):
         """Test convex_mesh_from_file loads and converts mesh."""
-        from tesseract_robotics.planning.geometry import convex_mesh_from_file
+        from tesseract.planning.geometry import convex_mesh_from_file
 
         # Use mesh from tesseract_support package
         mesh = convex_mesh_from_file(
@@ -565,8 +565,8 @@ class TestRobotLinkManagement:
 
     def test_add_link_with_geometry(self, robot):
         """Test adding a link with visual/collision geometry."""
-        from tesseract_robotics.tesseract_geometry import Box
-        from tesseract_robotics.tesseract_scene_graph import (
+        from tesseract.tesseract_geometry import Box
+        from tesseract.tesseract_scene_graph import (
             Collision,
             Joint,
             JointType,
@@ -600,9 +600,9 @@ class TestRobotLinkManagement:
 
     def test_add_link_using_create_fixed_joint(self, robot):
         """Test adding link using create_fixed_joint helper."""
-        from tesseract_robotics.planning import create_fixed_joint
-        from tesseract_robotics.tesseract_geometry import Sphere
-        from tesseract_robotics.tesseract_scene_graph import Collision, Link, Visual
+        from tesseract.planning import create_fixed_joint
+        from tesseract.tesseract_geometry import Sphere
+        from tesseract.tesseract_scene_graph import Collision, Link, Visual
 
         # Create sphere link
         link = Link("sphere_obstacle")
@@ -704,8 +704,8 @@ class TestRobotLinkManagement:
 
     def test_move_link(self, robot):
         """Test relocating a link to different parent."""
-        from tesseract_robotics.tesseract_geometry import Box
-        from tesseract_robotics.tesseract_scene_graph import (
+        from tesseract.tesseract_geometry import Box
+        from tesseract.tesseract_scene_graph import (
             Collision,
             Joint,
             JointType,
@@ -763,7 +763,7 @@ class TestPlanningIntegration:
 
     def test_plan_freespace(self, robot):
         """Test freespace planning through TaskComposer."""
-        from tesseract_robotics.planning import plan_freespace
+        from tesseract.planning import plan_freespace
 
         joint_names = robot.get_joint_names("manipulator")
         program = (
@@ -781,7 +781,7 @@ class TestPlanningIntegration:
 
     def test_plan_freespace_with_pipeline(self, robot):
         """Test freespace planning with explicit pipeline."""
-        from tesseract_robotics.planning import plan_freespace
+        from tesseract.planning import plan_freespace
 
         joint_names = robot.get_joint_names("manipulator")
         program = (
@@ -797,7 +797,7 @@ class TestPlanningIntegration:
 
     def test_assign_current_state_as_seed(self, robot):
         """Test assign_current_state_as_seed function."""
-        from tesseract_robotics.planning import assign_current_state_as_seed
+        from tesseract.planning import assign_current_state_as_seed
 
         joint_names = robot.get_joint_names("manipulator")
 
@@ -827,7 +827,7 @@ class TestTaskComposer:
 
     def test_get_available_pipelines(self):
         """Test get_available_pipelines returns all expected pipelines from factory."""
-        from tesseract_robotics.planning import TaskComposer
+        from tesseract.planning import TaskComposer
 
         # Explicit list of all 36 pipelines that must be loadable
         EXPECTED_PIPELINES = [
@@ -888,7 +888,7 @@ class TestTaskComposer:
 
     def test_plan_invalid_pipeline(self, robot):
         """Test plan returns failure for invalid pipeline."""
-        from tesseract_robotics.planning import TaskComposer
+        from tesseract.planning import TaskComposer
 
         joint_names = robot.get_joint_names("manipulator")
         program = (
@@ -906,7 +906,7 @@ class TestTaskComposer:
 
     def test_plan_ompl(self, robot):
         """Test plan_ompl convenience method."""
-        from tesseract_robotics.planning import plan_ompl
+        from tesseract.planning import plan_ompl
 
         joint_names = robot.get_joint_names("manipulator")
         program = (
@@ -926,7 +926,7 @@ class TestTaskComposer:
 
         Coverage for tesseract_qt_py test_ompl_pipeline_execution.
         """
-        from tesseract_robotics.planning import TaskComposer
+        from tesseract.planning import TaskComposer
 
         joint_names = robot.get_joint_names("manipulator")
 
@@ -955,7 +955,7 @@ class TestTaskComposer:
         Coverage for tesseract_qt_py test_freespace_pipeline_execution.
         Uses FreespacePipeline which combines OMPL (global) + TrajOpt (smoothing).
         """
-        from tesseract_robotics.planning import TaskComposer
+        from tesseract.planning import TaskComposer
 
         joint_names = robot.get_joint_names("manipulator")
 
@@ -981,11 +981,11 @@ class TestTaskComposer:
 
     def test_plan_cartesian(self, robot):
         """Test plan_cartesian with TrajOpt (Descartes not in default config)."""
-        from tesseract_robotics.planning import (
+        from tesseract.planning import (
             StateTarget,
             plan_cartesian,
         )
-        from tesseract_robotics.planning.profiles import create_trajopt_default_profiles
+        from tesseract.planning.profiles import create_trajopt_default_profiles
 
         joint_names = robot.get_joint_names("manipulator")
 
@@ -1016,8 +1016,8 @@ class TestProfileCreation:
 
     def test_create_trajopt_default_profiles(self):
         """Test TrajOpt profile creation with defaults."""
-        from tesseract_robotics.planning import create_trajopt_default_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_trajopt_default_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_trajopt_default_profiles()
 
@@ -1025,7 +1025,7 @@ class TestProfileCreation:
 
     def test_create_trajopt_default_profiles_custom_names(self):
         """Test TrajOpt profile creation with custom names."""
-        from tesseract_robotics.planning import create_trajopt_default_profiles
+        from tesseract.planning import create_trajopt_default_profiles
 
         profiles = create_trajopt_default_profiles(profile_names=["MY_PROFILE"])
 
@@ -1033,8 +1033,8 @@ class TestProfileCreation:
 
     def test_create_trajopt_ifopt_default_profiles(self):
         """Test TrajOptIfopt profile creation with defaults."""
-        from tesseract_robotics.planning import create_trajopt_ifopt_default_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_trajopt_ifopt_default_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_trajopt_ifopt_default_profiles()
 
@@ -1042,8 +1042,8 @@ class TestProfileCreation:
 
     def test_create_ompl_default_profiles(self):
         """Test OMPL profile creation with defaults."""
-        from tesseract_robotics.planning import create_ompl_default_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_ompl_default_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_ompl_default_profiles()
 
@@ -1051,7 +1051,7 @@ class TestProfileCreation:
 
     def test_create_ompl_default_profiles_custom_params(self):
         """Test OMPL profile creation with custom parameters."""
-        from tesseract_robotics.planning import create_ompl_default_profiles
+        from tesseract.planning import create_ompl_default_profiles
 
         profiles = create_ompl_default_profiles(
             planning_time=10.0,
@@ -1064,8 +1064,8 @@ class TestProfileCreation:
 
     def test_create_descartes_default_profiles(self):
         """Test Descartes profile creation with defaults."""
-        from tesseract_robotics.planning import create_descartes_default_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_descartes_default_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_descartes_default_profiles()
 
@@ -1073,7 +1073,7 @@ class TestProfileCreation:
 
     def test_create_descartes_default_profiles_custom_params(self):
         """Test Descartes profile creation with edge collision enabled."""
-        from tesseract_robotics.planning import create_descartes_default_profiles
+        from tesseract.planning import create_descartes_default_profiles
 
         profiles = create_descartes_default_profiles(
             enable_edge_collision=True,
@@ -1084,8 +1084,8 @@ class TestProfileCreation:
 
     def test_create_freespace_pipeline_profiles(self):
         """Test freespace pipeline profile creation (OMPL + TrajOpt)."""
-        from tesseract_robotics.planning import create_freespace_pipeline_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_freespace_pipeline_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_freespace_pipeline_profiles()
 
@@ -1093,8 +1093,8 @@ class TestProfileCreation:
 
     def test_create_cartesian_pipeline_profiles(self):
         """Test cartesian pipeline profile creation (Descartes + TrajOpt)."""
-        from tesseract_robotics.planning import create_cartesian_pipeline_profiles
-        from tesseract_robotics.tesseract_command_language import ProfileDictionary
+        from tesseract.planning import create_cartesian_pipeline_profiles
+        from tesseract.tesseract_command_language import ProfileDictionary
 
         profiles = create_cartesian_pipeline_profiles()
 
@@ -1102,7 +1102,7 @@ class TestProfileCreation:
 
     def test_create_ompl_planner_configurators_default(self):
         """Test OMPL configurator creation with defaults."""
-        from tesseract_robotics.planning import create_ompl_planner_configurators
+        from tesseract.planning import create_ompl_planner_configurators
 
         configurators = create_ompl_planner_configurators()
 
@@ -1110,7 +1110,7 @@ class TestProfileCreation:
 
     def test_create_ompl_planner_configurators_multiple(self):
         """Test OMPL configurator creation with multiple planners."""
-        from tesseract_robotics.planning import create_ompl_planner_configurators
+        from tesseract.planning import create_ompl_planner_configurators
 
         configurators = create_ompl_planner_configurators(
             planners=["RRTConnect", "RRTstar"],
@@ -1121,14 +1121,14 @@ class TestProfileCreation:
 
     def test_create_ompl_planner_configurators_invalid_planner(self):
         """Test OMPL configurator raises ValueError for invalid planner."""
-        from tesseract_robotics.planning import create_ompl_planner_configurators
+        from tesseract.planning import create_ompl_planner_configurators
 
         with pytest.raises(ValueError, match="Unknown planner"):
             create_ompl_planner_configurators(planners=["InvalidPlanner"])
 
     def test_create_time_optimal_parameterization(self):
         """Test TOTG parameterization creation."""
-        from tesseract_robotics.planning import create_time_optimal_parameterization
+        from tesseract.planning import create_time_optimal_parameterization
 
         totg = create_time_optimal_parameterization(path_tolerance=0.05)
 
@@ -1136,7 +1136,7 @@ class TestProfileCreation:
 
     def test_create_iterative_spline_parameterization(self):
         """Test ISP parameterization creation."""
-        from tesseract_robotics.planning import create_iterative_spline_parameterization
+        from tesseract.planning import create_iterative_spline_parameterization
 
         isp = create_iterative_spline_parameterization(add_points=False)
 
@@ -1160,7 +1160,7 @@ class TestProgramErrors:
 
     def test_state_target_requires_names(self):
         """Test StateTarget.to_waypoint raises ValueError without joint names."""
-        from tesseract_robotics.planning import StateTarget
+        from tesseract.planning import StateTarget
 
         target = StateTarget([0, 0, 0, 0, 0, 0])
 
@@ -1180,7 +1180,7 @@ class TestTrajectoryPoint:
 
     def test_creation(self):
         """Test basic TrajectoryPoint creation."""
-        from tesseract_robotics.planning import TrajectoryPoint
+        from tesseract.planning import TrajectoryPoint
 
         point = TrajectoryPoint(
             joint_names=["j1", "j2", "j3"],
@@ -1194,7 +1194,7 @@ class TestTrajectoryPoint:
 
     def test_with_velocities_and_time(self):
         """Test TrajectoryPoint with optional fields."""
-        from tesseract_robotics.planning import TrajectoryPoint
+        from tesseract.planning import TrajectoryPoint
 
         point = TrajectoryPoint(
             joint_names=["j1", "j2"],
@@ -1209,7 +1209,7 @@ class TestTrajectoryPoint:
 
     def test_as_dict(self):
         """Test TrajectoryPoint.as_dict() conversion."""
-        from tesseract_robotics.planning import TrajectoryPoint
+        from tesseract.planning import TrajectoryPoint
 
         point = TrajectoryPoint(
             joint_names=["joint_1", "joint_2"],
@@ -1221,7 +1221,7 @@ class TestTrajectoryPoint:
 
     def test_repr(self):
         """Test TrajectoryPoint string representation."""
-        from tesseract_robotics.planning import TrajectoryPoint
+        from tesseract.planning import TrajectoryPoint
 
         point = TrajectoryPoint(
             joint_names=["j1"],
@@ -1238,8 +1238,8 @@ class TestPlanningResult:
 
     def test_successful_result(self):
         """Test successful PlanningResult."""
-        from tesseract_robotics.planning import TrajectoryPoint
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning import TrajectoryPoint
+        from tesseract.planning.composer import PlanningResult
 
         traj = [
             TrajectoryPoint(["j1"], np.array([0.0])),
@@ -1259,7 +1259,7 @@ class TestPlanningResult:
 
     def test_failed_result(self):
         """Test failed PlanningResult."""
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning.composer import PlanningResult
 
         result = PlanningResult(
             successful=False,
@@ -1272,8 +1272,8 @@ class TestPlanningResult:
 
     def test_iteration(self):
         """Test iterating over PlanningResult trajectory."""
-        from tesseract_robotics.planning import TrajectoryPoint
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning import TrajectoryPoint
+        from tesseract.planning.composer import PlanningResult
 
         traj = [
             TrajectoryPoint(["j1"], np.array([0.1])),
@@ -1286,8 +1286,8 @@ class TestPlanningResult:
 
     def test_indexing(self):
         """Test indexing PlanningResult trajectory."""
-        from tesseract_robotics.planning import TrajectoryPoint
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning import TrajectoryPoint
+        from tesseract.planning.composer import PlanningResult
 
         traj = [
             TrajectoryPoint(["j1"], np.array([0.0])),
@@ -1300,8 +1300,8 @@ class TestPlanningResult:
 
     def test_to_numpy(self):
         """Test PlanningResult.to_numpy() conversion."""
-        from tesseract_robotics.planning import TrajectoryPoint
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning import TrajectoryPoint
+        from tesseract.planning.composer import PlanningResult
 
         traj = [
             TrajectoryPoint(["j1", "j2"], np.array([0.0, 0.1])),
@@ -1317,7 +1317,7 @@ class TestPlanningResult:
 
     def test_to_numpy_empty(self):
         """Test to_numpy() on empty trajectory."""
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning.composer import PlanningResult
 
         result = PlanningResult(successful=False)
         arr = result.to_numpy()
@@ -1325,8 +1325,8 @@ class TestPlanningResult:
 
     def test_negative_indexing(self):
         """Test negative indexing on PlanningResult trajectory."""
-        from tesseract_robotics.planning import TrajectoryPoint
-        from tesseract_robotics.planning.composer import PlanningResult
+        from tesseract.planning import TrajectoryPoint
+        from tesseract.planning.composer import PlanningResult
 
         traj = [
             TrajectoryPoint(["j1"], np.array([0.0])),

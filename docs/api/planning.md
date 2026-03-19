@@ -1,8 +1,8 @@
-# tesseract_robotics.planning
+# tesseract.planning
 
 High-level planning API for robot motion planning.
 
-::: tesseract_robotics.planning
+::: tesseract.planning
     options:
       show_root_heading: true
       show_source: false
@@ -19,7 +19,7 @@ High-level planning API for robot motion planning.
 The main entry point for working with a robot.
 
 ```python
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 
 # Load from bundled models
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -59,7 +59,7 @@ contacts = robot.get_contacts(joints)
 Motion planner wrapper.
 
 ```python
-from tesseract_robotics.planning import Planner
+from tesseract.planning import Planner
 
 planner = Planner(robot)
 
@@ -95,7 +95,7 @@ smooth = planner.refine(trajectory, planner="trajopt")
 Task composition for complex sequences.
 
 ```python
-from tesseract_robotics.planning import Composer
+from tesseract.planning import Composer
 
 composer = Composer(robot)
 
@@ -174,7 +174,7 @@ else:
 ### PlannerType
 
 ```python
-from tesseract_robotics.planning import PlannerType
+from tesseract.planning import PlannerType
 
 PlannerType.OMPL       # Sampling-based (OMPL)
 PlannerType.TRAJOPT    # Optimization (TrajOpt)
@@ -185,7 +185,7 @@ PlannerType.SIMPLE     # Interpolation
 ### MotionType
 
 ```python
-from tesseract_robotics.planning import MotionType
+from tesseract.planning import MotionType
 
 MotionType.FREESPACE  # Any collision-free path
 MotionType.LINEAR     # Straight Cartesian line

@@ -5,7 +5,7 @@ This guide walks you through your first motion planning task.
 ## Load a Robot
 
 ```python
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 import numpy as np
 
 # Load a bundled example robot (ABB IRB2400)
@@ -72,7 +72,7 @@ for contact in contacts:
 Plan a collision-free path between configurations:
 
 ```python
-from tesseract_robotics.planning import Planner
+from tesseract.planning import Planner
 
 # Define start and goal
 start = np.zeros(6)
@@ -100,7 +100,7 @@ if trajectory:
 For complex multi-step tasks, use the TaskComposer:
 
 ```python
-from tesseract_robotics.planning import Composer
+from tesseract.planning import Composer
 
 # Create composer with robot
 composer = Composer(robot)
@@ -123,7 +123,7 @@ if result.success:
 Use the TesseractViewer to visualize robots and trajectories:
 
 ```python
-from tesseract_robotics.viewer import TesseractViewer
+from tesseract.viewer import TesseractViewer
 
 viewer = TesseractViewer()
 viewer.update_environment(robot.env, [0, 0, 0])

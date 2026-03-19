@@ -134,19 +134,19 @@ jobs:
 
         for plugin in "${PLUGINS[@]}"; do
           if [[ -f "$GITHUB_WORKSPACE/ws/install/lib/$plugin" ]]; then
-            cp "$GITHUB_WORKSPACE/ws/install/lib/$plugin" "$WHEEL_DIR/tesseract_robotics/.dylibs/"
+            cp "$GITHUB_WORKSPACE/ws/install/lib/$plugin" "$WHEEL_DIR/tesseract/.dylibs/"
             echo "  Added: $plugin"
           fi
         done
 
         # Fix rpaths in newly added plugins
         export DYLD_LIBRARY_PATH=$CONDA_PREFIX/lib:$GITHUB_WORKSPACE/ws/install/lib
-        delocate-path "$WHEEL_DIR/tesseract_robotics/.dylibs" -L "$GITHUB_WORKSPACE/ws/install/lib:$CONDA_PREFIX/lib"
+        delocate-path "$WHEEL_DIR/tesseract/.dylibs" -L "$GITHUB_WORKSPACE/ws/install/lib:$CONDA_PREFIX/lib"
 
         # Patch task_composer_config YAMLs only (resolved at runtime by __init__.py)
         # Robot YAMLs (tesseract_support) are NOT patched - they use env var plugin paths
         echo "Patching task composer configs..."
-        for yaml_file in "$WHEEL_DIR/tesseract_robotics/data/task_composer_config"/*.yaml; do
+        for yaml_file in "$WHEEL_DIR/tesseract/data/task_composer_config"/*.yaml; do
           if [[ -f "$yaml_file" ]] && grep -q '/usr/local/lib' "$yaml_file"; then
             sed -i '' 's|/usr/local/lib|"@PLUGIN_PATH@"|g' "$yaml_file"
             echo "  Patched: $(basename $yaml_file)"
@@ -197,7 +197,7 @@ jobs:
       - name: debug libs
         run: |
           source test_env/bin/activate
-          PKG_DIR=$(python -c "import tesseract_robotics; from pathlib import Path; print(Path(tesseract_robotics.__file__).parent)")
+          PKG_DIR=$(python -c "import tesseract; from pathlib import Path; print(Path(tesseract.__file__).parent)")
           echo "Package dir: $PKG_DIR"
           echo "--- .dylib files in package (count) ---"
           ls "$PKG_DIR"/.dylibs/*.dylib 2>/dev/null | wc -l
@@ -216,12 +216,12 @@ jobs:
           done
           echo "--- End missing deps check ---"
           echo "--- TESSERACT env vars ---"
-          python -c "import os; import tesseract_robotics; print('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES:', os.environ.get('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES', 'NOT SET')); print('TESSERACT_SUPPORT_DIR:', os.environ.get('TESSERACT_SUPPORT_DIR', 'NOT SET'))"
+          python -c "import os; import tesseract; print('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES:', os.environ.get('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES', 'NOT SET')); print('TESSERACT_SUPPORT_DIR:', os.environ.get('TESSERACT_SUPPORT_DIR', 'NOT SET'))"
       - name: smoke test
         run: |
           source test_env/bin/activate
-          python -c "import tesseract_robotics; print('Version:', tesseract_robotics.__version__)"
-          python -c "from tesseract_robotics import tesseract_common, tesseract_geometry, tesseract_scene_graph"
+          python -c "import tesseract; print('Version:', tesseract.__version__)"
+          python -c "from tesseract import tesseract_common, tesseract_geometry, tesseract_scene_graph"
       - name: run full tests
         run: |
           source test_env/bin/activate

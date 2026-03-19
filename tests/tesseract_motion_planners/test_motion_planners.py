@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CartesianWaypoint,
     CartesianWaypointPoly_wrap_CartesianWaypoint,
     CompositeInstruction,
@@ -12,7 +12,7 @@ from tesseract_robotics.tesseract_command_language import (
     MoveInstructionType_FREESPACE,
     ProfileDictionary,
 )
-from tesseract_robotics.tesseract_common import (
+from tesseract.tesseract_common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
@@ -20,14 +20,14 @@ from tesseract_robotics.tesseract_common import (
     Quaterniond,
     Translation3d,
 )
-from tesseract_robotics.tesseract_environment import Environment
-from tesseract_robotics.tesseract_motion_planners import PlannerRequest
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_environment import Environment
+from tesseract.tesseract_motion_planners import PlannerRequest
+from tesseract.tesseract_motion_planners_ompl import (
     OMPLMotionPlanner,
     OMPLRealVectorPlanProfile,
     ProfileDictionary_addOMPLProfile,
 )
-from tesseract_robotics.tesseract_motion_planners_simple import (
+from tesseract.tesseract_motion_planners_simple import (
     generateInterpolatedProgram,
 )
 

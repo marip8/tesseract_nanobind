@@ -1,13 +1,13 @@
 """Tests verifying high-level and low-level examples produce similar results.
 
-This ensures the tesseract_robotics.planning high-level API produces
+This ensures the tesseract.planning high-level API produces
 trajectories comparable to the verbose low-level examples (which more
 closely match the C++ tesseract_examples).
 """
 
 import numpy as np
 import pytest
-import tesseract_robotics.examples as examples
+import tesseract.examples as examples
 
 
 def _get_final_positions(result):

@@ -3,7 +3,7 @@
 These tests verify that kinematics plugins (KDL, OPW) can be loaded and used
 via getKinematicGroup().
 
-For editable installs on macOS, the tesseract_robotics package automatically
+For editable installs on macOS, the tesseract package automatically
 adds rpath to plugin factory dylibs on first import (one-time fix).
 
 IMPORTANT: These tests must explicitly delete objects in the correct order
@@ -13,8 +13,8 @@ environment and kinematic group.
 
 import gc
 
-from tesseract_robotics.tesseract_common import FilesystemPath, GeneralResourceLocator
-from tesseract_robotics.tesseract_environment import Environment
+from tesseract.tesseract_common import FilesystemPath, GeneralResourceLocator
+from tesseract.tesseract_environment import Environment
 
 
 def test_kdl_kinematics_plugin_loads():

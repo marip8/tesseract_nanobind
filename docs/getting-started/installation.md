@@ -9,8 +9,8 @@ pip install tesseract-robotics
 The wheel bundles all C++ dependencies (~50MB). No compiler needed.
 
 ```python
-import tesseract_robotics
-from tesseract_robotics.planning import Robot
+import tesseract
+from tesseract.planning import Robot
 
 robot = Robot.from_tesseract_support("abb_irb2400")
 print(f"Loaded: {len(robot.get_joint_names('manipulator'))} joints")

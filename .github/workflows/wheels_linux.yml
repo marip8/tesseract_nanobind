@@ -113,14 +113,14 @@ jobs:
       run: |
         # Plugin factories are runtime-loaded (dlopen), not caught by auditwheel
         # Bundle them BEFORE auditwheel so deps get repaired together
-        # Put in tesseract_robotics/ (not .libs/) so auditwheel repairs them
+        # Put in tesseract/ (not .libs/) so auditwheel repairs them
         WHEEL_FILE=$(ls dist/tesseract*.whl)
         WHEEL_DIR=$(mktemp -d)
         unzip -q "$WHEEL_FILE" -d "$WHEEL_DIR"
 
         # Put plugins directly in package dir so auditwheel repairs them
         # (auditwheel doesn't repair .so files in subdirectories properly)
-        PLUGINS_DIR="$WHEEL_DIR/tesseract_robotics"
+        PLUGINS_DIR="$WHEEL_DIR/tesseract"
 
         PLUGINS=(
           libtesseract_collision_bullet_factories.so
@@ -143,7 +143,7 @@ jobs:
 
         # Patch task_composer_config YAMLs (resolved at runtime by __init__.py)
         echo "Patching task composer configs..."
-        for yaml_file in "$WHEEL_DIR/tesseract_robotics/data/task_composer_config"/*.yaml; do
+        for yaml_file in "$WHEEL_DIR/tesseract/data/task_composer_config"/*.yaml; do
           if [[ -f "$yaml_file" ]] && grep -q '/usr/local/lib' "$yaml_file"; then
             sed -i 's|/usr/local/lib|"@PLUGIN_PATH@"|g' "$yaml_file"
             echo "  Patched: $(basename $yaml_file)"
@@ -152,7 +152,7 @@ jobs:
 
         # Remove search_paths from robot YAMLs (forces use of env vars set by __init__.py)
         echo "Removing hardcoded search_paths from robot YAMLs..."
-        find "$WHEEL_DIR/tesseract_robotics/data/tesseract_support" -name "*.yaml" -type f | while read yaml_file; do
+        find "$WHEEL_DIR/tesseract/data/tesseract_support" -name "*.yaml" -type f | while read yaml_file; do
           if grep -q 'search_paths:' "$yaml_file"; then
             # Remove search_paths: line and following lines with - /path
             sed -i '/search_paths:/d; /^[[:space:]]*- \/.*$/d' "$yaml_file"
@@ -177,7 +177,7 @@ jobs:
         WHEEL_FILE=$(ls dist/tesseract*.whl)
         WHEEL_DIR=$(mktemp -d)
         unzip -q "$WHEEL_FILE" -d "$WHEEL_DIR"
-        PKG_DIR="$WHEEL_DIR/tesseract_robotics"
+        PKG_DIR="$WHEEL_DIR/tesseract"
 
         echo "Bundling all .so dependencies into package root..."
 
@@ -307,7 +307,7 @@ jobs:
       - name: debug libs
         run: |
           source test_env/bin/activate
-          PKG_DIR=$(python -c "import tesseract_robotics; from pathlib import Path; print(Path(tesseract_robotics.__file__).parent)")
+          PKG_DIR=$(python -c "import tesseract; from pathlib import Path; print(Path(tesseract.__file__).parent)")
           echo "Package dir: $PKG_DIR"
           echo "--- .so files in package (count) ---"
           ls "$PKG_DIR"/*.so* 2>/dev/null | wc -l
@@ -336,12 +336,12 @@ jobs:
           echo "--- Python extension deps ---"
           ldd "$PKG_DIR/tesseract_common/_tesseract_common"*.so 2>&1 | head -10
           echo "--- TESSERACT env vars ---"
-          python -c "import os; import tesseract_robotics; print('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES:', os.environ.get('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES', 'NOT SET')); print('TESSERACT_SUPPORT_DIR:', os.environ.get('TESSERACT_SUPPORT_DIR', 'NOT SET'))"
+          python -c "import os; import tesseract; print('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES:', os.environ.get('TESSERACT_KINEMATICS_PLUGIN_DIRECTORIES', 'NOT SET')); print('TESSERACT_SUPPORT_DIR:', os.environ.get('TESSERACT_SUPPORT_DIR', 'NOT SET'))"
       - name: smoke test
         run: |
           source test_env/bin/activate
-          python -c "import tesseract_robotics; print('Version:', tesseract_robotics.__version__)"
-          python -c "from tesseract_robotics import tesseract_common, tesseract_geometry, tesseract_scene_graph"
+          python -c "import tesseract; print('Version:', tesseract.__version__)"
+          python -c "from tesseract import tesseract_common, tesseract_geometry, tesseract_scene_graph"
       - name: run full tests
         run: |
           source test_env/bin/activate

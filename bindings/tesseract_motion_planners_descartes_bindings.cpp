@@ -33,13 +33,13 @@ NB_MODULE(_tesseract_motion_planners_descartes, m) {
     m.doc() = "tesseract_motion_planners_descartes Python bindings";
 
     // Import Profile type from tesseract_command_language for cross-module inheritance
-    nb::module_::import_("tesseract_robotics.tesseract_command_language._tesseract_command_language");
+    nb::module_::import_("tesseract.tesseract_command_language._tesseract_command_language");
 
     // Import tesseract_collision for CollisionCheckConfig
-    nb::module_::import_("tesseract_robotics.tesseract_collision._tesseract_collision");
+    nb::module_::import_("tesseract.tesseract_collision._tesseract_collision");
 
     // Import MotionPlanner base type for clone() return type
-    nb::module_::import_("tesseract_robotics.tesseract_motion_planners._tesseract_motion_planners");
+    nb::module_::import_("tesseract.tesseract_motion_planners._tesseract_motion_planners");
 
     // ========== DescartesSolverProfile<double> (base for solver profiles) ==========
     nb::class_<tp::DescartesSolverProfile<double>, tc::Profile>(m, "DescartesSolverProfileD")

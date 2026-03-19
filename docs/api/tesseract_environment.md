@@ -1,4 +1,4 @@
-# tesseract_robotics.tesseract_environment
+# tesseract.tesseract_environment
 
 Environment management and scene modification commands.
 
@@ -7,7 +7,7 @@ Environment management and scene modification commands.
 Central class containing robot model, collision, and kinematics.
 
 ```python
-from tesseract_robotics.tesseract_environment import Environment
+from tesseract.tesseract_environment import Environment
 
 # Create empty environment
 env = Environment()
@@ -16,7 +16,7 @@ env = Environment()
 env.init(urdf_string, srdf_string, locator)
 
 # Or use Robot helper
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 robot = Robot.from_urdf("robot.urdf", "robot.srdf")
 env = robot.env
 ```
@@ -92,8 +92,8 @@ Modify the environment with commands. Commands are tracked for undo/redo.
 Add a new link to the scene.
 
 ```python
-from tesseract_robotics.tesseract_environment import AddLinkCommand
-from tesseract_robotics.tesseract_scene_graph import Link, Joint
+from tesseract.tesseract_environment import AddLinkCommand
+from tesseract.tesseract_scene_graph import Link, Joint
 
 link = Link("obstacle")
 # ... configure link with visual/collision
@@ -110,7 +110,7 @@ env.applyCommand(cmd)
 ### RemoveLinkCommand
 
 ```python
-from tesseract_robotics.tesseract_environment import RemoveLinkCommand
+from tesseract.tesseract_environment import RemoveLinkCommand
 
 cmd = RemoveLinkCommand("obstacle")
 env.applyCommand(cmd)
@@ -121,7 +121,7 @@ env.applyCommand(cmd)
 Move a link to a new parent.
 
 ```python
-from tesseract_robotics.tesseract_environment import MoveLinkCommand
+from tesseract.tesseract_environment import MoveLinkCommand
 
 joint = Joint("new_joint")
 # ... configure joint
@@ -135,7 +135,7 @@ env.applyCommand(cmd)
 Change a joint's transform.
 
 ```python
-from tesseract_robotics.tesseract_environment import ChangeJointOriginCommand
+from tesseract.tesseract_environment import ChangeJointOriginCommand
 
 new_origin = Isometry3d.Identity()
 new_origin.translate([0.1, 0, 0])
@@ -147,7 +147,7 @@ env.applyCommand(cmd)
 ### Joint Limit Commands
 
 ```python
-from tesseract_robotics.tesseract_environment import (
+from tesseract.tesseract_environment import (
     ChangeJointPositionLimitsCommand,
     ChangeJointVelocityLimitsCommand,
     ChangeJointAccelerationLimitsCommand,
@@ -168,7 +168,7 @@ cmd = ChangeJointAccelerationLimitsCommand("joint_1", 5.0)
 Enable/disable collision for a link.
 
 ```python
-from tesseract_robotics.tesseract_environment import ChangeLinkCollisionEnabledCommand
+from tesseract.tesseract_environment import ChangeLinkCollisionEnabledCommand
 
 cmd = ChangeLinkCollisionEnabledCommand("gripper", False)  # disable
 env.applyCommand(cmd)
@@ -179,10 +179,10 @@ env.applyCommand(cmd)
 Update the allowed collision matrix.
 
 ```python
-from tesseract_robotics.tesseract_environment import (
+from tesseract.tesseract_environment import (
     ModifyAllowedCollisionsCommand, ModifyAllowedCollisionsType
 )
-from tesseract_robotics.tesseract_common import AllowedCollisionMatrix
+from tesseract.tesseract_common import AllowedCollisionMatrix
 
 acm = AllowedCollisionMatrix()
 acm.addAllowedCollision("link_a", "link_b", "custom reason")
@@ -202,8 +202,8 @@ env.applyCommand(cmd)
 Update collision margins.
 
 ```python
-from tesseract_robotics.tesseract_environment import ChangeCollisionMarginsCommand
-from tesseract_robotics.tesseract_common import CollisionMarginData
+from tesseract.tesseract_environment import ChangeCollisionMarginsCommand
+from tesseract.tesseract_common import CollisionMarginData
 
 margins = CollisionMarginData()
 margins.setDefaultCollisionMargin(0.05)
@@ -217,7 +217,7 @@ env.applyCommand(cmd)
 Subscribe to environment changes.
 
 ```python
-from tesseract_robotics.tesseract_environment import (
+from tesseract.tesseract_environment import (
     Events, Events_COMMAND_APPLIED, Events_SCENE_STATE_CHANGED,
     cast_CommandAppliedEvent, cast_SceneStateChangedEvent
 )
@@ -235,7 +235,7 @@ env.addEventCallback(Events_COMMAND_APPLIED, on_event)
 
 ## Auto-generated API Reference
 
-::: tesseract_robotics.tesseract_environment._tesseract_environment
+::: tesseract.tesseract_environment._tesseract_environment
     options:
       show_root_heading: false
       show_source: false

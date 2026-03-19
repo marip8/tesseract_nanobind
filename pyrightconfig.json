@@ -1,7 +1,7 @@
 {
   "pythonVersion": "3.9",
   "typeCheckingMode": "basic",
-  "include": ["src/tesseract_robotics"],
+  "include": ["src/tesseract"],
   "exclude": [
     "**/build",
     "**/.pixi",

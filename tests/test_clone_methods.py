@@ -3,11 +3,11 @@
 import numpy as np
 import pytest
 
-from tesseract_robotics.tesseract_common import (
+from tesseract.tesseract_common import (
     FilesystemPath,
     GeneralResourceLocator,
 )
-from tesseract_robotics.tesseract_environment import Environment
+from tesseract.tesseract_environment import Environment
 
 
 @pytest.fixture
@@ -83,7 +83,7 @@ class TestStateSolverClone:
 
 class TestMotionPlannerClone:
     def test_trajopt_clone(self):
-        from tesseract_robotics.tesseract_motion_planners_trajopt import TrajOptMotionPlanner
+        from tesseract.tesseract_motion_planners_trajopt import TrajOptMotionPlanner
 
         planner = TrajOptMotionPlanner("test_trajopt")
         cloned = planner.clone()
@@ -91,7 +91,7 @@ class TestMotionPlannerClone:
         assert cloned.getName() == "test_trajopt"
 
     def test_trajopt_ifopt_clone(self):
-        from tesseract_robotics.tesseract_motion_planners_trajopt_ifopt import (
+        from tesseract.tesseract_motion_planners_trajopt_ifopt import (
             TrajOptIfoptMotionPlanner,
         )
 
@@ -101,7 +101,7 @@ class TestMotionPlannerClone:
         assert cloned.getName() == "test_ifopt"
 
     def test_ompl_clone(self):
-        from tesseract_robotics.tesseract_motion_planners_ompl import OMPLMotionPlanner
+        from tesseract.tesseract_motion_planners_ompl import OMPLMotionPlanner
 
         planner = OMPLMotionPlanner("test_ompl")
         cloned = planner.clone()
@@ -109,7 +109,7 @@ class TestMotionPlannerClone:
         assert cloned.getName() == "test_ompl"
 
     def test_simple_clone(self):
-        from tesseract_robotics.tesseract_motion_planners_simple import SimpleMotionPlanner
+        from tesseract.tesseract_motion_planners_simple import SimpleMotionPlanner
 
         planner = SimpleMotionPlanner("test_simple")
         cloned = planner.clone()
@@ -117,7 +117,7 @@ class TestMotionPlannerClone:
         assert cloned.getName() == "test_simple"
 
     def test_descartes_clone(self):
-        from tesseract_robotics.tesseract_motion_planners_descartes import DescartesMotionPlannerD
+        from tesseract.tesseract_motion_planners_descartes import DescartesMotionPlannerD
 
         planner = DescartesMotionPlannerD("test_descartes")
         cloned = planner.clone()

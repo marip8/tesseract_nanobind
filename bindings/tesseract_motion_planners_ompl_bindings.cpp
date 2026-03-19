@@ -33,14 +33,14 @@ NB_MODULE(_tesseract_motion_planners_ompl, m) {
     m.doc() = "tesseract_motion_planners_ompl Python bindings";
 
     // Import Profile type from tesseract_command_language for cross-module inheritance
-    auto cl_module = nb::module_::import_("tesseract_robotics.tesseract_command_language._tesseract_command_language");
+    auto cl_module = nb::module_::import_("tesseract.tesseract_command_language._tesseract_command_language");
     auto profile_type = cl_module.attr("Profile");
 
     // Import tesseract_collision for CollisionCheckConfig
-    nb::module_::import_("tesseract_robotics.tesseract_collision._tesseract_collision");
+    nb::module_::import_("tesseract.tesseract_collision._tesseract_collision");
 
     // Import MotionPlanner base type for clone() return type
-    nb::module_::import_("tesseract_robotics.tesseract_motion_planners._tesseract_motion_planners");
+    nb::module_::import_("tesseract.tesseract_motion_planners._tesseract_motion_planners");
 
     // ========== OMPLSolverConfig ==========
     nb::class_<tp::OMPLSolverConfig>(m, "OMPLSolverConfig")

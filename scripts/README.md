@@ -132,5 +132,5 @@ This makes the wheel self-contained and portable across environments.
 pip install wheelhouse/tesseract*.whl
 
 # Test (no DYLD_LIBRARY_PATH needed):
-python -c "from tesseract_robotics import tesseract_collision; print('OK')"
+python -c "from tesseract import tesseract_collision; print('OK')"
 ```

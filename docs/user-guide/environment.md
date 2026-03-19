@@ -1,13 +1,13 @@
 # Environment & Scene Graph
 
-The Environment is the central data structure in tesseract_robotics, containing the robot model, scene graph, and collision information.
+The Environment is the central data structure in tesseract, containing the robot model, scene graph, and collision information.
 
 ## Creating an Environment
 
 === "From URDF/SRDF"
 
     ```python
-    from tesseract_robotics.planning import Robot
+    from tesseract.planning import Robot
 
     robot = Robot.from_urdf(
         urdf_path="/path/to/robot.urdf",
@@ -19,7 +19,7 @@ The Environment is the central data structure in tesseract_robotics, containing 
 === "From Bundled Models"
 
     ```python
-    from tesseract_robotics.planning import Robot
+    from tesseract.planning import Robot
 
     # Available: abb_irb2400, kuka_iiwa, fanuc_lrmate200id
     robot = Robot.from_tesseract_support("abb_irb2400")
@@ -69,9 +69,9 @@ joint = scene.getJoint("joint_6")
 ### Adding Objects
 
 ```python
-from tesseract_robotics.tesseract_geometry import Box, Sphere, Cylinder
-from tesseract_robotics.tesseract_scene_graph import Link, Joint, JointType
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_geometry import Box, Sphere, Cylinder
+from tesseract.tesseract_scene_graph import Link, Joint, JointType
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 # Create a box obstacle

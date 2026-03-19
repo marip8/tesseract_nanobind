@@ -1,6 +1,6 @@
 # Core Concepts
 
-Understanding these concepts will help you use tesseract_robotics effectively.
+Understanding these concepts will help you use tesseract effectively.
 
 ## Environment
 
@@ -12,7 +12,7 @@ The **Environment** is the central data structure containing:
 - **Allowed Collision Matrix**: Defines which link pairs to ignore
 
 ```python
-from tesseract_robotics.planning import Robot
+from tesseract.planning import Robot
 
 robot = Robot.from_tesseract_support("abb_irb2400")
 env = robot.env  # Access the Environment
@@ -78,7 +78,7 @@ The **Command Language** describes motion tasks:
 - **CompositeInstruction**: Container for multiple instructions
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     StateWaypointPoly, CartesianWaypointPoly,
     MoveInstruction, MoveInstructionType,
     CompositeInstruction
@@ -227,7 +227,7 @@ to NumPy arrays by nanobind. This conversion works for `float64` types (`double`
 Some Eigen geometry types are wrapped as classes in the `tesseract_common` module:
 
 ```python
-from tesseract_robotics.tesseract_common import Isometry3d
+from tesseract.tesseract_common import Isometry3d
 import numpy as np
 
 # Identity transform
@@ -250,7 +250,7 @@ pose_from_matrix = Isometry3d(mat)
 Resource locators resolve `package://` URLs to file paths. The `GeneralResourceLocator` class
 searches paths in `TESSERACT_RESOURCE_PATH` to find resources.
 
-**Auto-configuration:** When you import `tesseract_robotics`, environment variables are automatically
+**Auto-configuration:** When you import `tesseract`, environment variables are automatically
 set to point to bundled data (if not already set):
 
 - `TESSERACT_RESOURCE_PATH` - Path for `package://` URL resolution
@@ -265,7 +265,7 @@ The command language uses type erasure extensively. In Python, module-level util
 are needed to create and cast instructions and waypoints:
 
 ```python
-from tesseract_robotics.tesseract_command_language import (
+from tesseract.tesseract_command_language import (
     CartesianWaypointPoly_wrap_CartesianWaypoint,
     MoveInstructionPoly_wrap_MoveInstruction,
     InstructionPoly_as_MoveInstructionPoly,
@@ -282,7 +282,7 @@ move_instr = InstructionPoly_as_MoveInstructionPoly(instruction)
 `ProfileDictionary` has similar accessor functions per type:
 
 ```python
-from tesseract_robotics.tesseract_motion_planners_ompl import (
+from tesseract.tesseract_motion_planners_ompl import (
     ProfileDictionary_addProfile_OMPLPlanProfile
 )
 
@@ -294,7 +294,7 @@ ProfileDictionary_addProfile_OMPLPlanProfile(profiles, "DEFAULT", ompl_profile)
 Tesseract uses `console_bridge` for logging. Control logging level via:
 
 ```python
-from tesseract_robotics.tesseract_common import (
+from tesseract.tesseract_common import (
     getLogLevel, setLogLevel,
     CONSOLE_BRIDGE_LOG_NONE,
     CONSOLE_BRIDGE_LOG_ERROR,

@@ -323,5 +323,5 @@ NB_MODULE(_tesseract_scene_graph, m) {
 
     // Note: SceneState is bound in tesseract_state_solver module with proper
     // AlignedMap to std::map conversion for link_transforms and joint_transforms.
-    // Import from tesseract_robotics.tesseract_state_solver.
+    // Import from tesseract.tesseract_state_solver.
 }

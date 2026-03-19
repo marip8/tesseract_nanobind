@@ -25,7 +25,7 @@ NB_MODULE(_tesseract_motion_planners_simple, m) {
     m.doc() = "tesseract_motion_planners_simple Python bindings";
 
     // Import MotionPlanner base type for clone() return type
-    nb::module_::import_("tesseract_robotics.tesseract_motion_planners._tesseract_motion_planners");
+    nb::module_::import_("tesseract.tesseract_motion_planners._tesseract_motion_planners");
 
     // ========== SimpleMotionPlanner ==========
     // Note: Not binding inheritance from MotionPlanner to avoid cross-module issues

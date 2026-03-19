@@ -1,11 +1,11 @@
-# tesseract_robotics.trajopt_sqp
+# tesseract.trajopt_sqp
 
 Sequential Quadratic Programming (SQP) solver for trajectory optimization.
 
 ## Overview
 
 ```python
-from tesseract_robotics.trajopt_sqp import (
+from tesseract.trajopt_sqp import (
     # Solver
     TrustRegionSQPSolver, OSQPEigenSolver,
     # Problem types
@@ -20,11 +20,11 @@ from tesseract_robotics.trajopt_sqp import (
 ## Quick Start
 
 ```python
-from tesseract_robotics.trajopt_sqp import (
+from tesseract.trajopt_sqp import (
     TrustRegionSQPSolver, OSQPEigenSolver, IfoptQPProblem, SQPParameters
 )
-from tesseract_robotics.trajopt_ifopt import JointPosition, JointVelConstraint
-from tesseract_robotics.ifopt import Bounds
+from tesseract.trajopt_ifopt import JointPosition, JointVelConstraint
+from tesseract.ifopt import Bounds
 import numpy as np
 
 # Create variables
@@ -71,7 +71,7 @@ print(f"Final cost: {results.overall_cost}")
 Main SQP solver with trust region method.
 
 ```python
-from tesseract_robotics.trajopt_sqp import TrustRegionSQPSolver, OSQPEigenSolver
+from tesseract.trajopt_sqp import TrustRegionSQPSolver, OSQPEigenSolver
 
 qp_solver = OSQPEigenSolver()
 solver = TrustRegionSQPSolver(qp_solver)
@@ -107,7 +107,7 @@ results = solver.getResults()
 QP solver using OSQP (Operator Splitting QP).
 
 ```python
-from tesseract_robotics.trajopt_sqp import OSQPEigenSolver
+from tesseract.trajopt_sqp import OSQPEigenSolver
 
 qp_solver = OSQPEigenSolver()
 
@@ -120,7 +120,7 @@ qp_solver = OSQPEigenSolver()
 Problem formulation combining ifopt interface with QP solver.
 
 ```python
-from tesseract_robotics.trajopt_sqp import IfoptQPProblem, OSQPEigenSolver
+from tesseract.trajopt_sqp import IfoptQPProblem, OSQPEigenSolver
 
 qp_solver = OSQPEigenSolver()
 nlp = IfoptQPProblem(qp_solver)
@@ -148,7 +148,7 @@ nlp.setup()
 Solver configuration parameters.
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPParameters
+from tesseract.trajopt_sqp import SQPParameters
 
 params = SQPParameters()
 
@@ -215,7 +215,7 @@ best_values = results.best_var_vals  # np.ndarray of all variables
 ### SQPStatus
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPStatus
+from tesseract.trajopt_sqp import SQPStatus
 
 SQPStatus.RUNNING           # Still iterating
 SQPStatus.CONVERGED         # Converged successfully
@@ -228,7 +228,7 @@ SQPStatus.CALLBACK_STOPPED       # Stopped by callback
 ### QPSolverStatus
 
 ```python
-from tesseract_robotics.trajopt_sqp import QPSolverStatus
+from tesseract.trajopt_sqp import QPSolverStatus
 
 QPSolverStatus.OPTIMAL      # QP solved optimally
 QPSolverStatus.PRIMAL_INFEASIBLE  # Infeasible
@@ -238,7 +238,7 @@ QPSolverStatus.DUAL_INFEASIBLE    # Dual infeasible
 ### CostPenaltyType
 
 ```python
-from tesseract_robotics.trajopt_sqp import CostPenaltyType
+from tesseract.trajopt_sqp import CostPenaltyType
 
 CostPenaltyType.SQUARED  # Quadratic penalty
 CostPenaltyType.HINGE    # Hinge loss
@@ -247,7 +247,7 @@ CostPenaltyType.HINGE    # Hinge loss
 ### ConstraintType
 
 ```python
-from tesseract_robotics.trajopt_sqp import ConstraintType
+from tesseract.trajopt_sqp import ConstraintType
 
 ConstraintType.EQ   # Equality constraint
 ConstraintType.INEQ # Inequality constraint
@@ -258,7 +258,7 @@ ConstraintType.INEQ # Inequality constraint
 Custom callback for monitoring optimization.
 
 ```python
-from tesseract_robotics.trajopt_sqp import SQPCallback
+from tesseract.trajopt_sqp import SQPCallback
 
 class MyCallback(SQPCallback):
     def __call__(self, nlp, results):
@@ -278,7 +278,7 @@ solver.registerCallback(callback)
 
 ```python
 # Warm start example
-from tesseract_robotics.trajopt_ifopt import interpolate
+from tesseract.trajopt_ifopt import interpolate
 
 start = current_joints
 goal = target_joints
@@ -292,12 +292,12 @@ for i, var in enumerate(variables):
 
 The following is auto-generated from the module's type stubs and docstrings.
 
-::: tesseract_robotics.trajopt_sqp._trajopt_sqp.SQPStatus
+::: tesseract.trajopt_sqp._trajopt_sqp.SQPStatus
     options:
       show_root_heading: true
       show_source: false
 
-::: tesseract_robotics.trajopt_sqp._trajopt_sqp.SQPParameters
+::: tesseract.trajopt_sqp._trajopt_sqp.SQPParameters
     options:
       show_root_heading: true
       show_source: false

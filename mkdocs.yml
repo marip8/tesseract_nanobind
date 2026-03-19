@@ -1,4 +1,4 @@
-site_name: tesseract_robotics
+site_name: tesseract
 site_description: Python bindings for Tesseract Motion Planning Framework
 site_url: https://tesseract-robotics.github.io/tesseract_nanobind/
 repo_url: https://github.com/tesseract-robotics/tesseract_nanobind
@@ -145,26 +145,26 @@ nav:
   - API Reference:
     - api/index.md
     - High-Level:
-      - tesseract_robotics.planning: api/planning.md
+      - tesseract.planning: api/planning.md
     - Core Modules:
-      - tesseract_robotics.tesseract_common: api/tesseract_common.md
-      - tesseract_robotics.tesseract_geometry: api/tesseract_geometry.md
-      - tesseract_robotics.tesseract_scene_graph: api/tesseract_scene_graph.md
-      - tesseract_robotics.tesseract_environment: api/tesseract_environment.md
-      - tesseract_robotics.tesseract_collision: api/tesseract_collision.md
-      - tesseract_robotics.tesseract_kinematics: api/tesseract_kinematics.md
-      - tesseract_robotics.tesseract_serialization: api/tesseract_serialization.md
+      - tesseract.tesseract_common: api/tesseract_common.md
+      - tesseract.tesseract_geometry: api/tesseract_geometry.md
+      - tesseract.tesseract_scene_graph: api/tesseract_scene_graph.md
+      - tesseract.tesseract_environment: api/tesseract_environment.md
+      - tesseract.tesseract_collision: api/tesseract_collision.md
+      - tesseract.tesseract_kinematics: api/tesseract_kinematics.md
+      - tesseract.tesseract_serialization: api/tesseract_serialization.md
     - Planning Modules:
-      - tesseract_robotics.tesseract_command_language: api/tesseract_command_language.md
-      - tesseract_robotics.tesseract_motion_planners: api/tesseract_motion_planners.md
-      - tesseract_robotics.tesseract_motion_planners_ompl: api/tesseract_motion_planners_ompl.md
-      - tesseract_robotics.tesseract_motion_planners_trajopt: api/tesseract_motion_planners_trajopt.md
-      - tesseract_robotics.tesseract_motion_planners_descartes: api/tesseract_motion_planners_descartes.md
-      - tesseract_robotics.tesseract_motion_planners_simple: api/tesseract_motion_planners_simple.md
-      - tesseract_robotics.tesseract_task_composer: api/tesseract_task_composer.md
+      - tesseract.tesseract_command_language: api/tesseract_command_language.md
+      - tesseract.tesseract_motion_planners: api/tesseract_motion_planners.md
+      - tesseract.tesseract_motion_planners_ompl: api/tesseract_motion_planners_ompl.md
+      - tesseract.tesseract_motion_planners_trajopt: api/tesseract_motion_planners_trajopt.md
+      - tesseract.tesseract_motion_planners_descartes: api/tesseract_motion_planners_descartes.md
+      - tesseract.tesseract_motion_planners_simple: api/tesseract_motion_planners_simple.md
+      - tesseract.tesseract_task_composer: api/tesseract_task_composer.md
     - SQP Modules:
-      - tesseract_robotics.trajopt_ifopt: api/trajopt_ifopt.md
-      - tesseract_robotics.trajopt_sqp: api/trajopt_sqp.md
+      - tesseract.trajopt_ifopt: api/trajopt_ifopt.md
+      - tesseract.trajopt_sqp: api/trajopt_sqp.md
   - Changes:
     - "0.33 → 0.34": changes.md
   - Developer:

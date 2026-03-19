@@ -1,7 +1,7 @@
 import os
 
-import tesseract_robotics  # noqa: F401 - triggers env var setup
-from tesseract_robotics.tesseract_common import GeneralResourceLocator
+import tesseract  # noqa: F401 - triggers env var setup
+from tesseract.tesseract_common import GeneralResourceLocator
 
 
 def TesseractSupportResourceLocator():
@@ -10,7 +10,7 @@ def TesseractSupportResourceLocator():
     Uses GeneralResourceLocator which resolves package:// URLs using
     the TESSERACT_RESOURCE_PATH environment variable.
 
-    The environment variable is automatically set by tesseract_robotics
+    The environment variable is automatically set by tesseract
     when using bundled data. Can be overridden by setting env var manually.
     """
     # Legacy fallback for custom TESSERACT_SUPPORT_DIR without TESSERACT_RESOURCE_PATH
