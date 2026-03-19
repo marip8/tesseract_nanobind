@@ -244,7 +244,7 @@ target_link_libraries(_ompl_base PRIVATE ${OMPL_LIBRARIES})
 set_target_properties(_ompl_base PROPERTIES
   CXX_VISIBILITY_PRESET default
   VISIBILITY_INLINES_HIDDEN OFF)
-install(TARGETS _ompl_base LIBRARY DESTINATION tesseract_robotics/ompl_base)
+install(TARGETS _ompl_base LIBRARY DESTINATION ompl_base)
 
 # Add tesseract_motion_planners_descartes module (optional - only if descartes component was built)
 find_package(tesseract_motion_planners QUIET COMPONENTS descartes)

@@ -6,7 +6,7 @@ Exposes SE(2) state spaces with specialized distance metrics:
 - DubinsStateSpace: For vehicles that can only go forward
 
 Example:
-    >>> from tesseract_robotics.ompl_base import ReedsSheppStateSpace, RealVectorBounds
+    >>> from ompl_base import ReedsSheppStateSpace, RealVectorBounds
     >>> import math
     >>>
     >>> # Create state space with 1.5m turning radius
