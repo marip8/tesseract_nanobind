@@ -83,9 +83,10 @@ function(add_tesseract_nanobind_extension module_name source_file)
     CXX_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN OFF)
 
-  # Install the module
+  # Install the module - strip tesseract_ prefix for Python subpackage name
+  string(REGEX REPLACE "^tesseract_" "" _subpackage_name ${module_name})
   install(TARGETS _${module_name}
-          LIBRARY DESTINATION tesseract/${module_name})
+          LIBRARY DESTINATION tesseract/${_subpackage_name})
 endfunction()
 
 # Add tesseract_common module
@@ -377,10 +378,10 @@ message(STATUS "===============================================")
 #   - Local dev: ws/src/tesseract/... (flat repo layout)
 #   - CI layout: ../tesseract/... (repo cloned to ws/src/tesseract_nanobind)
 
-set(TESSERACT_SUPPORT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ws/src/tesseract/tesseract_support")
+set(TESSERACT_SUPPORT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ws/src/tesseract/support")
 if(NOT EXISTS "${TESSERACT_SUPPORT_SRC}")
   # CI layout: repo at ws/src/tesseract_nanobind, deps at ws/src/tesseract
-  set(TESSERACT_SUPPORT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../tesseract/tesseract_support")
+  set(TESSERACT_SUPPORT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../tesseract/support")
 endif()
 
 set(TASK_COMPOSER_CFG_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ws/src/tesseract_planning/tesseract_task_composer/config")

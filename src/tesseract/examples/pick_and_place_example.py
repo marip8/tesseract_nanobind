@@ -81,9 +81,9 @@ from tesseract.planning import (
     create_obstacle,
 )
 from tesseract.planning.profiles import create_freespace_pipeline_profiles
-from tesseract.tesseract_collision import CollisionEvaluatorType
-from tesseract.tesseract_command_language import ProfileDictionary
-from tesseract.tesseract_motion_planners_trajopt import (
+from tesseract.collision import CollisionEvaluatorType
+from tesseract.command_language import ProfileDictionary
+from tesseract.motion_planners_trajopt import (
     ProfileDictionary_addTrajOptCompositeProfile,
     TrajOptCollisionConfig,
     TrajOptDefaultCompositeProfile,

@@ -25,8 +25,8 @@ import re
 import ssl
 import traceback
 
-from tesseract.tesseract_common import ResourceLocator, SimpleLocatedResource
-from tesseract.tesseract_environment import Environment
+from tesseract.common import ResourceLocator, SimpleLocatedResource
+from tesseract.environment import Environment
 from tesseract.viewer import TesseractViewer
 
 shapes_urdf = """

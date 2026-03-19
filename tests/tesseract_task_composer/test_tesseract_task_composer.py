@@ -4,8 +4,8 @@ import gc
 import os
 
 import tesseract
-from tesseract.tesseract_common import FilesystemPath, GeneralResourceLocator
-from tesseract.tesseract_task_composer import TaskComposerPluginFactory
+from tesseract.common import FilesystemPath, GeneralResourceLocator
+from tesseract.task_composer import TaskComposerPluginFactory
 
 
 class TestTaskComposerPluginFactory:

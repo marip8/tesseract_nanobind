@@ -78,7 +78,7 @@ The **Command Language** describes motion tasks:
 - **CompositeInstruction**: Container for multiple instructions
 
 ```python
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     StateWaypointPoly, CartesianWaypointPoly,
     MoveInstruction, MoveInstructionType,
     CompositeInstruction
@@ -227,7 +227,7 @@ to NumPy arrays by nanobind. This conversion works for `float64` types (`double`
 Some Eigen geometry types are wrapped as classes in the `tesseract_common` module:
 
 ```python
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 # Identity transform
@@ -265,7 +265,7 @@ The command language uses type erasure extensively. In Python, module-level util
 are needed to create and cast instructions and waypoints:
 
 ```python
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     CartesianWaypointPoly_wrap_CartesianWaypoint,
     MoveInstructionPoly_wrap_MoveInstruction,
     InstructionPoly_as_MoveInstructionPoly,
@@ -282,7 +282,7 @@ move_instr = InstructionPoly_as_MoveInstructionPoly(instruction)
 `ProfileDictionary` has similar accessor functions per type:
 
 ```python
-from tesseract.tesseract_motion_planners_ompl import (
+from tesseract.motion_planners_ompl import (
     ProfileDictionary_addProfile_OMPLPlanProfile
 )
 
@@ -294,7 +294,7 @@ ProfileDictionary_addProfile_OMPLPlanProfile(profiles, "DEFAULT", ompl_profile)
 Tesseract uses `console_bridge` for logging. Control logging level via:
 
 ```python
-from tesseract.tesseract_common import (
+from tesseract.common import (
     getLogLevel, setLogLevel,
     CONSOLE_BRIDGE_LOG_NONE,
     CONSOLE_BRIDGE_LOG_ERROR,

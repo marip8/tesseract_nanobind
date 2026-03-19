@@ -123,7 +123,7 @@ Constrain TCP to a Cartesian pose.
 
 ```python
 from tesseract.trajopt_ifopt import CartPosInfo, CartPosInfoType, CartPosConstraint
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 
 # Create info struct
 info = CartPosInfo()

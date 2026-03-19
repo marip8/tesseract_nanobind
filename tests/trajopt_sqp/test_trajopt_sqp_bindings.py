@@ -16,12 +16,12 @@ import pytest
 
 from tesseract import trajopt_ifopt as ti
 from tesseract import trajopt_sqp as tsqp
-from tesseract.tesseract_common import (
+from tesseract.common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
 )
-from tesseract.tesseract_environment import Environment
+from tesseract.environment import Environment
 
 
 def _make_nodes_variables(joint_names, joint_limits, initial_states, name="trajectory"):
@@ -624,7 +624,7 @@ class TestContinuousCollisionBindings:
 
     def test_lvs_discrete_collision_evaluator(self, kuka_setup):
         """Test LVSDiscreteCollisionEvaluator creation (0.34: no cache)."""
-        from tesseract.tesseract_collision import CollisionEvaluatorType
+        from tesseract.collision import CollisionEvaluatorType
 
         env, manip, joint_names, _ = kuka_setup
 
@@ -637,7 +637,7 @@ class TestContinuousCollisionBindings:
 
     def test_lvs_continuous_collision_evaluator(self, kuka_setup):
         """Test LVSContinuousCollisionEvaluator creation (0.34: no cache)."""
-        from tesseract.tesseract_collision import CollisionEvaluatorType
+        from tesseract.collision import CollisionEvaluatorType
 
         env, manip, joint_names, _ = kuka_setup
 
@@ -649,7 +649,7 @@ class TestContinuousCollisionBindings:
 
     def test_continuous_collision_constraint(self, kuka_setup):
         """Test ContinuousCollisionConstraint creation."""
-        from tesseract.tesseract_collision import CollisionEvaluatorType
+        from tesseract.collision import CollisionEvaluatorType
 
         env, manip, joint_names, joint_limits = kuka_setup
 
@@ -670,7 +670,7 @@ class TestContinuousCollisionBindings:
 
     def test_continuous_vs_discrete_evaluator_types(self, kuka_setup):
         """Test that continuous evaluators inherit from correct base."""
-        from tesseract.tesseract_collision import CollisionEvaluatorType
+        from tesseract.collision import CollisionEvaluatorType
 
         env, manip, _, _ = kuka_setup
 

@@ -69,9 +69,9 @@ joint = scene.getJoint("joint_6")
 ### Adding Objects
 
 ```python
-from tesseract.tesseract_geometry import Box, Sphere, Cylinder
-from tesseract.tesseract_scene_graph import Link, Joint, JointType
-from tesseract.tesseract_common import Isometry3d
+from tesseract.geometry import Box, Sphere, Cylinder
+from tesseract.scene_graph import Link, Joint, JointType
+from tesseract.common import Isometry3d
 import numpy as np
 
 # Create a box obstacle

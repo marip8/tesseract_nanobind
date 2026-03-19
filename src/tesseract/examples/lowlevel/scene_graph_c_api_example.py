@@ -23,19 +23,19 @@ import sys
 
 import numpy as np
 
-from tesseract.tesseract_common import (
+from tesseract.common import (
     AngleAxisd,
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     Translation3d,
 )
-from tesseract.tesseract_environment import (
+from tesseract.environment import (
     Environment,
     MoveJointCommand,
     MoveLinkCommand,
 )
-from tesseract.tesseract_scene_graph import Joint, JointType
+from tesseract.scene_graph import Joint, JointType
 
 # Viewer (skip in pytest)
 TesseractViewer = None

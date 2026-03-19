@@ -90,29 +90,29 @@ Related Examples
 
 import numpy as np
 
-from tesseract.tesseract_collision import (
+from tesseract.collision import (
     ContactRequest,
     ContactResultMap,
     ContactResultVector,
     ContactTestType_ALL,
 )
-from tesseract.tesseract_common import (
+from tesseract.common import (
     CollisionMarginData,
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     Translation3d,
 )
-from tesseract.tesseract_environment import AddLinkCommand, Environment
-from tesseract.tesseract_geometry import Sphere
-from tesseract.tesseract_scene_graph import (
+from tesseract.environment import AddLinkCommand, Environment
+from tesseract.geometry import Sphere
+from tesseract.scene_graph import (
     Collision,
     Joint,
     JointType_FIXED,
     Link,
     Visual,
 )
-from tesseract.tesseract_state_solver import OFKTStateSolver
+from tesseract.state_solver import OFKTStateSolver
 
 # Initialize Environment with a robot from URDF file
 # The collision checker is configured using a yaml configuration file specified by the SRDF file. This configuration

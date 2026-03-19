@@ -25,11 +25,11 @@ from typing import TYPE_CHECKING
 
 # Re-export PlanningResult from composer
 from tesseract.planning.composer import PlanningResult, TaskComposer
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     CompositeInstruction,
     ProfileDictionary,
 )
-from tesseract.tesseract_motion_planners import (
+from tesseract.motion_planners import (
     assignCurrentStateAsSeed as _assignCurrentStateAsSeed,
 )
 

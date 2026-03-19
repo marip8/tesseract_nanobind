@@ -48,7 +48,7 @@ import numpy as np
 from tesseract import trajopt_ifopt as ti
 from tesseract import trajopt_sqp as tsqp
 from tesseract.planning import Robot
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 
 TesseractViewer = None
 if "pytest" not in sys.modules:

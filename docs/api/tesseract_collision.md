@@ -1,4 +1,4 @@
-# tesseract.tesseract_collision
+# tesseract.collision
 
 Collision detection managers and contact queries.
 
@@ -9,7 +9,7 @@ Collision detection managers and contact queries.
 Checks collision at a single configuration.
 
 ```python
-from tesseract.tesseract_collision import DiscreteContactManager
+from tesseract.collision import DiscreteContactManager
 
 # Get from environment
 manager = env.getDiscreteContactManager()
@@ -29,7 +29,7 @@ my_manager.contactTest(result_map, request)
 Checks collision along swept motion.
 
 ```python
-from tesseract.tesseract_collision import ContinuousContactManager
+from tesseract.collision import ContinuousContactManager
 
 # Get from environment
 manager = env.getContinuousContactManager()
@@ -52,7 +52,7 @@ my_manager.contactTest(result_map, request)
 Configure what contacts to find.
 
 ```python
-from tesseract.tesseract_collision import (
+from tesseract.collision import (
     ContactRequest, ContactTestType
 )
 
@@ -79,7 +79,7 @@ request.type = ContactTestType.LIMITED  # up to max contacts
 Single contact between two objects.
 
 ```python
-from tesseract.tesseract_collision import ContactResult
+from tesseract.collision import ContactResult
 
 # After contactTest()
 for key, results in result_map.items():
@@ -104,7 +104,7 @@ for key, results in result_map.items():
 Dictionary of contacts by link pair.
 
 ```python
-from tesseract.tesseract_collision import ContactResultMap
+from tesseract.collision import ContactResultMap
 
 result_map = ContactResultMap()
 manager.contactTest(result_map, request)
@@ -119,7 +119,7 @@ for pair_key, contacts in result_map.items():
 List of contact results.
 
 ```python
-from tesseract.tesseract_collision import ContactResultVector
+from tesseract.collision import ContactResultVector
 
 # Flatten all contacts
 all_contacts = ContactResultVector()
@@ -134,7 +134,7 @@ for contacts in result_map.values():
 Configure collision checking behavior.
 
 ```python
-from tesseract.tesseract_collision import CollisionCheckConfig
+from tesseract.collision import CollisionCheckConfig
 
 config = CollisionCheckConfig()
 config.contact_request = request
@@ -146,7 +146,7 @@ config.longest_valid_segment_length = 0.01  # for continuous
 Configure contact manager settings.
 
 ```python
-from tesseract.tesseract_collision import ContactManagerConfig
+from tesseract.collision import ContactManagerConfig
 
 config = ContactManagerConfig()
 config.margin_data.setDefaultCollisionMargin(0.025)
@@ -158,7 +158,7 @@ config.margin_data.setPairCollisionMargin("link_a", "link_b", 0.05)
 Generate convex hulls for collision.
 
 ```python
-from tesseract.tesseract_collision import makeConvexMesh
+from tesseract.collision import makeConvexMesh
 
 # From vertices
 vertices = [np.array([x, y, z]) for ...]
@@ -170,7 +170,7 @@ convex = makeConvexMesh(vertices)
 Used with trajectory optimization.
 
 ```python
-from tesseract.tesseract_collision import CollisionEvaluatorType
+from tesseract.collision import CollisionEvaluatorType
 
 CollisionEvaluatorType.DISCRETE           # single config
 CollisionEvaluatorType.LVS_DISCRETE       # interpolated discrete
@@ -181,7 +181,7 @@ CollisionEvaluatorType.CONTINUOUS         # continuous
 ## Usage Example
 
 ```python
-from tesseract.tesseract_collision import (
+from tesseract.collision import (
     ContactRequest, ContactTestType, ContactResultMap
 )
 
@@ -210,7 +210,7 @@ if is_collision:
 
 ## Auto-generated API Reference
 
-::: tesseract.tesseract_collision._tesseract_collision
+::: tesseract.collision._tesseract_collision
     options:
       show_root_heading: false
       show_source: false

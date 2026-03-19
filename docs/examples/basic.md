@@ -24,14 +24,14 @@ Manipulate the scene graph (add/remove objects):
 
 ```python title="scene_graph_example.py"
 from tesseract.planning import Robot
-from tesseract.tesseract_geometry import Box, Sphere
-from tesseract.tesseract_scene_graph import (
+from tesseract.geometry import Box, Sphere
+from tesseract.scene_graph import (
     Link, Joint, JointType, Visual, Collision, Material
 )
-from tesseract.tesseract_environment import (
+from tesseract.environment import (
     AddLinkCommand, RemoveLinkCommand
 )
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -93,11 +93,11 @@ print(f"Collision after removal: {not is_safe}")
 All available geometry types:
 
 ```python title="geometry_showcase_example.py"
-from tesseract.tesseract_geometry import (
+from tesseract.geometry import (
     Box, Sphere, Cylinder, Capsule, Cone,
     Mesh, ConvexMesh, Plane, Octree
 )
-from tesseract.tesseract_common import VectorVector3d
+from tesseract.common import VectorVector3d
 import numpy as np
 
 # Primitive shapes
@@ -138,7 +138,7 @@ print(f"Plane normal: ({plane.getA()}, {plane.getB()}, {plane.getC()})")
 
 ??? tip "Loading Mesh Files"
     ```python
-    from tesseract.tesseract_geometry import Mesh
+    from tesseract.geometry import Mesh
 
     # From file (STL, OBJ, DAE)
     mesh = Mesh.fromFile("/path/to/model.stl")
@@ -152,7 +152,7 @@ print(f"Plane normal: ({plane.getA()}, {plane.getB()}, {plane.getC()})")
 Working with Isometry3d transforms:
 
 ```python title="transforms_example.py"
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 # Identity transform

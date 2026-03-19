@@ -13,8 +13,8 @@ environment and kinematic group.
 
 import gc
 
-from tesseract.tesseract_common import FilesystemPath, GeneralResourceLocator
-from tesseract.tesseract_environment import Environment
+from tesseract.common import FilesystemPath, GeneralResourceLocator
+from tesseract.environment import Environment
 
 
 def test_kdl_kinematics_plugin_loads():

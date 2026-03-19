@@ -1,4 +1,4 @@
-# tesseract.tesseract_common
+# tesseract.common
 
 Common types, utilities, and resource handling.
 
@@ -9,7 +9,7 @@ Common types, utilities, and resource handling.
 Rigid body transformation (rotation + translation).
 
 ```python
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 # Identity transform
@@ -36,7 +36,7 @@ combined = pose1 * pose2       # compose transforms
 Quaternion rotation (w, x, y, z).
 
 ```python
-from tesseract.tesseract_common import Quaterniond
+from tesseract.common import Quaterniond
 
 q = Quaterniond(w=1.0, x=0.0, y=0.0, z=0.0)  # identity
 q = Quaterniond.Identity()
@@ -51,7 +51,7 @@ rotation_matrix = q.toRotationMatrix()
 Axis-angle rotation representation.
 
 ```python
-from tesseract.tesseract_common import AngleAxisd
+from tesseract.common import AngleAxisd
 import numpy as np
 
 # 90 degrees around Z axis
@@ -66,7 +66,7 @@ rotation_matrix = aa.toRotationMatrix()
 Resolves `package://` URLs to file paths.
 
 ```python
-from tesseract.tesseract_common import GeneralResourceLocator
+from tesseract.common import GeneralResourceLocator
 
 locator = GeneralResourceLocator()
 
@@ -80,7 +80,7 @@ path = resource.getFilePath()
 In-memory resource from bytes.
 
 ```python
-from tesseract.tesseract_common import BytesResource
+from tesseract.common import BytesResource
 
 data = b"<robot name='test'></robot>"
 resource = BytesResource("robot.urdf", data)
@@ -93,7 +93,7 @@ resource = BytesResource("robot.urdf", data)
 Defines which link pairs to skip during collision checking.
 
 ```python
-from tesseract.tesseract_common import AllowedCollisionMatrix
+from tesseract.common import AllowedCollisionMatrix
 
 acm = AllowedCollisionMatrix()
 
@@ -115,7 +115,7 @@ acm.clearAllowedCollisions()
 Configure collision margins per link pair.
 
 ```python
-from tesseract.tesseract_common import CollisionMarginData
+from tesseract.common import CollisionMarginData
 
 margins = CollisionMarginData()
 margins.setDefaultCollisionMargin(0.025)
@@ -132,7 +132,7 @@ pair_margin = margins.getPairCollisionMargin("link_a", "link_b")
 Joint positions and velocities.
 
 ```python
-from tesseract.tesseract_common import JointState
+from tesseract.common import JointState
 
 state = JointState()
 state.joint_names = ["j1", "j2", "j3"]
@@ -145,7 +145,7 @@ state.velocity = np.array([0.0, 0.0, 0.0])
 Joint position, velocity, acceleration limits.
 
 ```python
-from tesseract.tesseract_common import KinematicLimits
+from tesseract.common import KinematicLimits
 
 limits = kin_group.getLimits()
 print(f"Position min: {limits.joint_limits.col(0)}")
@@ -161,7 +161,7 @@ print(f"Acceleration: {limits.acceleration_limits}")
 Describes a kinematic group configuration.
 
 ```python
-from tesseract.tesseract_common import ManipulatorInfo
+from tesseract.common import ManipulatorInfo
 
 info = ManipulatorInfo()
 info.manipulator = "manipulator"        # group name
@@ -175,7 +175,7 @@ info.tcp_offset = Isometry3d.Identity() # optional TCP offset
 Control console_bridge logging level.
 
 ```python
-from tesseract.tesseract_common import (
+from tesseract.common import (
     getLogLevel, setLogLevel,
     CONSOLE_BRIDGE_LOG_NONE,
     CONSOLE_BRIDGE_LOG_ERROR,
@@ -201,7 +201,7 @@ setLogLevel(CONSOLE_BRIDGE_LOG_DEBUG)
 
 ## Auto-generated API Reference
 
-::: tesseract.tesseract_common._tesseract_common
+::: tesseract.common._tesseract_common
     options:
       show_root_heading: false
       show_source: false

@@ -60,7 +60,7 @@ Compute end-effector pose from joint values:
 ### Transform Operations
 
 ```python
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 # Create identity transform
@@ -196,7 +196,7 @@ def is_near_singularity(jacobian, threshold=0.01):
 Define tool center point (TCP) offsets:
 
 ```python
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 
 # Tool offset (e.g., gripper extends 15cm from flange)
 tool_offset = Isometry3d.Identity()

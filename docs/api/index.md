@@ -14,24 +14,24 @@ Auto-generated API documentation from docstrings.
 
 | Module | Description |
 |--------|-------------|
-| [`tesseract.tesseract_common`](tesseract_common.md) | Common types (Isometry3d, etc.) |
-| [`tesseract.tesseract_geometry`](tesseract_geometry.md) | Geometric primitives |
-| [`tesseract.tesseract_scene_graph`](tesseract_scene_graph.md) | Links, joints, scene graph |
-| [`tesseract.tesseract_environment`](tesseract_environment.md) | Environment, commands |
-| [`tesseract.tesseract_collision`](tesseract_collision.md) | Collision managers, contacts |
-| [`tesseract.tesseract_kinematics`](tesseract_kinematics.md) | Kinematic groups, solvers |
+| [`tesseract.common`](tesseract_common.md) | Common types (Isometry3d, etc.) |
+| [`tesseract.geometry`](tesseract_geometry.md) | Geometric primitives |
+| [`tesseract.scene_graph`](tesseract_scene_graph.md) | Links, joints, scene graph |
+| [`tesseract.environment`](tesseract_environment.md) | Environment, commands |
+| [`tesseract.collision`](tesseract_collision.md) | Collision managers, contacts |
+| [`tesseract.kinematics`](tesseract_kinematics.md) | Kinematic groups, solvers |
 
 ### Planning Modules
 
 | Module | Description |
 |--------|-------------|
-| [`tesseract.tesseract_command_language`](tesseract_command_language.md) | Waypoints, instructions |
-| [`tesseract.tesseract_motion_planners`](tesseract_motion_planners.md) | Base planner types |
-| [`tesseract.tesseract_motion_planners_ompl`](tesseract_motion_planners_ompl.md) | OMPL planner |
-| [`tesseract.tesseract_motion_planners_trajopt`](tesseract_motion_planners_trajopt.md) | TrajOpt planner |
-| [`tesseract.tesseract_motion_planners_descartes`](tesseract_motion_planners_descartes.md) | Descartes planner |
-| [`tesseract.tesseract_motion_planners_simple`](tesseract_motion_planners_simple.md) | Simple interpolation |
-| [`tesseract.tesseract_task_composer`](tesseract_task_composer.md) | Task composition |
+| [`tesseract.command_language`](tesseract_command_language.md) | Waypoints, instructions |
+| [`tesseract.motion_planners`](tesseract_motion_planners.md) | Base planner types |
+| [`tesseract.motion_planners_ompl`](tesseract_motion_planners_ompl.md) | OMPL planner |
+| [`tesseract.motion_planners_trajopt`](tesseract_motion_planners_trajopt.md) | TrajOpt planner |
+| [`tesseract.motion_planners_descartes`](tesseract_motion_planners_descartes.md) | Descartes planner |
+| [`tesseract.motion_planners_simple`](tesseract_motion_planners_simple.md) | Simple interpolation |
+| [`tesseract.task_composer`](tesseract_task_composer.md) | Task composition |
 
 ### Low-Level SQP Modules
 
@@ -54,9 +54,9 @@ planner = Planner(robot)
 ### Direct Module Access
 
 ```python
-from tesseract.tesseract_environment import Environment
-from tesseract.tesseract_scene_graph import Link, Joint
-from tesseract.tesseract_geometry import Box, Sphere
+from tesseract.environment import Environment
+from tesseract.scene_graph import Link, Joint
+from tesseract.geometry import Box, Sphere
 ```
 
 ### SQP API

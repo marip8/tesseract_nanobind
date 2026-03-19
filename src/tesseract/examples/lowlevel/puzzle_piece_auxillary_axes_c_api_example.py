@@ -34,9 +34,9 @@ from tesseract.planning import (
     Robot,
     TaskComposer,
 )
-from tesseract.tesseract_collision import CollisionEvaluatorType
-from tesseract.tesseract_command_language import ProfileDictionary
-from tesseract.tesseract_motion_planners_trajopt import (
+from tesseract.collision import CollisionEvaluatorType
+from tesseract.command_language import ProfileDictionary
+from tesseract.motion_planners_trajopt import (
     ProfileDictionary_addTrajOptCompositeProfile,
     ProfileDictionary_addTrajOptPlanProfile,
     ProfileDictionary_addTrajOptSolverProfile,

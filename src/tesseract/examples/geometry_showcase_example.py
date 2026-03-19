@@ -59,10 +59,10 @@ from pathlib import Path
 import numpy as np
 
 from tesseract.planning import Pose, Robot
-from tesseract.tesseract_common import (
+from tesseract.common import (
     VectorVector3d,
 )
-from tesseract.tesseract_geometry import (
+from tesseract.geometry import (
     Box,
     Capsule,
     Cone,
@@ -76,7 +76,7 @@ from tesseract.tesseract_geometry import (
     createConvexMeshFromPath,
     createMeshFromPath,
 )
-from tesseract.tesseract_scene_graph import (
+from tesseract.scene_graph import (
     Collision,
     Joint,
     JointType,

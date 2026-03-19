@@ -60,7 +60,7 @@ graph LR
 ## Discrete Collision Checking
 
 ```python
-from tesseract.tesseract_collision import (
+from tesseract.collision import (
     DiscreteContactManager,
     ContactRequest,
     ContactTestType
@@ -93,7 +93,7 @@ for key, results in contacts.items():
 Check for collisions along a motion segment:
 
 ```python
-from tesseract.tesseract_collision import ContinuousContactManager
+from tesseract.collision import ContinuousContactManager
 
 # Get continuous manager
 manager = env.getContinuousContactManager()
@@ -129,7 +129,7 @@ Used in TrajOpt for efficient continuous collision approximation:
 
 ```python
 from tesseract.trajopt_ifopt import TrajOptCollisionConfig
-from tesseract.tesseract_collision import CollisionEvaluatorType
+from tesseract.collision import CollisionEvaluatorType
 
 # 0.33 API: TrajOptCollisionConfig(margin, coeff) constructor
 config = TrajOptCollisionConfig(0.025, 20.0)  # 2.5cm margin, coeff=20
@@ -143,7 +143,7 @@ config.collision_check_config.longest_valid_segment_length = 0.05  # 5cm interpo
 Contact margins define the safety buffer around objects:
 
 ```python
-from tesseract.tesseract_collision import ContactMarginData
+from tesseract.collision import ContactMarginData
 
 margin_data = ContactMarginData()
 
@@ -251,7 +251,7 @@ trajectory = planner.plan(
     For complex meshes, use convex decomposition for better performance:
 
     ```python
-    from tesseract.tesseract_geometry import ConvexMesh
+    from tesseract.geometry import ConvexMesh
 
     convex = ConvexMesh.fromMesh(mesh, convex_hull=True)
     ```

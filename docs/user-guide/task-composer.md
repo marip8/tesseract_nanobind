@@ -49,7 +49,7 @@ graph TD
 === "Low-Level API"
 
     ```python
-    from tesseract.tesseract_task_composer import (
+    from tesseract.task_composer import (
         TaskComposerPluginFactory,
         TaskComposerDataStorage,
         TaskComposerContext,
@@ -103,7 +103,7 @@ DescartesTask → TrajOptTask → TimeParam → ContactCheck
 ```
 
 ```python
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 
 target_pose = Isometry3d.Identity()
 target_pose.translate([0.8, 0.2, 0.5])
@@ -147,10 +147,10 @@ composer.add_raster(
 Profiles configure each task's behavior:
 
 ```python
-from tesseract.tesseract_motion_planners_ompl import (
+from tesseract.motion_planners_ompl import (
     OMPLDefaultPlanProfile
 )
-from tesseract.tesseract_motion_planners_trajopt import (
+from tesseract.motion_planners_trajopt import (
     TrajOptDefaultPlanProfile,
     TrajOptDefaultCompositeProfile
 )

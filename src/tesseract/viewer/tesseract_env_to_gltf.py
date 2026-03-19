@@ -23,8 +23,8 @@ import struct
 
 import numpy as np
 
-from tesseract import tesseract_geometry
-from tesseract.tesseract_common import AngleAxisd, Quaterniond
+import tesseract.geometry
+from tesseract.common import AngleAxisd, Quaterniond
 
 from .util import tesseract_trajectory_to_list
 
@@ -321,7 +321,7 @@ def _append_link_visual(gltf_dict, gltf_buf_io, link_name, visual, visual_i, sha
     visual_u_name = visual.name + str(visual_i)
     visual_name = "link_" + link_name + "_visual_" + visual_u_name
 
-    if isinstance(visual_geom, tesseract_geometry.CompoundMesh):
+    if isinstance(visual_geom, tesseract.geometry.CompoundMesh):
         meshes = visual_geom.getMeshes()
         mesh_count = 0
         visual_nodes = []
@@ -351,21 +351,21 @@ def _append_link_visual(gltf_dict, gltf_buf_io, link_name, visual, visual_i, sha
 
     tf_material = None
 
-    if isinstance(visual_geom, tesseract_geometry.PolygonMesh):
+    if isinstance(visual_geom, tesseract.geometry.PolygonMesh):
         mesh = visual_geom
 
         mesh_dict, mesh_ind, tf_material = _convert_mesh(
             gltf_dict, gltf_buf_io, visual_node, visual_name, mesh
         )
 
-    elif isinstance(visual_geom, tesseract_geometry.Box):
+    elif isinstance(visual_geom, tesseract.geometry.Box):
         box = visual_geom
         mesh_dict, mesh_ind = _append_shape_mesh(
             gltf_dict, gltf_buf_io, "cube_geometry", visual_name, shapes_mesh_inds
         )
         visual_node["scale"] = [0.5 * box.getX(), 0.5 * box.getY(), 0.5 * box.getZ()]
 
-    elif isinstance(visual_geom, tesseract_geometry.Sphere):
+    elif isinstance(visual_geom, tesseract.geometry.Sphere):
         sphere = visual_geom
         mesh_dict, mesh_ind = _append_shape_mesh(
             gltf_dict, gltf_buf_io, "sphere_geometry", visual_name, shapes_mesh_inds
@@ -376,7 +376,7 @@ def _append_link_visual(gltf_dict, gltf_buf_io, link_name, visual, visual_i, sha
             sphere.getRadius(),
         ]
 
-    elif isinstance(visual_geom, tesseract_geometry.Cylinder):
+    elif isinstance(visual_geom, tesseract.geometry.Cylinder):
         cylinder = visual_geom
         mesh_dict, mesh_ind = _append_shape_mesh(
             gltf_dict, gltf_buf_io, "cylinder_geometry", visual_name, shapes_mesh_inds

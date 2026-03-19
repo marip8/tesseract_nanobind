@@ -2,9 +2,9 @@ import os
 
 import numpy as np
 
-from tesseract.tesseract_common import FilesystemPath, ManipulatorInfo
-from tesseract.tesseract_environment import Environment
-from tesseract.tesseract_kinematics import (
+from tesseract.common import FilesystemPath, ManipulatorInfo
+from tesseract.environment import Environment
+from tesseract.kinematics import (
     KinGroupIKInput,
     KinGroupIKInputs,
 )
@@ -132,7 +132,7 @@ def test_tesseract_redundant_solutions_tesseract_function():
     limits = kin_group.getLimits()
     redundancy_indices = list(kin_group.getRedundancyCapableJointIndices())
 
-    import tesseract.tesseract_kinematics as tes_com
+    import tesseract.kinematics as tes_com
 
     sol = np.ones(6) * np.deg2rad(5)  # 1D array, not 2D
     redun_sol = tes_com.getRedundantSolutions(sol, limits.joint_limits, redundancy_indices)

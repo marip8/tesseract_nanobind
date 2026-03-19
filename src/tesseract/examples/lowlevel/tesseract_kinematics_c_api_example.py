@@ -104,15 +104,15 @@ Related Examples
 
 import numpy as np
 
-from tesseract.tesseract_common import (
+from tesseract.common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     Quaterniond,
     Translation3d,
 )
-from tesseract.tesseract_environment import Environment
-from tesseract.tesseract_kinematics import KinGroupIKInput, KinGroupIKInputs
+from tesseract.environment import Environment
+from tesseract.kinematics import KinGroupIKInput, KinGroupIKInputs
 
 # Initialize Environment with a robot from URDF file
 # The URDF and SRDF file must be configured. The kinematics solver also requires plugin configuration,

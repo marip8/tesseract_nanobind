@@ -9,7 +9,7 @@ This example demonstrates:
 - Trajectory visualization
 """
 
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     CartesianWaypoint,
     CartesianWaypointPoly_wrap_CartesianWaypoint,
     CompositeInstruction,
@@ -18,7 +18,7 @@ from tesseract.tesseract_command_language import (
     MoveInstructionType_FREESPACE,
     ProfileDictionary,
 )
-from tesseract.tesseract_common import (
+from tesseract.common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
@@ -26,17 +26,17 @@ from tesseract.tesseract_common import (
     Quaterniond,
     Translation3d,
 )
-from tesseract.tesseract_environment import Environment
-from tesseract.tesseract_motion_planners import PlannerRequest
-from tesseract.tesseract_motion_planners_ompl import (
+from tesseract.environment import Environment
+from tesseract.motion_planners import PlannerRequest
+from tesseract.motion_planners_ompl import (
     OMPLMotionPlanner,
     OMPLRealVectorPlanProfile,
     ProfileDictionary_addOMPLProfile,
 )
-from tesseract.tesseract_motion_planners_simple import (
+from tesseract.motion_planners_simple import (
     generateInterpolatedProgram,
 )
-from tesseract.tesseract_time_parameterization import (
+from tesseract.time_parameterization import (
     TimeOptimalTrajectoryGeneration,
     TOTGCompositeProfile,
 )
@@ -44,7 +44,7 @@ from tesseract.viewer import TesseractViewer
 
 # TrajOpt imports - optional, skip if not available
 try:
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.motion_planners_trajopt import (
         ProfileDictionary_addTrajOptCompositeProfile,
         ProfileDictionary_addTrajOptPlanProfile,
         TrajOptDefaultCompositeProfile,

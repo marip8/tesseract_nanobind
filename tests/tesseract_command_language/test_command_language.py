@@ -6,7 +6,7 @@ including waypoints, instructions, and composite instructions.
 
 import numpy as np
 
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     CartesianWaypoint,
     # Poly wrappers
     CartesianWaypointPoly_wrap_CartesianWaypoint,
@@ -26,7 +26,7 @@ from tesseract.tesseract_command_language import (
     StateWaypoint,
     StateWaypointPoly_wrap_StateWaypoint,
 )
-from tesseract.tesseract_common import (
+from tesseract.common import (
     Isometry3d,
     ManipulatorInfo,
     Quaterniond,
@@ -327,7 +327,7 @@ class TestAnyPolyWrappers:
 
     def test_anypoly_wrap_composite_instruction(self):
         """Test wrapping CompositeInstruction in AnyPoly."""
-        from tesseract.tesseract_command_language import (
+        from tesseract.command_language import (
             AnyPoly_wrap_CompositeInstruction,
         )
 
@@ -348,7 +348,7 @@ class TestAnyPolyWrappers:
 
     def test_anypoly_wrap_profile_dictionary(self):
         """Test wrapping ProfileDictionary in AnyPoly."""
-        from tesseract.tesseract_command_language import (
+        from tesseract.command_language import (
             AnyPoly_wrap_ProfileDictionary,
         )
 
@@ -359,7 +359,7 @@ class TestAnyPolyWrappers:
 
     def test_anypoly_roundtrip_composite_instruction(self):
         """Test wrapping and unwrapping CompositeInstruction via AnyPoly."""
-        from tesseract.tesseract_command_language import (
+        from tesseract.command_language import (
             AnyPoly_as_CompositeInstruction,
             AnyPoly_wrap_CompositeInstruction,
         )

@@ -24,7 +24,7 @@ import traceback
 
 import importlib_resources
 
-from tesseract import tesseract_environment
+from tesseract.environment import Environment
 from tesseract.viewer.tesseract_env_to_gltf import (
     tesseract_env_to_glb,
     tesseract_env_to_gltf,
@@ -115,18 +115,18 @@ class TesseractViewer:
 
     def update_environment(self, tesseract_env, origin_offset=[0, 0, 0], trajectory=None):
         """
-        Update the environment from a tesseract_environment.Environment object. This must be called to load the
+        Update the environment from a tesseract.environment.Environment object. This must be called to load the
         environment, and after the environment changes.
 
         :param tesseract_env: The environment to load
-        :type tesseract_env: tesseract_environment.Environment
+        :type tesseract_env: tesseract.environment.Environment
         :param origin_offset: The offset of the origin in the world frame, defaults to [0,0,0]
         :type origin_offset: List[float], optional
         :param trajectory: The trajectory to display, defaults to None
         :type trajectory: tesseract_command_language.CompositeInstruction, optional
         """
 
-        assert isinstance(tesseract_env, tesseract_environment.Environment)
+        assert isinstance(tesseract_env, Environment)
         with self._lock:
             self.scene_json = tesseract_env_to_gltf(
                 tesseract_env, origin_offset, trajectory=trajectory
@@ -160,7 +160,7 @@ class TesseractViewer:
         Update the trajectory to display. The trajectory will be animated based on the timestamps in the trajectory.
 
         :param tesseract_trajectory: The trajectory to display
-        :type tesseract_trajectory: tesseract.tesseract_command_language.CompositeInstruction
+        :type tesseract_trajectory: tesseract.command_language.CompositeInstruction
         """
 
         joint_names, traj = tesseract_trajectory_to_list(tesseract_trajectory)
@@ -582,14 +582,14 @@ class TesseractViewer:
         update_now=True,
     ):
         """
-        Plot a trajectory stored in a tesseract.tesseract_command_language.CompositeInstruction to the scene.
+        Plot a trajectory stored in a tesseract.command_language.CompositeInstruction to the scene.
         This will draw the trajectory
         as a series of line segments and display axes at each trajectory waypoint.
 
         :param tesseract_trajectory: The trajectory to plot
-        :type tesseract_trajectory: tesseract.tesseract_command_language.CompositeInstruction
+        :type tesseract_trajectory: tesseract.command_language.CompositeInstruction
         :param manipulator_info: The manipulator info for the manipulator that generated the trajectory
-        :type manipulator_info: tesseract.tesseract_kinematics.ManipulatorInfo
+        :type manipulator_info: tesseract.kinematics.ManipulatorInfo
         :param color: The color of the trajectory, defaults to white
         :type color: Union[List[float], np.ndarray], optional
         :param linewidth: The width of the trajectory line segments, defaults to 0.001
@@ -643,7 +643,7 @@ class TesseractViewer:
         :param trajectory: The trajectory to plot
         :type trajectory: Union[List[List[float]], List[np.ndarray]]
         :param manipulator_info: The manipulator info for the manipulator that generated the trajectory
-        :type manipulator_info: tesseract.tesseract_kinematics.ManipulatorInfo
+        :type manipulator_info: tesseract.kinematics.ManipulatorInfo
         :param color: The color of the trajectory, defaults to white
         :type color: Union[List[float], np.ndarray], optional
         :param linewidth: The width of the trajectory line segments, defaults to 0.001

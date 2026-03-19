@@ -34,13 +34,13 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from tesseract.planning.transforms import Pose
-from tesseract.tesseract_common import (
+from tesseract.common import (
     FilesystemPath,
     GeneralResourceLocator,
     Isometry3d,
     ManipulatorInfo,
 )
-from tesseract.tesseract_environment import (
+from tesseract.environment import (
     AddLinkCommand,
     ChangeCollisionMarginsCommand,
     Environment,
@@ -49,8 +49,8 @@ from tesseract.tesseract_environment import (
     MoveLinkCommand,
     RemoveLinkCommand,
 )
-from tesseract.tesseract_kinematics import KinGroupIKInput
-from tesseract.tesseract_scene_graph import (
+from tesseract.kinematics import KinGroupIKInput
+from tesseract.scene_graph import (
     Joint,
     Link,
     SceneGraph,
@@ -505,7 +505,7 @@ class Robot:
         Returns:
             True if successful
         """
-        from tesseract.tesseract_common import AllowedCollisionMatrix
+        from tesseract.common import AllowedCollisionMatrix
 
         acm = AllowedCollisionMatrix()
         acm.addAllowedCollision(link1, link2, reason)

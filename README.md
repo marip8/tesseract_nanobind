@@ -66,8 +66,8 @@ if result.successful:
 For direct C++ API access:
 
 ```python
-from tesseract.tesseract_environment import Environment
-from tesseract.tesseract_common import GeneralResourceLocator
+from tesseract.environment import Environment
+from tesseract.common import GeneralResourceLocator
 
 env = Environment()
 locator = GeneralResourceLocator()

@@ -87,7 +87,7 @@ def test_env():
 
 def test_anypoly_wrap_environment_const():
     """Test wrapping Environment in AnyPoly for TaskComposerDataStorage."""
-    from tesseract.tesseract_environment import AnyPoly_wrap_EnvironmentConst
+    from tesseract.environment import AnyPoly_wrap_EnvironmentConst
 
     env = get_environment()
     # AnyPoly_wrap_EnvironmentConst expects shared_ptr<const Environment>
@@ -113,7 +113,7 @@ def test_get_continuous_contact_manager():
 
 def test_contact_test_api():
     """Test contactTest with ContactRequest and ContactResultMap."""
-    from tesseract.tesseract_collision import (
+    from tesseract.collision import (
         ContactRequest,
         ContactResultMap,
         ContactTestType,
@@ -137,7 +137,7 @@ def test_clear_cached_contact_managers():
 
     Uses a fully loaded robot environment to verify cache clearing with actual geometry.
     """
-    from tesseract.tesseract_collision import (
+    from tesseract.collision import (
         ContactRequest,
         ContactResultMap,
         ContactTestType,

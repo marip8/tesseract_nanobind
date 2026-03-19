@@ -5,7 +5,7 @@ Tests the ISP time parameterization using the 0.33 profile-based API.
 
 import numpy as np
 
-from tesseract.tesseract_command_language import (
+from tesseract.command_language import (
     CompositeInstruction,
     MoveInstruction,
     MoveInstructionPoly_wrap_MoveInstruction,
@@ -13,8 +13,8 @@ from tesseract.tesseract_command_language import (
     StateWaypoint,
     StateWaypointPoly_wrap_StateWaypoint,
 )
-from tesseract.tesseract_common import ManipulatorInfo
-from tesseract.tesseract_time_parameterization import (
+from tesseract.common import ManipulatorInfo
+from tesseract.time_parameterization import (
     InstructionsTrajectory,
     ISPCompositeProfile,
     IterativeSplineParameterization,

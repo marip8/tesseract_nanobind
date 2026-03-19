@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 
-from tesseract.tesseract_command_language import ProfileDictionary
+from tesseract.command_language import ProfileDictionary
 
 
 def _get_cpu_count() -> int:
@@ -47,8 +47,8 @@ def _create_trajopt_profiles():
         Must set collision_check_config.type and collision_coeff_data to match C++ examples.
         Uses LVS_CONTINUOUS for continuous collision checking (critical for attached objects).
     """
-    from tesseract.tesseract_collision import CollisionEvaluatorType
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.collision import CollisionEvaluatorType
+    from tesseract.motion_planners_trajopt import (
         TrajOptDefaultCompositeProfile,
         TrajOptDefaultPlanProfile,
     )
@@ -99,8 +99,8 @@ def _create_trajopt_upright_profiles():
     """
     import numpy as np
 
-    from tesseract.tesseract_collision import CollisionEvaluatorType
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.collision import CollisionEvaluatorType
+    from tesseract.motion_planners_trajopt import (
         TrajOptDefaultCompositeProfile,
         TrajOptDefaultPlanProfile,
     )
@@ -181,7 +181,7 @@ def create_trajopt_ifopt_default_profiles(
                               pipeline='TrajOptIfoptPipeline',
                               profiles=profiles)
     """
-    from tesseract.tesseract_motion_planners_trajopt_ifopt import (
+    from tesseract.motion_planners_trajopt_ifopt import (
         ProfileDictionary_addTrajOptIfoptCompositeProfile,
         ProfileDictionary_addTrajOptIfoptPlanProfile,
         ProfileDictionary_addTrajOptIfoptSolverProfile,
@@ -269,7 +269,7 @@ def create_trajopt_default_profiles(
             profile_names=["MY_PROFILE"]
         )
     """
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.motion_planners_trajopt import (
         ProfileDictionary_addTrajOptCompositeProfile,
         ProfileDictionary_addTrajOptPlanProfile,
     )
@@ -314,7 +314,7 @@ def create_trajopt_upright_profiles(
         profiles = create_trajopt_upright_profiles()
         result = composer.plan(robot, program, pipeline="TrajOptPipeline", profiles=profiles)
     """
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.motion_planners_trajopt import (
         ProfileDictionary_addTrajOptCompositeProfile,
         ProfileDictionary_addTrajOptPlanProfile,
     )
@@ -399,7 +399,7 @@ def create_ompl_default_profiles(
             max_solutions=1
         )
     """
-    from tesseract.tesseract_motion_planners_ompl import (
+    from tesseract.motion_planners_ompl import (
         OMPLRealVectorPlanProfile,
         ProfileDictionary_addOMPLProfile,
         RRTConnectConfigurator,
@@ -483,7 +483,7 @@ def create_ompl_planner_configurators(
             delay_collision_checking=False
         )
     """
-    from tesseract.tesseract_motion_planners_ompl import (
+    from tesseract.motion_planners_ompl import (
         RRTConnectConfigurator,
         RRTstarConfigurator,
         SBLConfigurator,
@@ -588,7 +588,7 @@ def create_descartes_default_profiles(
             num_threads=4
         )
     """
-    from tesseract.tesseract_motion_planners_descartes import (
+    from tesseract.motion_planners_descartes import (
         DescartesDefaultPlanProfileD,
         DescartesLadderGraphSolverProfileD,
         cast_DescartesPlanProfileD,
@@ -635,7 +635,7 @@ def _add_trajopt_to_profiles(
     profile_names: list[str] | None = None,
 ) -> None:
     """Add TrajOpt profiles to existing ProfileDictionary (internal helper)."""
-    from tesseract.tesseract_motion_planners_trajopt import (
+    from tesseract.motion_planners_trajopt import (
         ProfileDictionary_addTrajOptCompositeProfile,
         ProfileDictionary_addTrajOptPlanProfile,
     )
@@ -729,7 +729,7 @@ def _add_trajopt_ifopt_to_profiles(
     profile_names: list[str] | None = None,
 ) -> None:
     """Add TrajOptIfopt profiles to existing ProfileDictionary (internal helper)."""
-    from tesseract.tesseract_motion_planners_trajopt_ifopt import (
+    from tesseract.motion_planners_trajopt_ifopt import (
         ProfileDictionary_addTrajOptIfoptCompositeProfile,
         ProfileDictionary_addTrajOptIfoptPlanProfile,
         ProfileDictionary_addTrajOptIfoptSolverProfile,
@@ -895,7 +895,7 @@ def create_time_optimal_parameterization(
         from tesseract.planning.profiles import (
             create_time_optimal_parameterization
         )
-        from tesseract.tesseract_time_parameterization import (
+        from tesseract.time_parameterization import (
             InstructionsTrajectory
         )
 
@@ -915,7 +915,7 @@ def create_time_optimal_parameterization(
         Kunz & Stilman, "Time-Optimal Trajectory Generation for Path Following
         with Bounded Acceleration and Velocity", RSS 2012
     """
-    from tesseract.tesseract_time_parameterization import (
+    from tesseract.time_parameterization import (
         TimeOptimalTrajectoryGeneration,
     )
 
@@ -945,7 +945,7 @@ def create_iterative_spline_parameterization(add_points: bool = True):
         from tesseract.planning.profiles import (
             create_iterative_spline_parameterization
         )
-        from tesseract.tesseract_time_parameterization import (
+        from tesseract.time_parameterization import (
             InstructionsTrajectory
         )
 
@@ -966,7 +966,7 @@ def create_iterative_spline_parameterization(add_points: bool = True):
         time-optimal trajectories. Use ISP when computation speed matters
         more than trajectory time.
     """
-    from tesseract.tesseract_time_parameterization import (
+    from tesseract.time_parameterization import (
         IterativeSplineParameterization,
     )
 

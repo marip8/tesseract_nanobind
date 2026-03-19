@@ -130,7 +130,7 @@ def run_test(checker):
 
 def get_plugin_factory():
     # Use _FilesystemPath (C++ binding) for ContactManagersPluginFactory which needs fs::path
-    from tesseract.tesseract_common import _FilesystemPath
+    from tesseract.common import _FilesystemPath
 
     support_dir = os.environ["TESSERACT_SUPPORT_DIR"]
     collision_config = _FilesystemPath(support_dir + "/urdf/" + "contact_manager_plugins.yaml")

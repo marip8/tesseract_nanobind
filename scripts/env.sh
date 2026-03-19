@@ -22,7 +22,7 @@ export QT_HOST_PATH=$CONDA_PREFIX
 export DYLD_LIBRARY_PATH="$SCRIPT_DIR/ws/install/lib:$DYLD_LIBRARY_PATH"
 
 # Tesseract resource paths
-export TESSERACT_SUPPORT_DIR="$SCRIPT_DIR/ws/src/tesseract/tesseract_support"
+export TESSERACT_SUPPORT_DIR="$SCRIPT_DIR/ws/src/tesseract/support"
 export TESSERACT_RESOURCE_PATH="$SCRIPT_DIR/ws/src/tesseract/"
 
 # Task composer config (required for planning examples and tests)

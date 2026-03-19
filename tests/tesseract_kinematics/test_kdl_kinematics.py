@@ -22,7 +22,7 @@ def get_scene_graph():
 
 def get_plugin_factory():
     # Use _FilesystemPath (C++ binding) for KinematicsPluginFactory which needs fs::path
-    from tesseract.tesseract_common import _FilesystemPath
+    from tesseract.common import _FilesystemPath
 
     support_dir = os.environ["TESSERACT_SUPPORT_DIR"]
     kin_config = _FilesystemPath(support_dir + "/urdf/" + "lbr_iiwa_14_r820_plugins.yaml")

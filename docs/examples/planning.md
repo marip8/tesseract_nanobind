@@ -36,7 +36,7 @@ Cartesian straight-line motion with TrajOpt:
 
 ```python title="basic_cartesian_example.py"
 from tesseract.planning import Robot, Planner
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -77,7 +77,7 @@ Keep end-effector orientation constrained (e.g., carrying a glass of water):
 
 ```python title="glass_upright_example.py"
 from tesseract.planning import Robot, Composer
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -122,10 +122,10 @@ Complete pick and place workflow with object attachment:
 
 ```python title="pick_and_place_example.py"
 from tesseract.planning import Robot, Composer
-from tesseract.tesseract_geometry import Box
-from tesseract.tesseract_scene_graph import Link, Joint, JointType, Visual, Collision
-from tesseract.tesseract_environment import AddLinkCommand, RemoveLinkCommand
-from tesseract.tesseract_common import Isometry3d
+from tesseract.geometry import Box
+from tesseract.scene_graph import Link, Joint, JointType, Visual, Collision
+from tesseract.environment import AddLinkCommand, RemoveLinkCommand
+from tesseract.common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")
@@ -208,7 +208,7 @@ Industrial raster pattern for welding/painting:
 
 ```python title="raster_example.py"
 from tesseract.planning import Robot, Composer
-from tesseract.tesseract_common import Isometry3d
+from tesseract.common import Isometry3d
 import numpy as np
 
 robot = Robot.from_tesseract_support("abb_irb2400")

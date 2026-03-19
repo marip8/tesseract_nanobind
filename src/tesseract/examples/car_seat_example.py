@@ -68,17 +68,17 @@ from tesseract.planning import MotionProgram, Robot, StateTarget, TaskComposer
 from tesseract.planning.profiles import (
     create_freespace_pipeline_profiles,
 )
-from tesseract.tesseract_collision import CollisionEvaluatorType, makeConvexMesh
-from tesseract.tesseract_command_language import ProfileDictionary
-from tesseract.tesseract_common import AllowedCollisionMatrix, Isometry3d
-from tesseract.tesseract_environment import (
+from tesseract.collision import CollisionEvaluatorType, makeConvexMesh
+from tesseract.command_language import ProfileDictionary
+from tesseract.common import AllowedCollisionMatrix, Isometry3d
+from tesseract.environment import (
     AddLinkCommand,
     ModifyAllowedCollisionsCommand,
     ModifyAllowedCollisionsType,
     MoveLinkCommand,
 )
-from tesseract.tesseract_geometry import createMeshFromResource
-from tesseract.tesseract_motion_planners_trajopt import (
+from tesseract.geometry import createMeshFromResource
+from tesseract.motion_planners_trajopt import (
     ProfileDictionary_addTrajOptCompositeProfile,
     ProfileDictionary_addTrajOptPlanProfile,
     ProfileDictionary_addTrajOptSolverProfile,
@@ -86,7 +86,7 @@ from tesseract.tesseract_motion_planners_trajopt import (
     TrajOptDefaultPlanProfile,
     TrajOptOSQPSolverProfile,
 )
-from tesseract.tesseract_scene_graph import (
+from tesseract.scene_graph import (
     Collision,
     Joint,
     JointType,

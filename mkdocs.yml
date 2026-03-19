@@ -147,21 +147,21 @@ nav:
     - High-Level:
       - tesseract.planning: api/planning.md
     - Core Modules:
-      - tesseract.tesseract_common: api/tesseract_common.md
-      - tesseract.tesseract_geometry: api/tesseract_geometry.md
-      - tesseract.tesseract_scene_graph: api/tesseract_scene_graph.md
-      - tesseract.tesseract_environment: api/tesseract_environment.md
-      - tesseract.tesseract_collision: api/tesseract_collision.md
-      - tesseract.tesseract_kinematics: api/tesseract_kinematics.md
-      - tesseract.tesseract_serialization: api/tesseract_serialization.md
+      - tesseract.common: api/tesseract_common.md
+      - tesseract.geometry: api/tesseract_geometry.md
+      - tesseract.scene_graph: api/tesseract_scene_graph.md
+      - tesseract.environment: api/tesseract_environment.md
+      - tesseract.collision: api/tesseract_collision.md
+      - tesseract.kinematics: api/tesseract_kinematics.md
+      - tesseract.serialization: api/tesseract_serialization.md
     - Planning Modules:
-      - tesseract.tesseract_command_language: api/tesseract_command_language.md
-      - tesseract.tesseract_motion_planners: api/tesseract_motion_planners.md
-      - tesseract.tesseract_motion_planners_ompl: api/tesseract_motion_planners_ompl.md
-      - tesseract.tesseract_motion_planners_trajopt: api/tesseract_motion_planners_trajopt.md
-      - tesseract.tesseract_motion_planners_descartes: api/tesseract_motion_planners_descartes.md
-      - tesseract.tesseract_motion_planners_simple: api/tesseract_motion_planners_simple.md
-      - tesseract.tesseract_task_composer: api/tesseract_task_composer.md
+      - tesseract.command_language: api/tesseract_command_language.md
+      - tesseract.motion_planners: api/tesseract_motion_planners.md
+      - tesseract.motion_planners_ompl: api/tesseract_motion_planners_ompl.md
+      - tesseract.motion_planners_trajopt: api/tesseract_motion_planners_trajopt.md
+      - tesseract.motion_planners_descartes: api/tesseract_motion_planners_descartes.md
+      - tesseract.motion_planners_simple: api/tesseract_motion_planners_simple.md
+      - tesseract.task_composer: api/tesseract_task_composer.md
     - SQP Modules:
       - tesseract.trajopt_ifopt: api/trajopt_ifopt.md
       - tesseract.trajopt_sqp: api/trajopt_sqp.md
