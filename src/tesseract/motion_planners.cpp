@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_motion_planners core
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 #include <nanobind/stl/unordered_map.h>
 
 // tesseract_motion_planners core

@@ -5,7 +5,7 @@
  * NOTE: 0.33 API change - TimeParameterization now uses profiles and Environment
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_time_parameterization
 #include <tesseract_time_parameterization/core/time_parameterization.h>

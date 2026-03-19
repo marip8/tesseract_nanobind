@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_kinematics
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 #include <nanobind/stl/map.h>
 #include <nanobind/stl/unique_ptr.h>
 #include <nanobind/stl/set.h>

@@ -67,12 +67,7 @@ function(add_tesseract_nanobind_extension module_name source_file)
 
   # Apply precompiled headers
   target_precompile_headers(${module_name} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/bindings/tesseract_nb.h)
-
-  # Include directories
-  target_include_directories(${module_name} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/bindings
-  )
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/nanobind.h)
 
   # Link tesseract libraries (passed as remaining arguments)
   target_link_libraries(${module_name} PRIVATE ${ARGN})
@@ -83,7 +78,6 @@ function(add_tesseract_nanobind_extension module_name source_file)
     CXX_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN OFF)
 
-  # Install the module - all go to tesseract/{subpackage}
   install(TARGETS ${module_name} LIBRARY DESTINATION tesseract)
 
   # Generate Python stub file (.pyi)
@@ -101,7 +95,7 @@ endfunction()
 # Add tesseract_common module
 add_tesseract_nanobind_extension(
   common
-  bindings/tesseract_common_bindings.cpp
+  src/tesseract/common.cpp
   tesseract::tesseract_common
   console_bridge::console_bridge
 )
@@ -109,7 +103,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_geometry module
 add_tesseract_nanobind_extension(
   geometry
-  bindings/tesseract_geometry_bindings.cpp
+  src/tesseract/geometry.cpp
   tesseract::tesseract_geometry
   tesseract::tesseract_common
 )
@@ -117,7 +111,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_scene_graph module
 add_tesseract_nanobind_extension(
   scene_graph
-  bindings/tesseract_scene_graph_bindings.cpp
+  src/tesseract/scene_graph.cpp
   tesseract::tesseract_scene_graph
   tesseract::tesseract_geometry
   tesseract::tesseract_common
@@ -126,7 +120,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_srdf module
 add_tesseract_nanobind_extension(
   srdf
-  bindings/tesseract_srdf_bindings.cpp
+  src/tesseract/srdf.cpp
   tesseract::tesseract_srdf
   tesseract::tesseract_scene_graph
   tesseract::tesseract_common
@@ -135,7 +129,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_urdf module
 add_tesseract_nanobind_extension(
   urdf
-  bindings/tesseract_urdf_bindings.cpp
+  src/tesseract/urdf.cpp
   tesseract::tesseract_urdf
   tesseract::tesseract_scene_graph
   tesseract::tesseract_common
@@ -144,7 +138,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_collision module
 add_tesseract_nanobind_extension(
   collision
-  bindings/tesseract_collision_bindings.cpp
+  src/tesseract/collision.cpp
   tesseract::tesseract_collision_core
   tesseract::tesseract_collision_bullet
   tesseract::tesseract_geometry
@@ -154,7 +148,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_state_solver module
 add_tesseract_nanobind_extension(
   state_solver
-  bindings/tesseract_state_solver_bindings.cpp
+  src/tesseract/state_solver.cpp
   tesseract::tesseract_state_solver_kdl
   tesseract::tesseract_state_solver_ofkt
   tesseract::tesseract_scene_graph
@@ -164,7 +158,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_kinematics module
 add_tesseract_nanobind_extension(
   kinematics
-  bindings/tesseract_kinematics_bindings.cpp
+  src/tesseract/kinematics.cpp
   tesseract::tesseract_kinematics_core
   tesseract::tesseract_scene_graph
   tesseract::tesseract_state_solver_kdl
@@ -174,7 +168,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_environment module
 add_tesseract_nanobind_extension(
   environment
-  bindings/tesseract_environment_bindings.cpp
+  src/tesseract/environment.cpp
   tesseract::tesseract_environment
   tesseract::tesseract_kinematics_core
   tesseract::tesseract_collision_core
@@ -186,7 +180,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_command_language module
 add_tesseract_nanobind_extension(
   command_language
-  bindings/tesseract_command_language_bindings.cpp
+  src/tesseract/command_language.cpp
   tesseract::tesseract_command_language
   tesseract::tesseract_common
 )
@@ -194,7 +188,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_serialization module (XML/binary serialization for root types)
 add_tesseract_nanobind_extension(
   serialization
-  bindings/tesseract_serialization_bindings.cpp
+  src/tesseract/serialization.cpp
   tesseract::tesseract_command_language
   tesseract::tesseract_environment
   tesseract::tesseract_scene_graph
@@ -207,7 +201,7 @@ find_package(tesseract_motion_planners REQUIRED COMPONENTS core simple ompl)
 # Add tesseract_motion_planners module
 add_tesseract_nanobind_extension(
   motion_planners
-  bindings/tesseract_motion_planners_bindings.cpp
+  src/tesseract/motion_planners.cpp
   tesseract::tesseract_motion_planners_core
   tesseract::tesseract_environment
   tesseract::tesseract_command_language
@@ -217,7 +211,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_motion_planners_simple module
 add_tesseract_nanobind_extension(
   motion_planners_simple
-  bindings/tesseract_motion_planners_simple_bindings.cpp
+  src/tesseract/motion_planners_simple.cpp
   tesseract::tesseract_motion_planners_simple
   tesseract::tesseract_motion_planners_core
   tesseract::tesseract_environment
@@ -228,7 +222,7 @@ add_tesseract_nanobind_extension(
 # Add tesseract_motion_planners_ompl module
 add_tesseract_nanobind_extension(
   motion_planners_ompl
-  bindings/tesseract_motion_planners_ompl_bindings.cpp
+  src/tesseract/motion_planners_ompl.cpp
   tesseract::tesseract_motion_planners_ompl
   tesseract::tesseract_motion_planners_core
   tesseract::tesseract_environment
@@ -240,32 +234,31 @@ add_tesseract_nanobind_extension(
 # Note: OMPL uses old-style CMake variables, not modern targets
 find_package(ompl REQUIRED)
 nanobind_add_module(
-  _ompl_base
+  base
   STABLE_ABI
   NB_STATIC
-  bindings/ompl_base_bindings.cpp
+  src/ompl/base.cpp
 )
-target_precompile_headers(_ompl_base PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bindings/tesseract_nb.h)
-target_include_directories(_ompl_base PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/bindings
+target_precompile_headers(base PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/nanobind.h)
+target_include_directories(base PRIVATE
   ${OMPL_INCLUDE_DIRS}
 )
-target_link_libraries(_ompl_base PRIVATE ${OMPL_LIBRARIES})
-set_target_properties(_ompl_base PROPERTIES
+target_link_libraries(base PRIVATE ${OMPL_LIBRARIES})
+set_target_properties(base PROPERTIES
   CXX_VISIBILITY_PRESET default
   VISIBILITY_INLINES_HIDDEN OFF)
 
-install(TARGETS _ompl_base LIBRARY DESTINATION ompl_base)
+install(TARGETS base LIBRARY DESTINATION ompl)
 
 # Generate Python stub file (.pyi)
 nanobind_add_stub(
-    _ompl_base_stub
-    MODULE _ompl_base
-    OUTPUT _ompl_base.pyi
-    PYTHON_PATH $<TARGET_FILE_DIR:_ompl_base>
-    DEPENDS _ompl_base
+    base_stub
+    MODULE base
+    OUTPUT base.pyi
+    PYTHON_PATH $<TARGET_FILE_DIR:base>
+    DEPENDS base
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/_ompl_base.pyi DESTINATION ompl_base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/base.pyi DESTINATION ompl/base)
 
 # Add tesseract_motion_planners_descartes module (optional - only if descartes component was built)
 find_package(tesseract_motion_planners QUIET COMPONENTS descartes)
@@ -274,7 +267,7 @@ if(tesseract_motion_planners_descartes_FOUND AND descartes_light_FOUND)
   message(STATUS "tesseract_motion_planners descartes component found - building bindings")
   add_tesseract_nanobind_extension(
     motion_planners_descartes
-    bindings/tesseract_motion_planners_descartes_bindings.cpp
+    src/tesseract/motion_planners_descartes.cpp
     tesseract::tesseract_motion_planners_descartes
     tesseract::tesseract_motion_planners_core
     tesseract::tesseract_environment
@@ -293,7 +286,7 @@ if(tesseract_motion_planners_trajopt_FOUND AND trajopt_FOUND)
   message(STATUS "tesseract_motion_planners trajopt component found - building bindings")
   add_tesseract_nanobind_extension(
     motion_planners_trajopt
-    bindings/tesseract_motion_planners_trajopt_bindings.cpp
+    src/tesseract/motion_planners_trajopt.cpp
     tesseract::tesseract_motion_planners_trajopt
     tesseract::tesseract_motion_planners_core
     tesseract::tesseract_environment
@@ -314,7 +307,7 @@ if(tesseract_motion_planners_trajopt_ifopt_FOUND AND trajopt_ifopt_FOUND AND tra
   message(STATUS "tesseract_motion_planners trajopt_ifopt component found - building bindings")
   add_tesseract_nanobind_extension(
     motion_planners_trajopt_ifopt
-    bindings/tesseract_motion_planners_trajopt_ifopt_bindings.cpp
+    src/tesseract/motion_planners_trajopt_ifopt.cpp
     tesseract::tesseract_motion_planners_trajopt_ifopt
     tesseract::tesseract_motion_planners_core
     tesseract::tesseract_environment
@@ -333,7 +326,7 @@ if(trajopt_ifopt_FOUND AND trajopt_common_FOUND)
   message(STATUS "trajopt_ifopt found - building bindings for variables/constraints/costs")
   add_tesseract_nanobind_extension(
     trajopt_ifopt
-    bindings/trajopt_ifopt_bindings.cpp
+    src/tesseract/trajopt_ifopt.cpp
     trajopt::trajopt_ifopt
     trajopt::trajopt_common
     tesseract::tesseract_kinematics_core
@@ -350,7 +343,7 @@ if(trajopt_sqp_FOUND)
   message(STATUS "trajopt_sqp found - building SQP solver bindings")
   add_tesseract_nanobind_extension(
     trajopt_sqp
-    bindings/trajopt_sqp_bindings.cpp
+    src/tesseract/trajopt_sqp.cpp
     trajopt::trajopt_sqp
     trajopt::trajopt_ifopt
     tesseract::tesseract_common
@@ -364,7 +357,7 @@ find_package(tesseract_time_parameterization REQUIRED)
 
 add_tesseract_nanobind_extension(
   time_parameterization
-  bindings/tesseract_time_parameterization_bindings.cpp
+  src/tesseract/time_parameterization.cpp
   tesseract::tesseract_time_parameterization_isp
   tesseract::tesseract_time_parameterization_totg
   tesseract::tesseract_time_parameterization_core
@@ -377,7 +370,7 @@ find_package(tesseract_task_composer REQUIRED COMPONENTS core taskflow)
 
 add_tesseract_nanobind_extension(
   task_composer
-  bindings/tesseract_task_composer_bindings.cpp
+  src/tesseract/task_composer.cpp
   tesseract::tesseract_task_composer
   tesseract::tesseract_task_composer_taskflow
   tesseract::tesseract_environment

@@ -29,7 +29,7 @@ Reference:
 
 import math
 
-from ompl_base import (
+from ompl import (
     DubinsStateSpace,
     RealVectorBounds,
     ReedsSheppPathSegmentType,

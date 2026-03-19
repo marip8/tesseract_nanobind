@@ -1,4 +1,4 @@
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_common headers (need eigen_types.h before opaque declarations)
 #include <tesseract_common/eigen_types.h>

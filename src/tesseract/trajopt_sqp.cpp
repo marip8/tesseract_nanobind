@@ -6,7 +6,7 @@
  * Key feature: stepSQPSolver() allows running a single SQP iteration.
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // OsqpEigen - must be included BEFORE trajopt_sqp headers to complete forward declaration
 #include <OsqpEigen/Solver.hpp>

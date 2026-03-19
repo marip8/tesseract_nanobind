@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_environment
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 #include <nanobind/stl/map.h>
 #include <nanobind/stl/pair.h>
 #include <nanobind/stl/unique_ptr.h>

@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_urdf
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 #include <tesseract_urdf/urdf_parser.h>
 #include <tesseract_scene_graph/graph.h>

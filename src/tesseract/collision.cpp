@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_collision
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 #include <nanobind/stl/map.h>
 
 // tesseract_collision core

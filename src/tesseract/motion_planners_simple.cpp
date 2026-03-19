@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_motion_planners simple
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_motion_planners core (for PlannerRequest/Response)
 #include <tesseract_motion_planners/core/types.h>

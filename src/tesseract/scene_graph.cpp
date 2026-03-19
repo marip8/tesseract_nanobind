@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_scene_graph
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_scene_graph
 #include <tesseract_scene_graph/joint.h>

@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_task_composer
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 #include <nanobind/stl/unordered_map.h>
 #include <nanobind/stl/chrono.h>
 #include <nanobind/stl/optional.h>

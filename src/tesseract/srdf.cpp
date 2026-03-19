@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_srdf
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 #include <tesseract_srdf/srdf_model.h>
 #include <tesseract_srdf/kinematics_information.h>

@@ -11,7 +11,7 @@
  * - contact_test_type, longest_valid_segment_* removed from TrajOptDefaultCompositeProfile
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_motion_planners core (for PlannerRequest/Response)
 #include <tesseract_motion_planners/core/types.h>

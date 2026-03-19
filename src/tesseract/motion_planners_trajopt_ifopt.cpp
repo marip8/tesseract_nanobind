@@ -8,7 +8,7 @@
  * - Profile/ProfileDictionary moved to tesseract_common
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_motion_planners core (for PlannerRequest/Response)
 #include <tesseract_motion_planners/core/types.h>

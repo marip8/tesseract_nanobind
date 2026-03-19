@@ -7,7 +7,7 @@
  * and set members instead.
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // trajopt_ifopt core (replaces ifopt base classes)
 #include <trajopt_ifopt/core/bounds.h>

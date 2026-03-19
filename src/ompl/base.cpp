@@ -5,7 +5,7 @@
  * Exposes car-like vehicle planning primitives from OMPL.
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 #include <ompl/base/State.h>
 #include <ompl/base/spaces/RealVectorBounds.h>
@@ -15,7 +15,7 @@
 
 namespace ob = ompl::base;
 
-NB_MODULE(_ompl_base, m) {
+NB_MODULE(base, m) {
     m.doc() = "OMPL base state space bindings for car-like vehicle planning";
 
     // ========== State (opaque handle) ==========

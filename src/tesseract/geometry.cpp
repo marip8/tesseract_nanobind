@@ -3,7 +3,7 @@
  * @brief nanobind bindings for tesseract_geometry
  */
 
-#include "tesseract_nb.h"
+#include "../nanobind.h"
 
 // tesseract_geometry
 #include <tesseract_geometry/geometry.h>
