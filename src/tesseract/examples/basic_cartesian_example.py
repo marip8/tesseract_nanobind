@@ -1,57 +1,38 @@
 """
-Basic Cartesian Planning Example (High-Level API)
+Basic Cartesian Planning Example
 
-Demonstrates multi-phase Cartesian motion planning using TrajOpt trajectory optimization.
-The robot (KUKA IIWA 7-DOF) executes a sequence of FREESPACE and LINEAR moves around an obstacle.
+Demonstrates Cartesian motion planning using TrajOpt trajectory optimization with
+the KUKA IIWA 7-DOF robot. Plans a multi-phase trajectory combining freespace and
+linear Cartesian moves around an obstacle.
 
 Pipeline Overview:
-    1. Load KUKA IIWA robot from tesseract_support
-    2. Add box obstacle at (1.0, 0, 0) - 50cm cube
-    3. Create 4-phase motion program:
-        - Phase 1: Start at known joint configuration
-        - Phase 2: FREESPACE move to Cartesian waypoint 1 (0.5, -0.2, 0.62)
-        - Phase 3: LINEAR move to Cartesian waypoint 2 (0.5, 0.3, 0.62)
-        - Phase 4: FREESPACE return to start joint configuration
-    4. Execute TrajOptPipeline: seed trajectory -> optimization -> time parameterization
+1. Load robot and add box obstacle at (1.0, 0, 0)
+2. Create 4-phase program: start → freespace → linear → freespace back
+3. Execute TrajOptPipeline (trajectory optimization with collision/constraint costs)
+4. Return smooth, collision-free trajectory
 
 Key Concepts:
-    - TrajOpt: Trajectory optimizer minimizing costs (smoothness, collision) with constraints
-    - FREESPACE motion: Any collision-free path to goal (joint-space interpolation)
-    - LINEAR motion: Straight-line Cartesian path (tool pose interpolated along line)
-    - Profile names: Control per-waypoint behavior ("freespace_profile", "RASTER")
-    - StateTarget vs CartesianTarget: Joint config vs 6D pose goal specification
+- TrajOpt: trajectory optimizer that minimizes costs while respecting constraints
+- FREESPACE moves: joint-space interpolation, no Cartesian path constraints
+- LINEAR moves: straight-line Cartesian path, tool pose interpolated along line
+- Profile names: "freespace_profile" for unconstrained, "RASTER" for linear paths
 
 Motion Types:
-    - move_to(CartesianTarget): FREESPACE motion to pose (any collision-free path)
-    - linear_to(CartesianTarget): LINEAR motion (straight-line Cartesian path required)
-    - move_to(StateTarget): Return to known joint configuration
+- move_to(CartesianTarget): FREESPACE motion (any collision-free path to pose)
+- linear_to(CartesianTarget): LINEAR motion (straight-line path required)
 
-Quaternion Note:
-    Python uses (x, y, z, w) format; C++ Eigen::Quaterniond uses (w, x, y, z).
-    This example uses (0, 0, 1.0, 0) = 180 deg rotation around Z-axis (tool pointing down).
-
-C++ Source: tesseract_planning/tesseract_examples/src/basic_cartesian_example.cpp
-
-C++ Parameters (verified):
-    - Robot: KUKA LBR IIWA 14 R820 (7-DOF)
-    - Obstacle: Octomap point cloud 1x1x1m at (1.0, 0, 0) - Python uses simplified box
-    - Start joints: [-0.4, 0.2762, 0.0, -1.3348, 0.0, 1.4959, 0.0]
-    - wp1: (0.5, -0.2, 0.62) with quat (0, 0, 1.0, 0)
-    - wp2: (0.5, 0.3, 0.62) with same orientation
-    - Profiles: "cartesian_program", "freespace_profile", "RASTER"
+C++ Source: tesseract_examples/src/basic_cartesian_example.cpp
 
 Related Examples:
-    - glass_upright_example.py - Orientation-constrained TrajOpt
-    - puzzle_piece_example.py - Complex Cartesian toolpath from CSV
-    - freespace_ompl_example.py - Joint-space planning with OMPL
-    - lowlevel/basic_cartesian_c_api_example.py - Same with low-level API
+- glass_upright_example.py - orientation-constrained TrajOpt planning
+- puzzle_piece_example.py - complex Cartesian toolpath from CSV
 """
 
 import sys
 
 import numpy as np
 
-from tesseract.planning import (
+from tesseract_planning import (
     CartesianTarget,
     MotionProgram,
     Pose,
@@ -61,82 +42,73 @@ from tesseract.planning import (
     box,
     create_obstacle,
 )
-from tesseract.planning.profiles import (
-    create_freespace_pipeline_profiles,
-    create_trajopt_default_profiles,
-)
 
 TesseractViewer = None
 if "pytest" not in sys.modules:
     from tesseract.viewer import TesseractViewer
 
 
-def run(pipeline="TrajOptPipeline", num_planners=None):
+def run():
     """Run basic Cartesian planning example.
 
-    Plans a multi-phase trajectory combining FREESPACE and LINEAR moves using
-    TrajOpt trajectory optimization. Demonstrates mixing motion types and
-    profile selection in a single motion program.
-
-    Args:
-        pipeline: Planning pipeline to use. Options:
-            - "TrajOptPipeline" (default): TrajOpt trajectory optimization
-            - "FreespacePipeline": OMPL for FREESPACE moves (ignores LINEAR)
-        num_planners: Number of parallel OMPL planners (only for FreespacePipeline).
-
     Returns:
-        dict with keys:
-            - result: PlanningResult with trajectory and success status
-            - robot: Robot instance with environment state
-            - joint_names: List of 7 KUKA IIWA joint names
+        dict with result, robot, joint_names
     """
-    # Load KUKA IIWA 7-DOF robot
+    # Load KUKA IIWA 7-DOF robot from tesseract_support package
     robot = Robot.from_tesseract_support("lbr_iiwa_14_r820")
+    print(f"Loaded robot: {robot}")
 
-    # Add box obstacle at (1.0, 0, 0)
-    # C++ uses 1.0m octomap (sparse point cloud) which allows paths through gaps;
+    # Add box obstacle for collision checking
+    # C++ uses 1x1x1m octomap (sparse point cloud) which allows paths through gaps;
     # Python uses 0.5m solid box since solid geometry blocks more collision space
-    create_obstacle(robot, "box_obstacle", box(0.5, 0.5, 0.5), Pose.from_xyz(1.0, 0, 0))
+    create_obstacle(
+        robot,
+        name="box_obstacle",
+        geometry=box(0.5, 0.5, 0.5),  # 0.5m cube (smaller than C++ 1m octree)
+        transform=Pose.from_xyz(1.0, 0, 0),
+    )
+    print("Added box obstacle at (1.0, 0, 0)")
 
-    # Get joint names and set initial configuration
+    # Get joint names and set initial robot configuration
     joint_names = robot.get_joint_names("manipulator")
     joint_pos = np.array([-0.4, 0.2762, 0.0, -1.3348, 0.0, 1.4959, 0.0])
     robot.set_joints(joint_pos, joint_names=joint_names)
 
-    # Create Cartesian waypoints (6D poses)
-    # Quaternion (x=0, y=0, z=1.0, w=0) = 180 deg around Z = tool pointing down
-    # C++ uses Eigen::Quaterniond(w, x, y, z) = (0, 0, 1.0, 0)
-    wp1 = Pose.from_xyz_quat(0.5, -0.2, 0.62, 0, 0, 1.0, 0)  # First Cartesian waypoint
-    wp2 = Pose.from_xyz_quat(0.5, 0.3, 0.62, 0, 0, 1.0, 0)  # Second waypoint (+0.5m in Y)
+    # Create Cartesian waypoints (6D tool poses in world frame)
+    # Quaternion (x, y, z, w) = (0, 0, 1.0, 0) represents 180° rotation around Z-axis
+    # This points the tool down toward the work surface
+    # Note: Python uses (x,y,z,w) format; C++ Eigen uses (w,x,y,z)
+    wp1_pose = Pose.from_xyz_quat(0.5, -0.2, 0.62, 0, 0, 1.0, 0)  # First waypoint
+    wp2_pose = Pose.from_xyz_quat(0.5, 0.3, 0.62, 0, 0, 1.0, 0)  # Second waypoint (Y+0.5m)
 
-    # Build 4-phase motion program:
-    # 1. StateTarget: Start from known joint configuration
-    # 2. CartesianTarget + move_to: FREESPACE to wp1 (any collision-free path)
-    # 3. CartesianTarget + linear_to: LINEAR to wp2 (straight-line Cartesian path)
-    # 4. StateTarget: FREESPACE return to start joints
+    # Build 4-phase motion program using fluent API:
+    # Phase 1: Start from known joint state (defines initial configuration)
+    # Phase 2: FREESPACE move to wp1 (any collision-free path, uses IK)
+    # Phase 3: LINEAR move to wp2 (straight-line tool path, Cartesian interpolation)
+    # Phase 4: FREESPACE move back to start joint state
     program = (
         MotionProgram("manipulator", tcp_frame="tool0", profile="cartesian_program")
         .set_joint_names(joint_names)
         .move_to(StateTarget(joint_pos, names=joint_names, profile="freespace_profile"))
-        .move_to(CartesianTarget(wp1, profile="freespace_profile"))  # FREESPACE to pose
-        .linear_to(CartesianTarget(wp2, profile="RASTER"))  # LINEAR Cartesian path
+        .move_to(CartesianTarget(wp1_pose, profile="freespace_profile"))  # FREESPACE to pose
+        .linear_to(CartesianTarget(wp2_pose, profile="RASTER"))  # LINEAR between poses
         .move_to(StateTarget(joint_pos, names=joint_names, profile="freespace_profile"))
     )
 
-    # Select profiles based on pipeline type
-    # TrajOpt profiles include Cartesian constraint/cost configuration
-    # OMPL profiles configure RRTConnect planner parameters
-    if "Freespace" in pipeline or "OMPL" in pipeline:
-        profiles = create_freespace_pipeline_profiles(num_planners=num_planners)
-    else:
-        profiles = create_trajopt_default_profiles()
+    print("\nProgram created with TrajOpt Cartesian planning")
+    print("  - Freespace to Cartesian wp1")
+    print("  - Linear to Cartesian wp2")
+    print("  - Freespace back to start")
 
-    # Execute planning
+    # Plan using TaskComposer
+    print("\nRunning TrajOpt planner...")
     composer = TaskComposer.from_config()
-    result = composer.plan(robot, program, pipeline=pipeline, profiles=profiles)
+    result = composer.plan(robot, program, pipeline="TrajOptPipeline")
 
     assert result.successful, f"Planning failed: {result.message}"
-    print(f"Planning successful! Trajectory: {len(result)} waypoints")
+
+    print("Planning successful!")
+    print(f"\nTrajectory has {len(result)} waypoints")
 
     return {"result": result, "robot": robot, "joint_names": joint_names}
 
@@ -154,4 +126,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    exit(0 if success else 1)

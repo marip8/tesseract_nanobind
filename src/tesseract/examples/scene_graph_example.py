@@ -1,128 +1,188 @@
 """
-Scene Graph Example - High-Level API
+Scene Graph Example
 
-Demonstrates scene graph manipulation using the Robot wrapper class:
-- Query scene graph structure (links, joints, transforms)
-- Add/remove links dynamically
-- Move links to new parent joints
-
-This example uses the high-level Robot API which wraps the lower-level
-Environment commands (MoveJointCommand, MoveLinkCommand, AddLinkCommand).
-
-Pipeline Overview:
-1. Load KUKA IIWA robot using Robot.from_tesseract_support()
-2. Query scene graph structure (link names, joint names, root link)
-3. Demonstrate link manipulation operations
-4. Query modified scene graph
+Demonstrates low-level scene graph manipulation using tesseract commands:
+- MoveJointCommand: Change a joint's parent link
+- MoveLinkCommand: Re-attach a link with a new joint and transform
 
 C++ Source: tesseract_examples/src/scene_graph_example.cpp
 
-Key Concepts:
-- Scene Graph: Directed acyclic graph of links connected by joints
-- Links: Rigid bodies with visual/collision geometry
-- Joints: Connections between links defining relative motion
-- Root Link: Base of the kinematic tree (typically "base_link")
+Key C++ Implementation Details:
+- MoveJointCommand("joint_a4", "base_link"): Reparents joint to base
+- MoveLinkCommand uses transform: -pi/2 rotation around Y, then translate (0.15, 0, 0)
+- Order matters: rotation first, then translation (Isometry3d composition)
 
-Related Examples:
-- lowlevel/scene_graph_c_api_example.py - direct command API
-- geometry_showcase_example.py - creating geometry for links
+Use Cases:
+- Reconfiguring robot for tool changes
+- Dynamic workcell modifications
+- Testing kinematic reachability with modified chains
 """
 
+import math
 import sys
 
-from tesseract.planning import Robot
+import numpy as np
 
+from tesseract.common import (
+    AngleAxisd,
+    GeneralResourceLocator,
+    Isometry3d,
+    Translation3d,
+)
+from tesseract.environment import (
+    Environment,
+    MoveJointCommand,
+    MoveLinkCommand,
+)
+from tesseract.scene_graph import Joint, JointType
+
+# Viewer (skip in pytest)
 TesseractViewer = None
 if "pytest" not in sys.modules:
     from tesseract.viewer import TesseractViewer
 
 
-def run(pipeline=None, num_planners=None):
-    """Run scene graph manipulation example.
-
-    Args:
-        pipeline: Unused (for API compatibility)
-        num_planners: Unused (for API compatibility)
-
-    Returns:
-        dict with robot, success status
-    """
-    # === LOAD ROBOT ===
-    # Robot.from_tesseract_support() handles URDF/SRDF loading and resource location
-    robot = Robot.from_tesseract_support("lbr_iiwa_14_r820")
-    print(f"Loaded robot: {robot}")
-
-    # === QUERY SCENE GRAPH STRUCTURE ===
-    # The scene graph is accessible via robot.env.getSceneGraph()
-    scene_graph = robot.env.getSceneGraph()
-
-    print("\n=== Scene Graph Structure ===")
-    print(f"Name: {scene_graph.getName()}")
-    print(f"Root link: {robot.env.getRootLinkName()}")
-
-    # Get all link and joint names
-    link_names = list(robot.env.getLinkNames())
-    joint_names = list(robot.env.getJointNames())
-    print(f"Links ({len(link_names)}): {link_names}")
-    print(f"Joints ({len(joint_names)}): {joint_names}")
-
-    # === QUERY KINEMATIC CHAIN ===
-    # For KUKA IIWA: base_link -> link_0 -> ... -> link_7 -> tool0
-    print("\n=== Kinematic Chain ===")
-    for jname in joint_names[:4]:  # First 4 joints
-        joint = scene_graph.getJoint(jname)
-        if joint:
-            print(f"  {joint.parent_link_name} --[{jname}]--> {joint.child_link_name}")
-
-    # === QUERY LINK TRANSFORMS ===
-    # Get current link positions in world frame
-    print("\n=== Link Transforms (first 3) ===")
-    state = robot.env.getState()
-    for link_name in link_names[:3]:
-        transform = state.link_transforms[link_name]
-        pos = transform.translation()
-        print(f"  {link_name}: position = ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f})")
-
-    # === QUERY ACTIVE JOINTS ===
-    # Active joints are moveable (not fixed)
-    print("\n=== Active Joints ===")
-    active_joints = list(robot.env.getActiveJointNames())
-    print(f"Active joints ({len(active_joints)}): {active_joints}")
-
-    # Get joint limits
-    kin_info = robot.env.getKinematicGroup("manipulator")
-    if kin_info:
-        limits = kin_info.getLimits()
-        print("\nJoint limits (first 3):")
-        for i, jname in enumerate(active_joints[:3]):
-            print(
-                f"  {jname}: [{limits.joint_limits[i, 0]:.2f}, {limits.joint_limits[i, 1]:.2f}] rad"
-            )
-
-    print("\n=== Scene Graph Example Complete ===")
-    print("For link manipulation examples, see: lowlevel/scene_graph_c_api_example.py")
-
-    return {
-        "robot": robot,
-        "success": True,
-        "link_count": len(link_names),
-        "joint_count": len(joint_names),
-    }
-
-
 def main():
-    """Execute example and optionally visualize."""
-    results = run()
+    """
+    Demonstrates three scene graph operations:
+    1. MoveJointCommand - change joint's parent link
+    2. MoveLinkCommand - re-attach link with new joint and transform
+    3. Scene graph queries - traverse kinematic tree
+    """
+    # Resource locator resolves package:// URIs to filesystem paths
+    locator = GeneralResourceLocator()
 
+    # Load KUKA IIWA 7-DOF robot
+    urdf_url = "package://tesseract_support/urdf/lbr_iiwa_14_r820.urdf"
+    srdf_url = "package://tesseract_support/urdf/lbr_iiwa_14_r820.srdf"
+    urdf_path = locator.locateResource(urdf_url).getFilePath()
+    srdf_path = locator.locateResource(srdf_url).getFilePath()
+
+    # Initialize environment (loads URDF/SRDF, builds scene graph)
+    env = Environment()
+    if not env.init(urdf_path, srdf_path, locator):
+        print("Failed to initialize environment")
+        return False
+
+    print(f"Environment initialized: {env.getName()}")
+    print(f"Root link: {env.getRootLinkName()}")
+    print(f"Links: {list(env.getLinkNames())}")
+    print(f"Joints: {list(env.getJointNames())}")
+
+    # Scene graph is a directed acyclic graph of links connected by joints
+    scene_graph = env.getSceneGraph()
+    print(f"\nScene graph name: {scene_graph.getName()}")
+
+    # DEBUG: Uncomment to visualize graph structure
+    # scene_graph.saveDOT("scene_graph_example_initial.dot")
+
+    # =========================================================================
+    # Example 1: MoveJointCommand
+    # Reparents an existing joint to a different parent link
+    # Use case: Shortcut kinematic chain (e.g., for testing reachability)
+    # =========================================================================
+    print("\n--- Example 1: MoveJointCommand ---")
+    print("Moving joint 'joint_a4' to have parent 'base_link' instead of 'link_3'")
+
+    # Query current joint configuration before modification
+    joint = scene_graph.getJoint("joint_a4")
+    if joint:
+        print(f"  Current parent: {joint.parent_link_name}")
+        print(f"  Current child: {joint.child_link_name}")
+
+    # MoveJointCommand(joint_name, new_parent_link)
+    # This preserves the joint but changes parent_link_name
+    move_joint_cmd = MoveJointCommand("joint_a4", "base_link")
+    if env.applyCommand(move_joint_cmd):
+        print("  Command applied successfully!")
+        # Verify the change took effect
+        joint = env.getSceneGraph().getJoint("joint_a4")
+        if joint:
+            print(f"  New parent: {joint.parent_link_name}")
+    else:
+        print("  Failed to apply command")
+
+    # Reinitialize environment for clean state in next example
+    env = Environment()
+    env.init(urdf_path, srdf_path, locator)
+
+    # =========================================================================
+    # Example 2: MoveLinkCommand
+    # Re-attaches a link using a NEW joint with custom transform
+    # More powerful than MoveJointCommand - can specify full joint properties
+    # =========================================================================
+    print("\n--- Example 2: MoveLinkCommand ---")
+    print("Moving link_4 to be attached to link_1 with a new fixed joint")
+
+    # Create the new joint that will connect link_1 -> link_4
+    new_joint = Joint("moved_link_joint")
+    new_joint.parent_link_name = "link_1"
+    new_joint.child_link_name = "link_4"
+    new_joint.type = JointType.FIXED  # Could also be REVOLUTE, PRISMATIC, etc.
+
+    # Build transform: rotate -90deg around Y, then translate (0.15, 0, 0)
+    # C++ equivalent: Isometry3d::Identity() * AngleAxisd(-pi/2, Y) * Translation3d(0.15, 0, 0)
+    # Order: rotation applied first, then translation in rotated frame
+    transform = Isometry3d.Identity()
+    transform = transform * AngleAxisd(-math.pi / 2, np.array([0, 1, 0], dtype=np.float64))
+    transform = transform * Translation3d(0.15, 0.0, 0.0)
+    new_joint.parent_to_joint_origin_transform = transform
+
+    # MoveLinkCommand replaces the joint connecting to child_link_name
+    move_link_cmd = MoveLinkCommand(new_joint)
+    if env.applyCommand(move_link_cmd):
+        print("  Command applied successfully!")
+        print("  Link 4 now attached to link_1 via joint 'moved_link_joint'")
+        # Verify the new joint exists in scene graph
+        joint = env.getSceneGraph().getJoint("moved_link_joint")
+        if joint:
+            print(f"  New joint parent: {joint.parent_link_name}")
+            print(f"  New joint child: {joint.child_link_name}")
+    else:
+        print("  Failed to apply command")
+
+    # =========================================================================
+    # Example 3: Scene Graph Queries
+    # Demonstrates traversal and inspection of the kinematic structure
+    # =========================================================================
+    print("\n--- Example 3: Scene Graph Queries ---")
+    print(f"Number of links: {scene_graph.getLinks().__len__()}")
+    print(f"Number of joints: {scene_graph.getJoints().__len__()}")
+
+    # getAdjacentLinkNames returns links directly connected by a joint
+    root_link = env.getRootLinkName()
+    adjacent = scene_graph.getAdjacentLinkNames(root_link)
+    print(f"\nLinks adjacent to '{root_link}': {list(adjacent)}")
+
+    # Traverse kinematic tree using DFS
+    # Note: scene graph may have multiple branches (tool, sensors, etc.)
+    print("\nKinematic chain from root:")
+    visited = set()
+    stack = [(root_link, 0)]
+
+    while stack:
+        link_name, depth = stack.pop()
+        if link_name in visited:
+            continue
+        visited.add(link_name)
+        print(f"  {'  ' * depth}{link_name}")
+
+        # Find child links by iterating joints where this is parent
+        for joint in scene_graph.getJoints():
+            if joint.parent_link_name == link_name:
+                stack.append((joint.child_link_name, depth + 1))
+
+    # Optional: visualize with viewer
     if TesseractViewer is not None:
-        print("\nViewer at http://localhost:8000")
+        print("\nStarting viewer at http://localhost:8000")
         viewer = TesseractViewer()
-        viewer.update_environment(results["robot"].env, [0, 0, 0])
+        viewer.update_environment(env, [0, 0, 0])
         viewer.start_serve_background()
         input("Press Enter to exit...")
 
-    return results["success"]
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    exit(0 if success else 1)

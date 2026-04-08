@@ -1,96 +1,25 @@
 """
-Puzzle Piece Auxiliary Axes Example - 9-DOF Cartesian Path with Positioner
+Puzzle Piece Auxiliary Axes Example
 
-This example demonstrates Cartesian path planning for a multi-chain kinematic
-system: a 7-DOF KUKA IIWA arm combined with a 2-DOF workpiece positioner.
-The positioner (auxiliary axes) can reorient the workpiece to improve
-reachability and avoid singularities during surface following operations.
+Cartesian path planning with 9-DOF (KUKA IIWA 7-DOF + 2-DOF positioner).
+This demonstrates planning for a multi-chain kinematic system where auxiliary
+axes (positioner) can orient the workpiece to improve reachability.
 
-PIPELINE OVERVIEW
------------------
-1. LOAD WORKCELL: 9-DOF system (7-DOF arm + 2-DOF positioner)
-2. LOAD TOOLPATH: Parse CSV file with ~50 Cartesian waypoints (puzzle piece edge)
-3. CONFIGURE TRAJOPT: Enable yaw freedom (coeff[5]=0) for auxiliary axis optimization
-4. PLAN: TrajOpt optimizes 9-DOF trajectory following Cartesian path
+C++ Source: tesseract_examples/src/puzzle_piece_auxillary_axes_example.cpp
 
-KEY CONCEPTS DEMONSTRATED
--------------------------
-1. Multi-Chain Kinematics:
-   - "manipulator_aux" group: combines arm and positioner kinematic chains
-   - Arm chain: grinder_frame (TCP) on KUKA IIWA end-effector
-   - Positioner chain: "part" frame that moves with auxiliary axes
+Key C++ Implementation Details:
+- 9-DOF system: 7 arm joints + 2 auxiliary positioner joints
+- CSV toolpath positions are in millimeters (converted to meters here)
+- TrajOpt Cartesian constraint coeff[5]=0 allows yaw rotation freedom
+  so auxiliary axes can optimize orientation while maintaining position
+- Uses "manipulator_aux" kinematic group (defined in SRDF)
+- puzzle_bent.csv contains ~50 waypoints for grinding puzzle piece edge
 
-2. Yaw Freedom for Auxiliary Axes:
-   - TrajOpt constraint coeff = [5,5,5,2,2,0] (x,y,z,rx,ry,rz)
-   - coeff[5]=0: yaw (rz) is FREE, not constrained
-   - Positioner can rotate workpiece around tool axis while maintaining TCP position
-   - Enables better arm configurations and singularity avoidance
-
-3. CSV Toolpath Format:
-   - puzzle_bent.csv: surface points with normals for grinding operation
-   - Columns: point_num, x, y, z, i, j, k (position + normal vector)
-   - Units: millimeters (converted to meters in code)
-   - ~50 waypoints tracing puzzle piece edge
-
-4. Frame Construction from Normal:
-   - Z-axis: surface normal from CSV (tool approach direction)
-   - X-axis: computed orthogonal to normal
-   - Y-axis: Z x X for right-handed frame
-
-ROBOT CONFIGURATION (from C++)
-------------------------------
-9 DOF joint order:
-- joint_a1 through joint_a7: KUKA IIWA arm (7 DOF)
-- joint_aux1: positioner Z-rotation (turntable)
-- joint_aux2: positioner tilt (tilting table)
-
-Initial configuration:
-- joint_a1=-0.785398 (-45deg), joint_a2=0.4, joint_a4=-1.9, joint_a6=1.0
-- Positioner at neutral (0, 0)
-
-Frames:
-- tcp_frame="grinder_frame": tool center point on arm end-effector
-- working_frame="part": workpiece frame attached to positioner
-
-TRAJOPT SETTINGS (from C++)
----------------------------
-Plan profile (CARTESIAN):
-- cartesian_constraint_config.coeff = [5,5,5,2,2,0]
-- Position (x,y,z) tightly constrained (coeff=5)
-- Roll/pitch (rx,ry) moderately constrained (coeff=2)
-- Yaw (rz) FREE (coeff=0) - allows tool rotation
-
-Composite profile (DEFAULT):
-- collision_cost_config.collision_margin_buffer = 0.025m
-- collision_cost_config.collision_check_config.type = DISCRETE
-- Solver: OSQP, max_iter=200
-
-C++ SOURCE
-----------
-tesseract_planning/tesseract_examples/src/puzzle_piece_auxillary_axes_example.cpp
-Author: Levi Armstrong, Southwest Research Institute, July 2019
-
-USE CASES
----------
-- Surface grinding/polishing with tool orientation freedom
-- Welding with auxiliary rotation for weld pool control
-- Machining with coordinated workpiece repositioning
-- Any process where auxiliary axes extend workspace or improve reachability
-
-RELATED EXAMPLES
-----------------
-- basic_cartesian_example.py: simple Cartesian path without auxiliary axes
-- glass_upright_example.py: orientation constraints for upright maintenance
-- raster_example.py: industrial raster patterns
-
-PERFORMANCE NOTE
-----------------
-First planning call takes ~10-15s due to dynamic plugin loading (dlopen).
-This is inherent to the TaskComposer plugin architecture (same in C++).
-Subsequent calls in the same process are fast (~8s for this 50-waypoint path).
-
-For interactive use, call composer.warmup() or use warmup=True:
-    composer = TaskComposer.from_config(warmup=True)  # loads plugins upfront
+Robot Configuration:
+- KUKA IIWA 7-DOF arm (joint_a1 through joint_a7)
+- 2-DOF positioner (joint_aux1=Z rotation, joint_aux2=tilt)
+- "grinder_frame" TCP attached to arm end-effector
+- "part" working frame on positioner (moves with aux axes)
 """
 
 import csv
@@ -98,7 +27,7 @@ import sys
 
 import numpy as np
 
-from tesseract.planning import (
+from tesseract_planning import (
     CartesianTarget,
     MotionProgram,
     Pose,
@@ -116,65 +45,69 @@ from tesseract.motion_planners_trajopt import (
     TrajOptOSQPSolverProfile,
 )
 
-TRAJOPT_NS = "TrajOptMotionPlannerTask"
-
 TesseractViewer = None
 if "pytest" not in sys.modules:
     from tesseract.viewer import TesseractViewer
 
+TRAJOPT_DEFAULT_NAMESPACE = "TrajOptMotionPlannerTask"
+
 
 def make_puzzle_tool_poses(robot):
-    """Load toolpath poses from puzzle_bent.csv.
-
-    From C++ makePuzzleToolPoses(): parses CSV with position and normal data.
-
-    CSV Format:
-        Row 0-1: Headers (skipped)
-        Columns: point_num, x, y, z, i, j, k
-        Units: millimeters (converted to meters)
-
-    Frame Construction (from C++):
-        - Z-axis: surface normal (i, j, k) from CSV - tool approach direction
-        - X-axis: computed orthogonal, pointing inward toward origin
-        - Y-axis: Z x X for right-handed coordinate frame
-
-    Returns:
-        list[Pose]: ~50 Cartesian waypoints for puzzle piece edge
     """
+    Load toolpath poses from the puzzle_bent.csv file.
+
+    The CSV contains position (x, y, z) and normal direction (i, j, k) for each pose.
+    We construct a full orientation from the normal using the position for the x-axis.
+
+    CSV Format (puzzle_bent.csv):
+        Row 0-1: Headers
+        Columns: point_num, x, y, z, i, j, k
+        Units: millimeters (converted to meters below)
+
+    Frame Construction:
+        - Z-axis: surface normal (i, j, k) from CSV
+        - X-axis: computed from cross products for orthogonality
+        - Y-axis: Z x X for right-handed frame
+    """
+    # Locate CSV via tesseract resource system (resolves package:// URIs)
     resource = robot.locator.locateResource("package://tesseract_support/urdf/puzzle_bent.csv")
     csv_path = resource.getFilePath()
 
     poses = []
+
     with open(csv_path) as f:
         reader = csv.reader(f)
         for lnum, row in enumerate(reader):
-            if lnum < 2 or len(row) < 7:  # Skip header rows
+            # Skip header rows (first 2 lines in puzzle_bent.csv)
+            if lnum < 2:
                 continue
 
+            if len(row) < 7:
+                continue
+
+            # Parse values: skip first column (point number), then x, y, z, i, j, k
             try:
-                # Parse x,y,z (mm) and normal i,j,k - convert mm to meters
-                x, y, z = (
-                    float(row[1]) / 1000,
-                    float(row[2]) / 1000,
-                    float(row[3]) / 1000,
-                )
+                x, y, z = float(row[1]), float(row[2]), float(row[3])
                 i, j, k = float(row[4]), float(row[5]), float(row[6])
             except (ValueError, IndexError):
                 continue
 
-            pos = np.array([x, y, z])
-            norm = np.array([i, j, k])
-            norm /= np.linalg.norm(norm)
+            # CRITICAL: CSV positions in mm, tesseract uses meters
+            pos = np.array([x, y, z]) / 1000.0
 
-            # Build orthogonal frame from surface normal
+            # Normalize the surface normal vector (tool Z-axis)
+            norm = np.array([i, j, k])
+            norm = norm / np.linalg.norm(norm)
+
+            # Construct orthogonal frame from normal:
             # Use negative position as reference to create X-axis pointing inward
             temp_x = (
                 -pos / np.linalg.norm(pos) if np.linalg.norm(pos) > 1e-6 else np.array([1, 0, 0])
             )
             y_axis = np.cross(norm, temp_x)
-            y_axis /= np.linalg.norm(y_axis)
+            y_axis = y_axis / np.linalg.norm(y_axis)
             x_axis = np.cross(y_axis, norm)
-            x_axis /= np.linalg.norm(x_axis)
+            x_axis = x_axis / np.linalg.norm(x_axis)
 
             # Build rotation matrix [X|Y|Z] and create pose
             rot = np.column_stack([x_axis, y_axis, norm])
@@ -183,68 +116,22 @@ def make_puzzle_tool_poses(robot):
     return poses
 
 
-def create_profiles():
-    """Create TrajOpt profiles for Cartesian path following with yaw freedom.
-
-    From C++ puzzle_piece_auxillary_axes_example.cpp profile configuration.
-
-    Key settings:
-    - cartesian_constraint_config.coeff = [5,5,5,2,2,0]
-      Position (x,y,z) tightly constrained, roll/pitch moderate, yaw FREE
-    - collision_cost (not constraint) with 25mm safety margin
-    - solver: OSQP, max_iter=200, min_approx_improve=1e-3, min_trust_box_size=1e-3
+def main():
     """
-    profiles = ProfileDictionary()
-
-    # Plan profile: Cartesian constraint with yaw (rz) freedom
-    # coeff = [x, y, z, rx, ry, rz] weights for pose error
-    # CRITICAL: coeff[5]=0 allows yaw rotation freedom for auxiliary axes
-    plan = TrajOptDefaultPlanProfile()
-    plan.joint_cost_config.enabled = False
-    plan.cartesian_cost_config.enabled = False
-    plan.cartesian_constraint_config.enabled = True
-    plan.cartesian_constraint_config.coeff = np.array([5.0, 5.0, 5.0, 2.0, 2.0, 0.0])
-
-    # Composite profile: soft collision cost (not hard constraint)
-    composite = TrajOptDefaultCompositeProfile()
-    composite.collision_constraint_config.enabled = False
-    composite.collision_cost_config.enabled = True
-    composite.collision_cost_config.collision_margin_buffer = 0.025  # 25mm buffer
-    composite.collision_cost_config.collision_check_config.type = CollisionEvaluatorType.DISCRETE
-
-    # Solver profile: OSQP with C++ settings
-    solver = TrajOptOSQPSolverProfile()
-    solver.opt_params.max_iter = 200
-    solver.opt_params.min_approx_improve = 1e-3
-    solver.opt_params.min_trust_box_size = 1e-3
-
-    ProfileDictionary_addTrajOptPlanProfile(profiles, TRAJOPT_NS, "CARTESIAN", plan)
-    ProfileDictionary_addTrajOptCompositeProfile(profiles, TRAJOPT_NS, "DEFAULT", composite)
-    ProfileDictionary_addTrajOptSolverProfile(profiles, TRAJOPT_NS, "DEFAULT", solver)
-    return profiles
-
-
-def run(pipeline="TrajOptPipeline", num_planners=None):
-    """Run 9-DOF Cartesian path planning with auxiliary axes.
-
-    Args:
-        pipeline: Pipeline name (default "TrajOptPipeline")
-        num_planners: Number of parallel planners (unused, for API compat)
-
-    Returns:
-        dict with result, robot, joint_names, planning_time, success
+    Main planning workflow:
+    1. Load 9-DOF workcell (arm + positioner)
+    2. Load CSV toolpath (~50 waypoints)
+    3. Configure TrajOpt with yaw-free constraint (coeff[5]=0)
+    4. Plan Cartesian path through all waypoints
     """
-    import time
-
-    # === LOAD WORKCELL ===
-    # puzzle_piece_workcell: KUKA IIWA arm + 2-DOF positioner
+    # Load puzzle piece workcell - contains KUKA IIWA + 2-DOF positioner
     robot = Robot.from_urdf(
         "package://tesseract_support/urdf/puzzle_piece_workcell.urdf",
         "package://tesseract_support/urdf/puzzle_piece_workcell.srdf",
     )
+    print(f"Loaded robot with {len(robot.get_link_names())} links")
 
-    # 9 DOF: KUKA IIWA (7) + auxiliary axes (2)
-    # Joint order must match URDF kinematic chain
+    # 9-DOF joint names: 7 arm + 2 auxiliary (must match URDF order)
     joint_names = [
         "joint_a1",
         "joint_a2",
@@ -254,88 +141,130 @@ def run(pipeline="TrajOptPipeline", num_planners=None):
         "joint_a6",
         "joint_a7",
         "joint_aux1",
-        "joint_aux2",  # Positioner: Z-rotation + tilt
+        "joint_aux2",  # positioner axes
     ]
-    # Initial configuration from C++ (arm slightly bent, positioner neutral)
-    joint_pos = np.array([-0.785398, 0.4, 0.0, -1.9, 0.0, 1.0, 0.0, 0.0, 0.0])
+
+    # Initial configuration from C++ example
+    # Arm slightly bent, positioner at neutral (0,0)
+    joint_pos = np.array(
+        [
+            -0.785398,  # joint_a1: -45deg
+            0.4,  # joint_a2
+            0.0,  # joint_a3
+            -1.9,  # joint_a4
+            0.0,  # joint_a5
+            1.0,  # joint_a6
+            0.0,  # joint_a7
+            0.0,  # joint_aux1: positioner Z-rotation
+            0.0,  # joint_aux2: positioner tilt
+        ]
+    )
+
+    # Set initial state
     robot.set_joints(joint_pos, joint_names=joint_names)
 
-    # === LOAD TOOLPATH ===
-    # Parse CSV with ~50 Cartesian waypoints (puzzle piece edge grinding)
-    tool_poses = make_puzzle_tool_poses(robot)
-    print(f"Loaded {len(tool_poses)} tool poses")
-    assert tool_poses, "No poses loaded from CSV"
+    # Load tool poses from CSV
+    try:
+        tool_poses = make_puzzle_tool_poses(robot)
+    except Exception as e:
+        print(f"Failed to load toolpath: {e}")
+        return False
 
-    # === BUILD MOTION PROGRAM ===
-    # "manipulator_aux": combined kinematic group (arm + positioner)
-    # tcp_frame="grinder_frame": tool on arm end-effector
-    # working_frame="part": workpiece frame attached to positioner
-    program = MotionProgram(
-        "manipulator_aux", tcp_frame="grinder_frame", working_frame="part"
-    ).set_joint_names(joint_names)
+    print(f"Loaded {len(tool_poses)} tool poses from CSV")
 
+    if len(tool_poses) == 0:
+        print("No poses loaded from CSV!")
+        return False
+
+    # Build motion program using "manipulator_aux" kinematic group
+    # This group includes both arm and positioner chains (defined in SRDF)
+    # - tcp_frame: grinder tool on arm end-effector
+    # - working_frame: "part" frame attached to positioner (moves with aux axes)
+    program = MotionProgram("manipulator_aux", tcp_frame="grinder_frame", working_frame="part")
+    program.set_joint_names(joint_names)
+
+    # Add all CSV waypoints as Cartesian targets
     for pose in tool_poses:
         program.linear_to(CartesianTarget(pose, profile="CARTESIAN"))
 
-    print(f"Program: {len(program)} waypoints")
+    print(f"Program has {len(program)} Cartesian waypoints")
 
-    # === PLAN WITH TRAJOPT ===
-    # Custom profiles enable yaw freedom for auxiliary axis optimization
-    print(f"Planning with {pipeline} (9 DOF: 7 arm + 2 aux)...")
+    # Configure TrajOpt for 9-DOF Cartesian planning
+    profiles = ProfileDictionary()
+
+    # TrajOpt plan profile: waypoint-level constraints
+    trajopt_plan_profile = TrajOptDefaultPlanProfile()
+    trajopt_plan_profile.joint_cost_config.enabled = False  # No joint-space costs
+    trajopt_plan_profile.cartesian_cost_config.enabled = False  # Using constraints instead
+    trajopt_plan_profile.cartesian_constraint_config.enabled = True
+
+    # CRITICAL: coeff[5]=0 for yaw (rz) freedom
+    # This allows aux axes to rotate workpiece while maintaining TCP position
+    # [x, y, z, rx, ry, rz] - position constrained, roll/pitch constrained, yaw FREE
+    trajopt_plan_profile.cartesian_constraint_config.coeff = np.array(
+        [5.0, 5.0, 5.0, 2.0, 2.0, 0.0]
+    )
+
+    # TrajOpt composite profile: trajectory-level collision settings
+    trajopt_composite_profile = TrajOptDefaultCompositeProfile()
+    trajopt_composite_profile.collision_constraint_config.enabled = (
+        False  # Soft cost, not hard constraint
+    )
+    trajopt_composite_profile.collision_cost_config.enabled = True
+    # 0.33 API: TrajOptCollisionConfig replaces CollisionCostConfig
+    trajopt_composite_profile.collision_cost_config.collision_margin_buffer = (
+        0.025  # 25mm collision buffer
+    )
+    trajopt_composite_profile.collision_cost_config.collision_check_config.type = (
+        CollisionEvaluatorType.DISCRETE  # was SINGLE_TIMESTEP
+    )
+    trajopt_composite_profile.collision_cost_config.collision_coeff_data.setDefaultCollisionCoeff(
+        1.0
+    )
+
+    # Solver profile: OSQP with C++ settings
+    trajopt_solver_profile = TrajOptOSQPSolverProfile()
+    trajopt_solver_profile.opt_params.max_iter = 200
+    trajopt_solver_profile.opt_params.min_approx_improve = 1e-3
+    trajopt_solver_profile.opt_params.min_trust_box_size = 1e-3
+
+    # Register profiles with TrajOpt task namespace
+    ProfileDictionary_addTrajOptPlanProfile(
+        profiles, TRAJOPT_DEFAULT_NAMESPACE, "CARTESIAN", trajopt_plan_profile
+    )
+    ProfileDictionary_addTrajOptCompositeProfile(
+        profiles, TRAJOPT_DEFAULT_NAMESPACE, "DEFAULT", trajopt_composite_profile
+    )
+    ProfileDictionary_addTrajOptSolverProfile(
+        profiles, TRAJOPT_DEFAULT_NAMESPACE, "DEFAULT", trajopt_solver_profile
+    )
+
+    print("Running TrajOpt planner with 9 DOF (7 arm + 2 auxiliary axes)...")
+
+    # Plan via TaskComposer - handles seeding and post-processing
+    # TrajOptPipeline: seeds Cartesian waypoints with IK, then optimizes
     composer = TaskComposer.from_config()
+    result = composer.plan(robot, program, pipeline="TrajOptPipeline", profiles=profiles)
 
-    # Warmup: pre-load plugins (dlopen overhead)
-    warmup_start = time.time()
-    composer.warmup([pipeline])
-    warmup_time = time.time() - warmup_start
-    print(f"Plugin warmup: {warmup_time:.2f}s")
+    if not result.successful:
+        print(f"Planning failed: {result.message}")
+        return False
 
-    profiles = create_profiles()
+    print("Planning successful!")
+    print(f"Trajectory has {len(result)} waypoints")
 
-    # Plan: actual optimization time
-    plan_start = time.time()
-    try:
-        result = composer.plan(robot, program, pipeline=pipeline, profiles=profiles)
-        planning_time = time.time() - plan_start
-
-        if result.successful:
-            print(f"Planning: {planning_time:.2f}s ({len(result)} waypoints)")
-        else:
-            print(f"Planning failed: {planning_time:.2f}s - {result.message}")
-
-    except Exception as e:
-        planning_time = time.time() - plan_start
-        print(f"Planning exception: {planning_time:.2f}s - {e}")
-        result = None
-
-    total_time = warmup_time + planning_time
-    print(f"Total: {total_time:.2f}s (warmup {warmup_time:.2f}s + plan {planning_time:.2f}s)")
-
-    return {
-        "result": result,
-        "robot": robot,
-        "joint_names": joint_names,
-        "planning_time": planning_time,
-        "warmup_time": warmup_time,
-        "success": result.successful if result else False,
-    }
-
-
-def main():
-    """Execute example and optionally visualize."""
-    results = run()
-
-    if TesseractViewer is not None and results.get("result"):
-        print("\nViewer at http://localhost:8000")
+    # Optional: visualize with viewer
+    if TesseractViewer is not None:
+        print("\nStarting viewer at http://localhost:8000")
         viewer = TesseractViewer()
-        viewer.update_environment(results["robot"].env, [0, 0, 0])
-        if results["result"].raw_results is not None:
-            viewer.update_trajectory(results["result"].raw_results)
+        viewer.update_environment(robot.env, [0, 0, 0])
+        viewer.update_trajectory(result.raw_results)
         viewer.start_serve_background()
         input("Press Enter to exit...")
 
-    return results["success"]
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    exit(0 if success else 1)

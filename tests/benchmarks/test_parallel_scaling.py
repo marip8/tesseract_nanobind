@@ -30,7 +30,7 @@ import pytest
 
 pytest.importorskip("pytest_benchmark")
 
-from tesseract.planning import (
+from tesseract_planning import (
     JointTarget,
     MotionProgram,
     Pose,
@@ -39,7 +39,7 @@ from tesseract.planning import (
     create_obstacle,
     sphere,
 )
-from tesseract.planning.profiles import create_freespace_pipeline_profiles
+from tesseract_planning.profiles import create_freespace_pipeline_profiles
 
 
 def setup_robot_with_obstacles(num_obstacles: int = 1):
